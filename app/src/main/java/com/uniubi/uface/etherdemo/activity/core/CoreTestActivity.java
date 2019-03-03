@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.TextureView;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.uniubi.faceapi.CvFace;
 import com.uniubi.uface.ether.base.UfaceEtherImpl;
@@ -44,10 +45,10 @@ import butterknife.ButterKnife;
  */
 public class CoreTestActivity extends AppCompatActivity implements IdentifyResultCallBack, EtherFaceManager.OnServerConnectListener {
 
-    @BindView(R.id.text_score)
-    TextView textScore;
-    @BindView(R.id.text_alive)
-    TextView textAlive;
+//    @BindView(R.id.text_score)
+//    TextView textScore;
+//    @BindView(R.id.text_alive)
+//    TextView textAlive;
     private FaceHandler faceHandler;
 
     private TextureView textureRGBView;
@@ -171,7 +172,7 @@ public class CoreTestActivity extends AppCompatActivity implements IdentifyResul
             @Override
             public void run() {
                 faceView.setVisibility(View.GONE);
-                textAlive.setVisibility(View.INVISIBLE);
+//                textAlive.setVisibility(View.INVISIBLE);
             }
         });
     }
@@ -235,22 +236,23 @@ public class CoreTestActivity extends AppCompatActivity implements IdentifyResul
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                textScore.setVisibility(View.VISIBLE);
-                textScore.setText(recognition.getScore()+"");
+//                textScore.setVisibility(View.VISIBLE);
+//                textScore.setText(recognition.getScore()+"");
+                Toast.makeText(getApplicationContext(), recognition.getScore() + "", Toast.LENGTH_LONG).show();
                 if (recognition.isAlivePass()&&recognition.isVerifyPass()) {
-                    textScore.setText("都通过");
+//                    textScore.setText("都通过");
                     return;
                 }
                 if (recognition.isAlivePass()&&!recognition.isVerifyPass()){
-                    textScore.setText("识别未通过");
+//                    textScore.setText("识别未通过");
                     return;
                 }
                 if (!recognition.isAlivePass()&&recognition.isVerifyPass()){
-                    textScore.setText("活体未通过");
+//                    textScore.setText("活体未通过");
                     return;
                 }
                 if (!recognition.isAlivePass()&&!recognition.isVerifyPass()){
-                    textScore.setText("都未通过");
+//                    textScore.setText("都未通过");
                     return;
                 }
 
@@ -264,7 +266,7 @@ public class CoreTestActivity extends AppCompatActivity implements IdentifyResul
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                textScore.setVisibility(View.GONE);
+//                textScore.setVisibility(View.GONE);
             }
         });
     }

@@ -16,4 +16,8 @@
     <dimen name="poritrait_camera_attend_welcome_drawablePadding">23px</dimen>
     <dimen name="poritrait_camera_attend_welcome_textSize">26sp</dimen>
     <dimen name="poritrait_camera_showName_marginTop">368px</dimen>
+
+
+    <dimen name="camera_view_width">200dp</dimen>
+    <dimen name="camera_view_height"> 240dp</dimen>
 </resources>
