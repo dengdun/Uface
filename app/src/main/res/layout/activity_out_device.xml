@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:paddingBottom="20dp"
+    android:paddingTop="20dp"
+    tools:context="com.uniubi.uface.ether.activity.outdevice.OutDeviceActivity">
+
+    <Button
+        android:id="@+id/btn_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="身份证相关"/>
+
+    <Button
+        android:id="@+id/btn_serial"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btn_id"
+        android:layout_marginTop="10dp"
+        android:text="串口相关"/>
+
+    <Button
+        android:id="@+id/btn_open_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btn_serial"
+        android:layout_marginTop="10dp"
+        android:text="开关量相关"/>
+
+    <Button
+        android:id="@+id/btn_fp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btn_open_close"
+        android:layout_marginTop="10dp"
+        android:text="指纹相关"/>
+
+    <Button
+        android:id="@+id/btn_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btn_fp"
+        android:layout_marginTop="10dp"
+        android:text="返回上一层"/>
+</RelativeLayout>

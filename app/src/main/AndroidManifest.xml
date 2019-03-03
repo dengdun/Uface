@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.uniubi.uface.etherdemo">
+
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.REORDER_TASKS" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
+    <application
+        android:name=".EtherApp"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".TestActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".activity.AndServerTestActivity">
+
+        </activity>
+        <activity android:name=".activity.core.CoreTestActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activity.outdevice.IDCardActivity"/>
+        <activity android:name=".activity.outdevice.OutDeviceActivity">
+
+        </activity>
+        <activity android:name=".activity.outdevice.SerialPortActivity"/>
+        <activity android:name=".activity.outdevice.OpenCloseActivity"/>
+        <activity android:name=".activity.core.CoreMainActivity" />
+        <activity android:name=".activity.core.CoreInterfaceActivity"/>
+        <activity android:name=".activity.core.CoreNaviActivity"/>
+        <activity android:name=".activity.outdevice.FpActivity"/>
+        <receiver android:name="com.uniubi.uface.etherdemo.receiver.IotReceiver">
+            <intent-filter>
+                <action android:name="com.uniubi.uface.ether.msg"/>
+                <action android:name="com.uniubi.uface.ether.msg.extra"/>
+            </intent-filter>
+        </receiver>
+        <activity android:name=".activity.IotReceiveActivity"/>
+    </application>
+
+</manifest>

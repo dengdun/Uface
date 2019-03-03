@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="20dp"
+    android:paddingTop="20dp"
+    tools:context="com.uniubi.uface.ether.activity.outdevice.IDCardActivity">
+
+    <Button
+        android:layout_centerHorizontal="true"
+        android:id="@+id/btn_serialport"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="串口读取身份证"/>
+
+    <Button
+        android:layout_centerHorizontal="true"
+        android:id="@+id/btn_jl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btn_serialport"
+        android:layout_marginTop="10dp"
+        android:text="精伦usb读取身份证"/>
+
+    <Button
+        android:layout_centerHorizontal="true"
+        android:id="@+id/btn_zkt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btn_jl"
+        android:layout_marginTop="10dp"
+        android:text="新中新、中控、威尔usb读取"/>
+
+    <Button
+        android:layout_centerHorizontal="true"
+        android:id="@+id/btn_jl_release"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btn_zkt"
+        android:layout_marginTop="10dp"
+        android:text="精伦释放资源"/>
+
+    <Button
+        android:layout_centerHorizontal="true"
+        android:id="@+id/btn_zkt_release"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btn_jl_release"
+        android:layout_marginTop="10dp"
+        android:text="新中新、中控、威尔等释放资源"/>
+
+    <Button
+        android:layout_centerHorizontal="true"
+        android:id="@+id/btn_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btn_zkt_release"
+        android:layout_marginTop="10dp"
+        android:text="返回上一层"/>
+    <Button
+        android:layout_centerHorizontal="true"
+        android:id="@+id/btn_clear"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btn_back"
+        android:layout_marginTop="10dp"
+        android:text="清除信息"/>
+
+    <TextView
+        android:textSize="20px"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:id="@+id/tv_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btn_clear"/>
+
+    <ImageView
+        android:layout_marginTop="20dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/tv_info"
+        android:id="@+id/iv"
+        android:layout_width="100dp"
+        android:layout_height="100dp"/>
+
+</RelativeLayout>

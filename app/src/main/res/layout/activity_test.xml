@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+   <LinearLayout
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"
+       android:orientation="vertical"
+       android:gravity="center"
+       >
+       <Button
+           android:id="@+id/btn_out"
+           android:layout_width="160dp"
+           android:layout_height="wrap_content"
+           android:text="外设测试"
+           />
+       <Button
+           android:id="@+id/btn_face"
+           android:layout_width="160dp"
+           android:layout_height="wrap_content"
+           android:text="人脸测试"
+           />
+       <Button
+           android:id="@+id/btn_andserver"
+           android:layout_width="160dp"
+           android:layout_height="wrap_content"
+           android:text="开启离线服务"
+           />
+       <Button
+           android:id="@+id/btn_iot"
+           android:layout_width="160dp"
+           android:layout_height="wrap_content"
+           android:text="IoT消息"
+           />
+   </LinearLayout>
+
+</LinearLayout>

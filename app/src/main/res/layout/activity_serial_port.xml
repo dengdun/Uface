@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="10dp"
+    android:paddingTop="10dp"
+    tools:context="com.uniubi.uface.ether.activity.outdevice.SerialPortActivity">
+
+    <Button
+        android:id="@+id/btn_open"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="打开串口"/>
+
+    <Button
+        android:id="@+id/btn_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btn_open"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:text="关闭串口"/>
+
+    <Button
+        android:id="@+id/btn_read"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btn_close"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:text="读取串口"/>
+
+    <Button
+        android:id="@+id/btn_write"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btn_read"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:text="串口写入"/>
+
+    <Button
+        android:id="@+id/btn_ic_card"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btn_write"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:text="IC卡读取"/>
+
+    <Button
+        android:id="@+id/btn_code"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btn_ic_card"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:text="二维码读取"/>
+
+    <Button
+        android:id="@+id/btn_weigen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btn_code"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:text="韦根写入"/>
+
+    <Button
+        android:id="@+id/btn_clear"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btn_weigen"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:text="清除信息"/>
+
+    <Button
+        android:id="@+id/btn_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btn_clear"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:text="返回上一层"/>
+
+    <EditText
+        android:id="@+id/et_open"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="串口打开位置"
+        android:text="/dev/ttyS0"/>
+
+    <EditText
+        android:id="@+id/et_baud"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/et_open"
+        android:hint="设置波特率"
+        android:text="9600"/>
+
+    <EditText
+        android:id="@+id/et_write"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/et_baud"
+        android:layout_marginTop="10dp"
+        android:hint="串口或韦根写入内容"
+        android:text="abc"/>
+
+    <EditText
+        android:id="@+id/et_weigen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/et_write"
+        android:layout_marginTop="10dp"
+        android:hint="韦根26or34"
+        android:text="1"/>
+
+    <TextView
+        android:id="@+id/tv_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/et_weigen"
+        android:layout_marginTop="10dp"
+        android:textSize="20sp"/>
+
+
+</RelativeLayout>

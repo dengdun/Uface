@@ -1,0 +1,17 @@
+<resources>
+
+    <!-- 首页摄像头预览布局 -->
+    <dimen name="poritrait_camera_layout_height">640px</dimen>
+    <dimen name="poritrait_camera_texture_width">180px</dimen>
+    <dimen name="poritrait_camera_texture_height">240px</dimen>
+    <dimen name="poritrait_camera_info_textSize">14.4sp</dimen>
+    <dimen name="poritrait_camera_attend_name_marginBottom">17.6px</dimen>
+    <dimen name="poritrait_camera_attend_name_marginLeft">56px</dimen>
+    <dimen name="poritrait_camera_attend_name_marginTop">26.4px</dimen>
+    <dimen name="poritrait_camera_attend_name_marginRight">56px</dimen>
+    <dimen name="poritrait_camera_attend_name_textSize">40sp</dimen>
+    <dimen name="poritrait_camera_attend_welcome_marginBottom">26.4px</dimen>
+    <dimen name="poritrait_camera_attend_welcome_drawablePadding">18.4px</dimen>
+    <dimen name="poritrait_camera_attend_welcome_textSize">20.8sp</dimen>
+    <dimen name="poritrait_camera_showName_marginTop">294.4px</dimen>
+</resources>

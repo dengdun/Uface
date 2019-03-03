@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/btn_select"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="选择照片" />
+
+        <Button
+            android:id="@+id/btn_track"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="track" />
+
+        <Button
+            android:id="@+id/btn_detect"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="detect" />
+
+        <Button
+            android:layout_marginBottom="20dp"
+            android:id="@+id/btn_getfeatrue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="getFeature" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="保存第一个特征值"
+                android:id="@+id/btn_saveone"/>
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="保存第二个特征值"
+                android:id="@+id/btn_savetwo"/>
+
+        </LinearLayout>
+        <Button
+            android:id="@+id/btn_compare"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="compare" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="20dp">
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="LEFT增量保存一个特征值"
+                android:id="@+id/btn_nsaveone"/>
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="RIGHT增量保存一个特征值"
+                android:id="@+id/btn_nsavetwo"/>
+
+        </LinearLayout>
+        <Button
+            android:id="@+id/btn_ncompare"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="增量compare" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+    <TextView
+        android:id="@+id/text_result"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+         />
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/image_photo"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+    </LinearLayout>
+</LinearLayout>
