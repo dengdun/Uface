@@ -30,6 +30,7 @@ import com.uniubi.uface.ether.core.exception.CvFaceException;
 import com.uniubi.uface.ether.core.faceprocess.IdentifyResultCallBack;
 import com.uniubi.uface.etherdemo.R;
 import com.uniubi.uface.etherdemo.utils.CameraUtils;
+import com.uniubi.uface.etherdemo.utils.NetUtils;
 import com.uniubi.uface.etherdemo.view.FaceView;
 
 import java.util.ArrayList;
@@ -274,6 +275,8 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
                 Toast.makeText(getApplicationContext(), recognition.getScore() + "", Toast.LENGTH_LONG).show();
                 if (recognition.isAlivePass()&&recognition.isVerifyPass()) {
 //                    textScore.setText("都通过");
+
+                    NetUtils.sendMessage(recognition.getPersonId(), recognition.getFaceId(), recognition.getScore());
                     return;
                 }
                 if (recognition.isAlivePass()&&!recognition.isVerifyPass()){
