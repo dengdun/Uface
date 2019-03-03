@@ -1,12 +1,10 @@
 package com.uniubi.uface.etherdemo;
 
 import android.app.Application;
+import android.content.Context;
 
 import com.uniubi.andserver.EtherAndServerManager;
 import com.uniubi.ether.Ether;
-import com.uniubi.iot.DeviceStatusListener;
-import com.uniubi.iot.EtherIotManager;
-import com.uniubi.uface.ether.UfaceEtherOutDevice;
 import com.uniubi.uface.ether.andserver.handler.AbstractEtherRequestHandler;
 import com.uniubi.uface.ether.config.AlgorithmOptions;
 import com.uniubi.uface.ether.config.AndServerOptions;
@@ -18,7 +16,6 @@ import com.uniubi.uface.ether.config.configenum.service.AliveLevel;
 import com.uniubi.uface.ether.config.configenum.service.RecoMode;
 import com.uniubi.uface.ether.config.configenum.service.RecoPattern;
 import com.uniubi.uface.ether.config.configenum.service.ScenePhotoRecResult;
-import com.uniubi.uface.ether.config.configenum.service.ScenePhotoType;
 import com.uniubi.uface.ether.config.configenum.service.ScenePhotoWholeResult;
 import com.uniubi.uface.ether.config.configenum.service.WorkMode;
 import com.uniubi.uface.ether.core.cvhandle.FaceHandler;
@@ -26,6 +23,7 @@ import com.uniubi.uface.ether.utils.AppLog;
 import com.uniubi.uface.etherdemo.serverhandle.ChangeRocModeHandler;
 import com.uniubi.uface.etherdemo.serverhandle.FaceCreateHandler;
 import com.uniubi.uface.etherdemo.serverhandle.FaceDeleteHandler;
+import com.uniubi.uface.etherdemo.serverhandle.SettingHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,9 +38,12 @@ import java.util.List;
  */
 
 public class EtherApp extends Application {
+    public static Context context;
+
     @Override
     public void onCreate() {
         super.onCreate();
+        this.context = getApplicationContext();
         AlgorithmOptions algorithmOptions = AlgorithmOptions.newBuilder()
                 .withDataSourceFormat(DataSourceFormat.CV_PIX_FMT_NV21)
                 .withDataSourceWidth(640)
@@ -69,11 +70,12 @@ public class EtherApp extends Application {
         FaceCreateHandler faceCreateHandler = new FaceCreateHandler("/faceCreate");
         FaceDeleteHandler faceDeleteHandler = new FaceDeleteHandler("/faceDelete");
         ChangeRocModeHandler rocModeHandler = new ChangeRocModeHandler("/changeReco");
+        SettingHandler settingHandler = new SettingHandler("/setting");
         List<AbstractEtherRequestHandler> handlers = new ArrayList<>();
         handlers.add(faceCreateHandler);
         handlers.add(faceDeleteHandler);
         handlers.add(rocModeHandler);
-
+        handlers.add(settingHandler);
         ServiceOptions serviceOptions = new ServiceOptions.Builder()
                 .withRecoMode(RecoMode.LOCALONLY)
                 .withRecoPattern(RecoPattern.VERIFY)

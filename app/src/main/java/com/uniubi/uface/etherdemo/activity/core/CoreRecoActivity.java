@@ -4,13 +4,13 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.TextureView;
 import android.view.View;
-import android.widget.TextView;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Toast;
 
 import com.uniubi.faceapi.CvFace;
@@ -28,8 +28,6 @@ import com.uniubi.uface.ether.core.bean.IdentifyResult;
 import com.uniubi.uface.ether.core.cvhandle.FaceHandler;
 import com.uniubi.uface.ether.core.exception.CvFaceException;
 import com.uniubi.uface.ether.core.faceprocess.IdentifyResultCallBack;
-import com.uniubi.uface.ether.core.utils.CoreUtils;
-import com.uniubi.uface.ether.utils.ImageUtils;
 import com.uniubi.uface.etherdemo.R;
 import com.uniubi.uface.etherdemo.utils.CameraUtils;
 import com.uniubi.uface.etherdemo.view.FaceView;
@@ -45,13 +43,10 @@ import butterknife.ButterKnife;
  * @date 2018/08/02
  *
  *  直接把代码改造成识别页.
+ *  目前可以识别.
  */
 public class CoreRecoActivity extends AppCompatActivity implements IdentifyResultCallBack, EtherFaceManager.OnServerConnectListener {
 
-//    @BindView(R.id.text_score)
-//    TextView textScore;
-//    @BindView(R.id.text_alive)
-//    TextView textAlive;
     private FaceHandler faceHandler;
 
     private TextureView textureRGBView;
@@ -70,6 +65,10 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
 
     private int deviceType = 2;
 
+    @BindView(R.id.top_webView)
+    WebView bottom_webView;
+    @BindView(R.id.bottom_webView)
+    WebView top_webView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -85,7 +84,35 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
         serviceOptions.setWorkMode(WorkMode.OFFLINE);
         init();
         initCamera();
+        initWebView();
         etherFaceManager.startService(this, this, this);
+    }
+
+    private void initWebView() {
+        //WebView加载web资源
+        bottom_webView.loadUrl("http://baidu.com");
+        //覆盖WebView默认使用第三方或系统默认浏览器打开网页的行为，使网页用WebView打开
+        bottom_webView.setWebViewClient(new WebViewClient(){
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                // TODO Auto-generated method stub
+                //返回值是true的时候控制去WebView打开，为false调用系统浏览器或第三方浏览器
+                view.loadUrl(url);
+                return true;
+            }
+        });
+        //WebView加载web资源
+        top_webView.loadUrl("http://baidu.com");
+        // 覆盖WebView默认使用第三方或系统默认浏览器打开网页的行为，使网页用WebView打开
+        top_webView.setWebViewClient(new WebViewClient(){
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                //返回值是true的时候控制去WebView打开，为false调用系统浏览器或第三方浏览器
+                view.loadUrl(url);
+                return true;
+            }
+        });
+
     }
 
     private void init() {
