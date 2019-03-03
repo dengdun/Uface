@@ -18,17 +18,19 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".TestActivity">
+
+        </activity>
+        <activity android:name=".activity.AndServerTestActivity">
+
+        </activity>
+        <activity android:name=".activity.core.CoreRecoActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.AndServerTestActivity">
-
-        </activity>
-        <activity android:name=".activity.core.CoreTestActivity"
-            android:screenOrientation="portrait"/>
         <activity android:name=".activity.outdevice.IDCardActivity"/>
         <activity android:name=".activity.outdevice.OutDeviceActivity">
 

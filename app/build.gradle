@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 27
     defaultConfig {
-        applicationId "com.uniubi.uface.etherdemo"
+        applicationId "com.whzxw.uface.ether"
         minSdkVersion 22
         targetSdkVersion 22
         versionCode 1

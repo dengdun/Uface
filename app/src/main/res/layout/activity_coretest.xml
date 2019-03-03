@@ -1,56 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+    <!-- 两条辅助线帮助布局 -->
+    <android.support.constraint.Guideline
+        android:id="@+id/vertical_guide_line"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
 
-    <RelativeLayout
+    <android.support.constraint.Guideline
+        android:id="@+id/horizontal_guide_line"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.6" />
+
+    <WebView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="4">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/horizontal_guide_line"/>
 
 
-        <WebView
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="4" />
+    <TextureView
+        android:id="@+id/rgb_camera"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="@id/horizontal_guide_line"
+        app:layout_constraintRight_toRightOf="@id/vertical_guide_line"/>
 
-        <TextureView
-            android:id="@+id/rgb_camera"
-            android:layout_width="@dimen/camera_view_width"
-            android:layout_height="@dimen/camera_view_height"
-            style="@style/camera_view_style"
-            android:layout_weight="1" />
+    <TextureView
+        android:id="@+id/ir_camera"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="@id/horizontal_guide_line"
+        app:layout_constraintRight_toRightOf="@id/vertical_guide_line" />
 
-        <TextureView
-            android:id="@+id/ir_camera"
-            android:layout_width="@dimen/camera_view_width"
-            android:layout_height="@dimen/camera_view_height"
-            style="@style/camera_view_style" />
-
-        <TextView
-            android:id="@+id/tv_info"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="#ffffff"
-            android:textSize="@dimen/poritrait_camera_info_textSize" />
-
-
-        <com.uniubi.uface.etherdemo.view.FaceView
-            android:id="@+id/fvRGB"
-            android:layout_width="@dimen/camera_view_width"
-            android:layout_height="@dimen/camera_view_height"
-            style="@style/camera_view_style" />
-
-        <com.uniubi.uface.etherdemo.view.FaceView
-            android:layout_width="@dimen/camera_view_width"
-            android:layout_height="@dimen/camera_view_height"
-            style="@style/camera_view_style"
-            android:id="@+id/fvIR"
-             />
+    <TextView
+        android:id="@+id/tv_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#ffffff"
+        android:textSize="@dimen/poritrait_camera_info_textSize" />
 
 
-    </RelativeLayout>
+    <com.uniubi.uface.etherdemo.view.FaceView
+        android:id="@+id/fvRGB"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="@id/horizontal_guide_line"
+        app:layout_constraintRight_toRightOf="@id/vertical_guide_line" />
 
-</LinearLayout>
+    <com.uniubi.uface.etherdemo.view.FaceView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="@id/horizontal_guide_line"
+        app:layout_constraintRight_toRightOf="@id/vertical_guide_line"
+        android:id="@+id/fvIR" />
+
+</android.support.constraint.ConstraintLayout>

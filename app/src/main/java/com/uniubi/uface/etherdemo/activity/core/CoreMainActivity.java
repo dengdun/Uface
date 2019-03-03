@@ -149,8 +149,8 @@ public class CoreMainActivity extends AppCompatActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_core_continue:
-                Intent intent1 = new Intent(CoreMainActivity.this, CoreTestActivity.class);
-                intent1.putExtra("deviceType",deviceType);
+                Intent intent1 = new Intent(CoreMainActivity.this, CoreRecoActivity.class);
+                intent1.putExtra("deviceType", deviceType);
                 startActivity(intent1);
                 break;
             default:

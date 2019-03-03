@@ -19,6 +19,7 @@ import com.uniubi.uface.ether.config.ServiceOptions;
 import com.uniubi.uface.ether.config.configenum.algorithm.FaceOrientation;
 import com.uniubi.uface.ether.config.configenum.service.RecoMode;
 import com.uniubi.uface.ether.config.configenum.service.RecoPattern;
+import com.uniubi.uface.ether.config.configenum.service.WorkMode;
 import com.uniubi.uface.ether.core.EtherFaceManager;
 import com.uniubi.uface.ether.core.bean.AliveResult;
 import com.uniubi.uface.ether.core.bean.CheckFace;
@@ -42,8 +43,10 @@ import butterknife.ButterKnife;
 /**
  * @author qiaopeng
  * @date 2018/08/02
+ *
+ *  直接把代码改造成识别页.
  */
-public class CoreTestActivity extends AppCompatActivity implements IdentifyResultCallBack, EtherFaceManager.OnServerConnectListener {
+public class CoreRecoActivity extends AppCompatActivity implements IdentifyResultCallBack, EtherFaceManager.OnServerConnectListener {
 
 //    @BindView(R.id.text_score)
 //    TextView textScore;
@@ -77,6 +80,9 @@ public class CoreTestActivity extends AppCompatActivity implements IdentifyResul
 
         serviceOptions = UfaceEtherImpl.getServiceOptions();
         etherFaceManager = EtherFaceManager.getInstance();
+        serviceOptions.setRecoMode(RecoMode.LOCALONLY);
+        serviceOptions.setRecoPattern(RecoPattern.IDENTIFY);
+        serviceOptions.setWorkMode(WorkMode.OFFLINE);
         init();
         initCamera();
         etherFaceManager.startService(this, this, this);
