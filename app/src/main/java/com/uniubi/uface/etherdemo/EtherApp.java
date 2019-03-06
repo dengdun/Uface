@@ -71,11 +71,16 @@ public class EtherApp extends Application {
         FaceDeleteHandler faceDeleteHandler = new FaceDeleteHandler("/faceDelete");
         ChangeRocModeHandler rocModeHandler = new ChangeRocModeHandler("/changeReco");
         SettingHandler settingHandler = new SettingHandler("/setting");
+        SettingHandler pongHandler = new SettingHandler("/pong");
+
         List<AbstractEtherRequestHandler> handlers = new ArrayList<>();
         handlers.add(faceCreateHandler);
         handlers.add(faceDeleteHandler);
         handlers.add(rocModeHandler);
         handlers.add(settingHandler);
+        // 心跳包
+        handlers.add(pongHandler);
+
         ServiceOptions serviceOptions = new ServiceOptions.Builder()
                 .withRecoMode(RecoMode.LOCALONLY)
                 .withRecoPattern(RecoPattern.VERIFY)
