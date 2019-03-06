@@ -2,6 +2,7 @@ package com.uniubi.uface.etherdemo.serverhandle;
 
 import com.uniubi.uface.ether.andserver.handler.AbstractEtherRequestHandler;
 import com.uniubi.uface.etherdemo.EtherApp;
+import com.uniubi.uface.etherdemo.bean.SettingMessageEvent;
 import com.uniubi.uface.etherdemo.utils.ShareUtils;
 import com.yanzhenjie.andserver.RequestMethod;
 import com.yanzhenjie.andserver.annotation.RequestMapping;
@@ -12,6 +13,7 @@ import org.apache.httpcore.HttpRequest;
 import org.apache.httpcore.HttpResponse;
 import org.apache.httpcore.entity.StringEntity;
 import org.apache.httpcore.protocol.HttpContext;
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.IOException;
 import java.util.Map;
@@ -36,7 +38,7 @@ public class SettingHandler extends AbstractEtherRequestHandler {
         String urlad = params.get("urlad");
         String urlad2 = params.get("urlad2");
         String resulturl = params.get("resulturl");
-
+        EventBus.getDefault().post(new SettingMessageEvent(urlad, urlad2, resulturl));
         // 保存参数
         ShareUtils.put(EtherApp.context, "urlad", urlad);
         ShareUtils.put(EtherApp.context, "urlad2", urlad2);

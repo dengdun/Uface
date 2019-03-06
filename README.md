@@ -11,7 +11,7 @@
             personId
     正确的话返回:人脸照片删除成功
 
-3.设置广告页  http://ip:8090/setting  POST 方法
+3.设置广告页  http://ip:8090/setting  POST 方法   三个要同时设置,不然报错
     参数:urlad 上部分的广告的URL页
          urlad2 识别框旁边的URL地址
          resulturl 发送识别结果的地址

@@ -30,8 +30,10 @@ import com.uniubi.uface.ether.core.exception.CvFaceException;
 import com.uniubi.uface.ether.core.faceprocess.IdentifyResultCallBack;
 import com.uniubi.uface.etherdemo.R;
 import com.uniubi.uface.etherdemo.bean.ScreenSaverMessageEvent;
+import com.uniubi.uface.etherdemo.bean.SettingMessageEvent;
 import com.uniubi.uface.etherdemo.utils.CameraUtils;
 import com.uniubi.uface.etherdemo.utils.NetUtils;
+import com.uniubi.uface.etherdemo.utils.ShareUtils;
 import com.uniubi.uface.etherdemo.view.FaceView;
 import com.uniubi.uface.etherdemo.view.snowview.SnowUtils;
 import com.uniubi.uface.etherdemo.view.snowview.SnowView;
@@ -101,7 +103,7 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
 
     private void initWebView() {
         //WebView加载web资源
-        bottom_webView.loadUrl("http://baidu.com");
+        bottom_webView.loadUrl((String)ShareUtils.get(getApplicationContext(), "urlad", "http://localhost:8090"));
         //覆盖WebView默认使用第三方或系统默认浏览器打开网页的行为，使网页用WebView打开
         bottom_webView.setWebViewClient(new WebViewClient(){
             @Override
@@ -113,7 +115,7 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
             }
         });
         //WebView加载web资源
-        top_webView.loadUrl("http://baidu.com");
+        top_webView.loadUrl((String)ShareUtils.get(getApplicationContext(), "urlad", "http://localhost:8090"));
         // 覆盖WebView默认使用第三方或系统默认浏览器打开网页的行为，使网页用WebView打开
         top_webView.setWebViewClient(new WebViewClient(){
             @Override
@@ -359,6 +361,20 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
         } else {
             snowView.stopAnim();
             snowView.setVisibility(View.INVISIBLE);
+        }
+    }
+    /**
+     * 接收到订阅消息
+     * @param event
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onUrlMessageEvent(SettingMessageEvent event) {
+        if (!event.urlad.isEmpty()) {
+            top_webView.loadUrl(event.urlad);
+        }
+
+        if (!event.urlad2.isEmpty()) {
+            bottom_webView.loadUrl(event.urlad2);
         }
     }
 }
