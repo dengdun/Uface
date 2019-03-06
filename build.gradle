@@ -26,7 +26,7 @@ allprojects {
             url 'http://47.110.154.115:8001/repository/maven-releases/'
 
         }
-    }323232323232323232
+    }
 }
 
 task clean(type: Delete) {

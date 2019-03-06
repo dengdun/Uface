@@ -25,3 +25,11 @@
          3.识别分数
 
 
+5. 心跳包   http://ip:8090/pong  POST 方法
+a.参数  ping  空字符串
+
+返回:pong 成功,其它为失败
+
+6.屏保开关  http://ip:8090/screenSaver  POST 方法
+a. 参数  screenSaver    true就是屏保,false关屏保
+

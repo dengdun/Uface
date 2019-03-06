@@ -1,6 +1,7 @@
 package com.uniubi.uface.etherdemo.serverhandle;
 
 import com.uniubi.uface.ether.andserver.handler.AbstractEtherRequestHandler;
+import com.uniubi.uface.etherdemo.bean.ScreenSaverMessageEvent;
 import com.yanzhenjie.andserver.RequestMethod;
 import com.yanzhenjie.andserver.annotation.RequestMapping;
 import com.yanzhenjie.andserver.util.HttpRequestParser;
@@ -10,12 +11,14 @@ import org.apache.httpcore.HttpRequest;
 import org.apache.httpcore.HttpResponse;
 import org.apache.httpcore.entity.StringEntity;
 import org.apache.httpcore.protocol.HttpContext;
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.IOException;
 import java.util.Map;
 
-public class PongHandler extends AbstractEtherRequestHandler {
-    public PongHandler(String url) {
+public class ScreenHandler extends AbstractEtherRequestHandler {
+
+    public ScreenHandler(String url) {
         super(url);
     }
 
@@ -23,12 +26,13 @@ public class PongHandler extends AbstractEtherRequestHandler {
     @Override
     public void handle(HttpRequest request, HttpResponse response, HttpContext context) throws HttpException, IOException {
         Map<String, String> params = HttpRequestParser.parseParams(request);
-        if (!params.containsKey("ping")) {
-            response(response, "Please fill in ping params");
+        if (!params.containsKey("screenSaver")) {
+            // 这里是屏幕保护的字段
             return;
         }
-
-        response(response,"pong");
+        boolean screenSaver = Boolean.parseBoolean(params.get("screenSaver"));
+        EventBus.getDefault().post(new ScreenSaverMessageEvent(screenSaver));
+        response(response, "execute");
     }
 
     private void response(HttpResponse response, String info) {

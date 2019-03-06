@@ -29,9 +29,16 @@ import com.uniubi.uface.ether.core.cvhandle.FaceHandler;
 import com.uniubi.uface.ether.core.exception.CvFaceException;
 import com.uniubi.uface.ether.core.faceprocess.IdentifyResultCallBack;
 import com.uniubi.uface.etherdemo.R;
+import com.uniubi.uface.etherdemo.bean.ScreenSaverMessageEvent;
 import com.uniubi.uface.etherdemo.utils.CameraUtils;
 import com.uniubi.uface.etherdemo.utils.NetUtils;
 import com.uniubi.uface.etherdemo.view.FaceView;
+import com.uniubi.uface.etherdemo.view.snowview.SnowUtils;
+import com.uniubi.uface.etherdemo.view.snowview.SnowView;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,6 +77,9 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
     WebView bottom_webView;
     @BindView(R.id.bottom_webView)
     WebView top_webView;
+
+    @BindView(R.id.snow)
+    SnowView snowView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -189,10 +199,18 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        // 注册接收是否屏保的广播
+        EventBus.getDefault().register(this);
+    }
+    @Override
     protected void onStop() {
         super.onStop();
         cameraRGB.closeCamera();
         cameraIR.closeCamera();
+        // 注销接收是否屏保的广播
+        EventBus.getDefault().unregister(this);
     }
 
 
@@ -308,6 +326,9 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
     }
 
 
+
+
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -324,5 +345,20 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
     @Override
     public void onDisconnected() {
 
+    }
+
+    /**
+     * 接收到订阅消息
+     * @param event
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(ScreenSaverMessageEvent event) {
+        if (event.isScreenSaver) {
+            snowView.setVisibility(View.VISIBLE);
+            snowView.startSnowAnim(SnowUtils.SNOW_LEVEL_MIDDLE);
+        } else {
+            snowView.stopAnim();
+            snowView.setVisibility(View.INVISIBLE);
+        }
     }
 }

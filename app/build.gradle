@@ -37,7 +37,7 @@ dependencies {
     api 'com.jakewharton:butterknife:8.5.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
     implementation 'net.zetetic:android-database-sqlcipher:3.5.7@aar'
-
+    implementation 'org.greenrobot:eventbus:3.1.1'
 
     implementation 'com.uniubi.uface.ether:baselib:0.1.9-release'//基础库模块
     implementation 'com.uniubi.uface.ether:core:0.1.9-release@aar'//人脸识别核心模块（可选）

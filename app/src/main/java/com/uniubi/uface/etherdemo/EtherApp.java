@@ -23,6 +23,8 @@ import com.uniubi.uface.ether.utils.AppLog;
 import com.uniubi.uface.etherdemo.serverhandle.ChangeRocModeHandler;
 import com.uniubi.uface.etherdemo.serverhandle.FaceCreateHandler;
 import com.uniubi.uface.etherdemo.serverhandle.FaceDeleteHandler;
+import com.uniubi.uface.etherdemo.serverhandle.PongHandler;
+import com.uniubi.uface.etherdemo.serverhandle.ScreenHandler;
 import com.uniubi.uface.etherdemo.serverhandle.SettingHandler;
 
 import java.util.ArrayList;
@@ -71,15 +73,19 @@ public class EtherApp extends Application {
         FaceDeleteHandler faceDeleteHandler = new FaceDeleteHandler("/faceDelete");
         ChangeRocModeHandler rocModeHandler = new ChangeRocModeHandler("/changeReco");
         SettingHandler settingHandler = new SettingHandler("/setting");
-        SettingHandler pongHandler = new SettingHandler("/pong");
+        PongHandler pongHandler = new PongHandler("/pong");
+        ScreenHandler screenHandler = new ScreenHandler("/screenSaver");
 
         List<AbstractEtherRequestHandler> handlers = new ArrayList<>();
         handlers.add(faceCreateHandler);
         handlers.add(faceDeleteHandler);
         handlers.add(rocModeHandler);
         handlers.add(settingHandler);
+
         // 心跳包
         handlers.add(pongHandler);
+        // 屏幕保护
+        handlers.add(screenHandler);
 
         ServiceOptions serviceOptions = new ServiceOptions.Builder()
                 .withRecoMode(RecoMode.LOCALONLY)
