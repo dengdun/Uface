@@ -26,6 +26,7 @@ import com.uniubi.uface.etherdemo.serverhandle.FaceDeleteHandler;
 import com.uniubi.uface.etherdemo.serverhandle.PongHandler;
 import com.uniubi.uface.etherdemo.serverhandle.ScreenHandler;
 import com.uniubi.uface.etherdemo.serverhandle.SettingHandler;
+import com.uniubi.uface.etherdemo.utils.SerialUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -103,7 +104,9 @@ public class EtherApp extends Application {
                 .withIsRegisterWebsite(true)
                 .withIsExternalStorage(true)
                 .withOfflineServerWebsitePath("").build();
-        CommonOptions commonOptions = new CommonOptions("84E0F420874101FA", "06CA983C214E4FBF82E90A00B05A4822", "025cb4d148f5b71f14dfdcf0e68ae5a9");
+
+//        CommonOptions commonOptions = new CommonOptions("84E0F420874101FA", "06CA983C214E4FBF82E90A00B05A4822", "025cb4d148f5b71f14dfdcf0e68ae5a9");
+        CommonOptions commonOptions = new CommonOptions(SerialUtils.getDeviceSerial(), "06CA983C214E4FBF82E90A00B05A4822", "025cb4d148f5b71f14dfdcf0e68ae5a9");
 
         Ether ether = new Ether.Builder(commonOptions)
                 .withAlgorithmOptions(algorithmOptions)
