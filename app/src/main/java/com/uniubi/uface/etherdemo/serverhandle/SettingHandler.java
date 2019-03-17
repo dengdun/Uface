@@ -31,18 +31,20 @@ public class SettingHandler extends AbstractEtherRequestHandler {
     public void handle(HttpRequest request, HttpResponse response, HttpContext context) throws HttpException, IOException {
         Map<String, String> params = HttpRequestParser.parseParams(request);
         if (!params.containsKey("urlad")||!params.containsKey("urlad2")
-                || !params.containsKey("resulturl")) {
+                || !params.containsKey("resulturl") || !!params.containsKey("startApp")) {
             response(response, "{\"success\":\"true\", \"message\": \"参数不正确\"}");
             return;
         }
         String urlad = params.get("urlad");
         String urlad2 = params.get("urlad2");
         String resulturl = params.get("resulturl");
+        String startApp = params.get("startApp");
         EventBus.getDefault().post(new SettingMessageEvent(urlad, urlad2, resulturl));
         // 保存参数
         ShareUtils.put(EtherApp.context, "urlad", urlad);
         ShareUtils.put(EtherApp.context, "urlad2", urlad2);
         ShareUtils.put(EtherApp.context, "resulturl", resulturl);
+        ShareUtils.put(EtherApp.context, "startApp", startApp);
 
         response(response, "{\"success\":\"true\", \"message\": \"设置成功\"}");
     }

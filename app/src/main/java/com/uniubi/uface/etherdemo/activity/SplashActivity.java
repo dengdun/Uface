@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.uniubi.uface.etherdemo.activity.core.CoreRecoActivity;
+import com.uniubi.uface.etherdemo.utils.NetUtils;
 
 /**
  * 正在启动界面
@@ -40,13 +41,13 @@ public class SplashActivity extends AppCompatActivity {
 
         linearLayout.addView(textView);
         setContentView(linearLayout);
-
+        NetUtils.startApp();
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 startActivity(new Intent(getApplicationContext(), CoreRecoActivity.class));
                 finish();
             }
-        }, 2000);
+        }, 1500);
     }
 }

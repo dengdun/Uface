@@ -61,4 +61,47 @@ public class NetUtils {
             }
         }).start();
     }
+
+    public static void startApp() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //接口地址
+                String url_path = (String) ShareUtils.get(EtherApp.context, "startApp", "");
+                HttpURLConnection connection = null;
+                try {
+                    URL url = new URL(url_path);
+                    connection = (HttpURLConnection) url.openConnection();
+                    // 设置请求方式
+                    connection.setRequestMethod("GET");
+                    // 设置编码格式
+                    connection.setRequestProperty("Charset", "UTF-8");
+                    // 设置容许输出
+                    connection.setDoOutput(true);
+
+                    OutputStream os = connection.getOutputStream();
+
+                    os.flush();
+                    os.close();
+
+                    // 获取返回数据
+                    if(connection.getResponseCode() == 200){
+                        InputStream is = connection.getInputStream();
+
+                    }
+                } catch (MalformedURLException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                } finally {
+                    if(connection!=null){
+                        connection.disconnect();
+                    }
+                }
+            }
+        }).start();
+    }
+
 }
