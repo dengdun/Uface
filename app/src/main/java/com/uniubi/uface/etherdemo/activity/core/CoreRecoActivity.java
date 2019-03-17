@@ -163,10 +163,12 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                Toast.makeText(getApplicationContext(), "输入框的值:" + cardNo.getText().toString(), Toast.LENGTH_LONG).show();
                 OfflineFaceInfo offlineFaceInfo = OfflineFaceInfoImpl.getFaceInfoImpl().queryByFaceId(cardNo.getText().toString());
                 // faceID, 姓名 personId
                 String[] split = offlineFaceInfo.getPersonId().split("/");
                 final String cardNoIn = offlineFaceInfo.getFaceId();
+                // 调用js方法
                 // 参数  faceid 姓名 卡号
                 bottom_webView.evaluateJavascript("javascript: callJS(" + split[0] + "," + split[1] + "," + split[2] + ","+ cardNoIn +")", new ValueCallback<String>() {
                     @Override
