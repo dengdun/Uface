@@ -42,4 +42,5 @@ dependencies {
     implementation 'com.uniubi.uface.ether:baselib:0.1.9-release'//基础库模块
     implementation 'com.uniubi.uface.ether:core:0.1.9-release@aar'//人脸识别核心模块（可选）
     implementation 'com.uniubi.uface.ether:outdevice:0.1.6-release@aar'//外设模块（可选）
+
 }

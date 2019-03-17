@@ -316,8 +316,11 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
                 Toast.makeText(getApplicationContext(), recognition.getScore() + "", Toast.LENGTH_LONG).show();
                 if (recognition.isAlivePass()&&recognition.isVerifyPass()) {
 //                    textScore.setText("都通过");
+                    String personId = recognition.getPersonId();
+                    String[] split = personId.split("/");
 
-                    NetUtils.sendMessage(recognition.getPersonId(), recognition.getFaceId(), recognition.getScore());
+
+                    NetUtils.sendMessage(split[0], recognition.getFaceId(), recognition.getScore(), split[1], split[2]);
                     return;
                 }
                 if (recognition.isAlivePass()&&!recognition.isVerifyPass()){

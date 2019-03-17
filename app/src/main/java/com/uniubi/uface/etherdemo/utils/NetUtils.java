@@ -9,9 +9,12 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+/**
+ * 发送网络请求的
+ */
 public class NetUtils {
 
-    public static void sendMessage(final String personId, final String faceId, final Float score) {
+    public static void sendMessage(final String personId, final String faceId, final Float score, final String name, final String cardNo) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -29,6 +32,8 @@ public class NetUtils {
                     connection.setRequestProperty("personId", personId);
                     connection.setRequestProperty("faceId", faceId);
                     connection.setRequestProperty("score", score+"");
+                    connection.setRequestProperty("name", name);
+                    connection.setRequestProperty("cardNo", cardNo);
                     // 设置容许输出
                     connection.setDoOutput(true);
 

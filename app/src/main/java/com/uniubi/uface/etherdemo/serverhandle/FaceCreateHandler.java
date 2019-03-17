@@ -57,6 +57,11 @@ public class FaceCreateHandler extends AbstractEtherRequestHandler {
         String personId = params.get("personId");
         String imgBase64 = params.get("imgBase64");
         String imagePath = params.get("imagePath");
+        String name = params.get("name");
+        String cardNo = params.get("cardNo");
+        // 把三个字段都拼接到一个字段里面
+        personId += personId + "/" + name + "/" + cardNo;
+
         if (!TextUtils.isEmpty(faceId) && !TextUtils.isEmpty(personId)) {
             if (TextUtils.isEmpty(imgBase64)) {
                 return;
