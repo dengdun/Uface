@@ -7,13 +7,18 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.InputType;
+import android.text.TextWatcher;
 import android.view.TextureView;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.webkit.ValueCallback;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.uniubi.faceapi.CvFace;
@@ -31,6 +36,8 @@ import com.uniubi.uface.ether.core.bean.IdentifyResult;
 import com.uniubi.uface.ether.core.cvhandle.FaceHandler;
 import com.uniubi.uface.ether.core.exception.CvFaceException;
 import com.uniubi.uface.ether.core.faceprocess.IdentifyResultCallBack;
+import com.uniubi.uface.ether.db.OfflineFaceInfo;
+import com.uniubi.uface.ether.db.impl.OfflineFaceInfoImpl;
 import com.uniubi.uface.etherdemo.R;
 import com.uniubi.uface.etherdemo.bean.ScreenSaverMessageEvent;
 import com.uniubi.uface.etherdemo.bean.SettingMessageEvent;
@@ -85,6 +92,8 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
 
     @BindView(R.id.snow)
     SnowView snowView;
+    @BindView(R.id.cardNo)
+    EditText cardNo;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -145,7 +154,34 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
                 return true;
             }
         });
+        cardNo.setInputType(InputType.TYPE_NULL);
+        cardNo.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                OfflineFaceInfo offlineFaceInfo = OfflineFaceInfoImpl.getFaceInfoImpl().queryByFaceId(cardNo.getText().toString());
+                // faceID, 姓名 personId
+                String[] split = offlineFaceInfo.getPersonId().split("/");
+                final String cardNoIn = offlineFaceInfo.getFaceId();
+                // 参数  faceid 姓名 卡号
+                bottom_webView.evaluateJavascript("javascript: callJS(" + split[0] + "," + split[1] + "," + split[2] + ","+ cardNoIn +")", new ValueCallback<String>() {
+                    @Override
+                    public void onReceiveValue(String s) {
+                        // 清空文字
+                        cardNo.setText("");
+                    }
+                });
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
 
     }
 
@@ -317,10 +353,11 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
                 if (recognition.isAlivePass()&&recognition.isVerifyPass()) {
 //                    textScore.setText("都通过");
                     String personId = recognition.getPersonId();
+                    // faceID, 姓名 personId
                     String[] split = personId.split("/");
 
 
-                    NetUtils.sendMessage(split[0], recognition.getFaceId(), recognition.getScore(), split[1], split[2]);
+                    NetUtils.sendMessage(split[0], split[2], recognition.getScore(), split[1], recognition.getFaceId());
                     return;
                 }
                 if (recognition.isAlivePass()&&!recognition.isVerifyPass()){

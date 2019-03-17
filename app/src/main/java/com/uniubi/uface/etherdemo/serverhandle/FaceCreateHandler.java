@@ -59,9 +59,9 @@ public class FaceCreateHandler extends AbstractEtherRequestHandler {
         String imagePath = params.get("imagePath");
         String name = params.get("name");
         String cardNo = params.get("cardNo");
-        // 把三个字段都拼接到一个字段里面
-        personId += personId + "/" + name + "/" + cardNo;
-
+        // 把personID 姓名/ faceId存在一个里面  三个字段都拼接到一个字段里面
+        personId += personId + "/" + name + "/" + faceId;
+        faceId = cardNo;
         if (!TextUtils.isEmpty(faceId) && !TextUtils.isEmpty(personId)) {
             if (TextUtils.isEmpty(imgBase64)) {
                 return;
@@ -82,6 +82,7 @@ public class FaceCreateHandler extends AbstractEtherRequestHandler {
                     info.setPersonId(personId);
                     info.setImgPath(imagePath);
                     OfflineFaceInfoImpl.getFaceInfoImpl().saveFaceInfo(info);
+
                     EtherFaceManager.getInstance().addFeatureToLib(info.getFeature(), info.getPersonId(), info.getFaceId());
                     response(response, "{\"success\":\"true\", \"message\": \"添加人脸成功\"}");
                 } catch (CvFaceException e) {
