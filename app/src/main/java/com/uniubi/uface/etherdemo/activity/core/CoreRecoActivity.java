@@ -94,7 +94,8 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
     SnowView snowView;
     @BindView(R.id.cardNo)
     EditText cardNo;
-
+    // 正在屏保
+    private boolean isScreenSaver = false;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -349,9 +350,9 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-//                textScore.setVisibility(View.VISIBLE);
-//                textScore.setText(recognition.getScore()+"");
                 Toast.makeText(getApplicationContext(), recognition.getScore() + "", Toast.LENGTH_LONG).show();
+                // 屏保的时候不让提交数据
+                if (isScreenSaver) return;
                 if (recognition.isAlivePass()&&recognition.isVerifyPass()) {
 //                    textScore.setText("都通过");
                     String personId = recognition.getPersonId();
@@ -390,10 +391,6 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
         });
     }
 
-
-
-
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -419,9 +416,11 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(ScreenSaverMessageEvent event) {
         if (event.isScreenSaver) {
+            isScreenSaver = true;
             snowView.setVisibility(View.VISIBLE);
             snowView.startSnowAnim(SnowUtils.SNOW_LEVEL_MIDDLE);
         } else {
+            isScreenSaver = false;
             snowView.stopAnim();
             snowView.setVisibility(View.INVISIBLE);
         }
