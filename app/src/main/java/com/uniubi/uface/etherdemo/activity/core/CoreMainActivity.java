@@ -9,7 +9,6 @@ import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
-import com.uniubi.uface.etherdemo.R;
 import com.uniubi.uface.ether.base.UfaceEtherImpl;
 import com.uniubi.uface.ether.config.AlgorithmOptions;
 import com.uniubi.uface.ether.config.CommonOptions;
@@ -17,6 +16,7 @@ import com.uniubi.uface.ether.config.ServiceOptions;
 import com.uniubi.uface.ether.config.configenum.service.RecoMode;
 import com.uniubi.uface.ether.config.configenum.service.RecoPattern;
 import com.uniubi.uface.ether.config.configenum.service.WorkMode;
+import com.uniubi.uface.etherdemo.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -58,6 +58,7 @@ public class CoreMainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         options = UfaceEtherImpl.getServiceOptions();
         algorithmOptions = UfaceEtherImpl.getAlgorithmOptions();
         commonOptions = UfaceEtherImpl.getCommonOptions();
