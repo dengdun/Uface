@@ -12,7 +12,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.uniubi.uface.etherdemo.activity.core.CoreRecoActivity;
+import com.uniubi.uface.etherdemo.bean.StartAppEvent;
 import com.uniubi.uface.etherdemo.utils.NetUtils;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 /**
  * 正在启动界面
@@ -42,12 +46,31 @@ public class SplashActivity extends AppCompatActivity {
         linearLayout.addView(textView);
         setContentView(linearLayout);
         NetUtils.startApp();
+
+
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                startActivity(new Intent(getApplicationContext(), CoreRecoActivity.class));
-                finish();
+
             }
         }, 1500);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe
+    public void startReco(StartAppEvent event) {
+        startActivity(new Intent(getApplicationContext(), CoreRecoActivity.class));
+        finish();
     }
 }
