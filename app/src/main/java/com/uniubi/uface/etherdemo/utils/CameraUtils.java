@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.view.TextureView;
 
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -95,7 +96,20 @@ public class CameraUtils implements TextureView.SurfaceTextureListener {
             try {
                Camera.Parameters parameters =  mCamera.getParameters();
                parameters.setPreviewSize(640,480);
-               mCamera.setParameters(parameters);
+                String flashMode = parameters.getFlashMode();
+                if (flashMode != null) {
+                    // FIXME
+                    List<String> flashModes = parameters.getSupportedFlashModes();
+                    if (!Camera.Parameters.FLASH_MODE_OFF.equals(flashMode)) {
+                        if (flashModes.contains(Camera.Parameters.FLASH_MODE_OFF)) {
+                            parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+                            mCamera.setParameters(parameters);
+
+                            } else {
+                            }
+                    }
+                }
+                mCamera.setParameters(parameters);
                 mCamera.setPreviewTexture(mSurfaceTexture);
                 mCamera.setPreviewCallbackWithBuffer(frameCallback);
                 mCamera.addCallbackBuffer(cameraData);

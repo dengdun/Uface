@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.TextureView;
 import android.view.View;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
@@ -102,8 +103,20 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
     }
 
     private void initWebView() {
+        WebSettings webSettings = bottom_webView.getSettings();
+        // 设置与Js交互的权限
+        webSettings.setJavaScriptEnabled(true);
+        // 设置允许JS弹窗
+        webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
+        WebSettings settings = top_webView.getSettings();
+        // 设置与Js交互的权限
+        settings.setJavaScriptEnabled(true);
+        // 设置允许JS弹窗
+        settings.setJavaScriptCanOpenWindowsAutomatically(true);
+
         //WebView加载web资源
         bottom_webView.loadUrl((String)ShareUtils.get(getApplicationContext(), "urlad", "http://localhost:8090"));
+
         //覆盖WebView默认使用第三方或系统默认浏览器打开网页的行为，使网页用WebView打开
         bottom_webView.setWebViewClient(new WebViewClient(){
             @Override
@@ -125,6 +138,7 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
                 return true;
             }
         });
+
 
     }
 
