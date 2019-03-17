@@ -32,7 +32,7 @@ public class SettingHandler extends AbstractEtherRequestHandler {
         Map<String, String> params = HttpRequestParser.parseParams(request);
         if (!params.containsKey("urlad")||!params.containsKey("urlad2")
                 || !params.containsKey("resulturl")) {
-            response(response, "参数不正确");
+            response(response, "{\"success\":\"true\", \"message\": \"参数不正确\"}");
             return;
         }
         String urlad = params.get("urlad");
@@ -44,7 +44,7 @@ public class SettingHandler extends AbstractEtherRequestHandler {
         ShareUtils.put(EtherApp.context, "urlad2", urlad2);
         ShareUtils.put(EtherApp.context, "resulturl", resulturl);
 
-        response(response, "设置成功");
+        response(response, "{\"success\":\"true\", \"message\": \"设置成功\"}");
     }
 
     private void response(HttpResponse response, String info) {

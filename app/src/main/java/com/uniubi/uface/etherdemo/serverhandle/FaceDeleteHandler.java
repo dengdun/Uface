@@ -46,9 +46,9 @@ public class FaceDeleteHandler extends AbstractEtherRequestHandler {
         boolean isDelete = OfflineFaceInfoImpl.getFaceInfoImpl().deleteByFaceId(faceId);
         if (isDelete){
             EtherFaceManager.getInstance().removeFeatureFromLib(personId,faceId);
-            response(response,"删除人脸成功");
+            response(response,"{\"success\":\"false\", \"message\": \"删除人脸成功\"}");
         }else {
-            response(response,"删除人脸失败");
+            response(response,"{\"success\":\"false\", \"message\": \"删除人脸失败\"}");
         }
 
     }

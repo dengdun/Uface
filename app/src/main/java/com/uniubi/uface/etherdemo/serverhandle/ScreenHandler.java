@@ -32,7 +32,7 @@ public class ScreenHandler extends AbstractEtherRequestHandler {
         }
         boolean screenSaver = Boolean.parseBoolean(params.get("screenSaver"));
         EventBus.getDefault().post(new ScreenSaverMessageEvent(screenSaver));
-        response(response, "execute");
+        response(response, "{\"success\":\"true\"}");
     }
 
     private void response(HttpResponse response, String info) {
