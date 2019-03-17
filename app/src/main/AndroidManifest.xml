@@ -21,6 +21,7 @@
         <activity android:name=".activity.AndServerTestActivity"></activity>
         <activity
             android:name=".activity.core.CoreRecoActivity"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
