@@ -31,7 +31,7 @@ public class SettingHandler extends AbstractEtherRequestHandler {
     public void handle(HttpRequest request, HttpResponse response, HttpContext context) throws HttpException, IOException {
         Map<String, String> params = HttpRequestParser.parseParams(request);
         if (!params.containsKey("urlad")||!params.containsKey("urlad2")
-                || !params.containsKey("resulturl") || !!params.containsKey("startApp")) {
+                || !params.containsKey("resulturl") || !params.containsKey("startApp") || !params.containsKey("schooleName") ) {
             response(response, "{\"success\":\"true\", \"message\": \"参数不正确\"}");
             return;
         }
@@ -39,12 +39,14 @@ public class SettingHandler extends AbstractEtherRequestHandler {
         String urlad2 = params.get("urlad2");
         String resulturl = params.get("resulturl");
         String startApp = params.get("startApp");
+        String schooleName = params.get("schooleName");
         EventBus.getDefault().post(new SettingMessageEvent(urlad, urlad2, resulturl));
         // 保存参数
         ShareUtils.put(EtherApp.context, "urlad", urlad);
         ShareUtils.put(EtherApp.context, "urlad2", urlad2);
         ShareUtils.put(EtherApp.context, "resulturl", resulturl);
         ShareUtils.put(EtherApp.context, "startApp", startApp);
+        ShareUtils.put(EtherApp.context, "schooleName", schooleName);
 
         response(response, "{\"success\":\"true\", \"message\": \"设置成功\"}");
     }

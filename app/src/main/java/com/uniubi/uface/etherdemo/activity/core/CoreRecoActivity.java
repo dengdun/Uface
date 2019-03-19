@@ -38,6 +38,7 @@ import com.uniubi.uface.ether.core.exception.CvFaceException;
 import com.uniubi.uface.ether.core.faceprocess.IdentifyResultCallBack;
 import com.uniubi.uface.ether.db.OfflineFaceInfo;
 import com.uniubi.uface.ether.db.impl.OfflineFaceInfoImpl;
+import com.uniubi.uface.ether.outdevice.utils.FileNodeOperator;
 import com.uniubi.uface.etherdemo.R;
 import com.uniubi.uface.etherdemo.bean.ScreenSaverMessageEvent;
 import com.uniubi.uface.etherdemo.bean.SettingMessageEvent;
@@ -45,7 +46,6 @@ import com.uniubi.uface.etherdemo.utils.CameraUtils;
 import com.uniubi.uface.etherdemo.utils.NetUtils;
 import com.uniubi.uface.etherdemo.utils.ShareUtils;
 import com.uniubi.uface.etherdemo.view.FaceView;
-import com.uniubi.uface.etherdemo.view.snowview.SnowUtils;
 import com.uniubi.uface.etherdemo.view.snowview.SnowView;
 
 import org.greenrobot.eventbus.EventBus;
@@ -410,7 +410,7 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
     }
 
     /**
-     * 接收到订阅消息
+     * 接收到订阅消息 设置屏幕保护的监听
      * @param event
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -418,15 +418,19 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
         if (event.isScreenSaver) {
             isScreenSaver = true;
             snowView.setVisibility(View.VISIBLE);
-            snowView.startSnowAnim(SnowUtils.SNOW_LEVEL_MIDDLE);
+            snowView.setSchoolName("美国");
+            snowView.stratTime();
+            // 开灯
+            FileNodeOperator.open(FileNodeOperator.LED_PATH);
         } else {
             isScreenSaver = false;
-            snowView.stopAnim();
+            // 关灯
+            FileNodeOperator.close(FileNodeOperator.LED_PATH);
             snowView.setVisibility(View.INVISIBLE);
         }
     }
     /**
-     * 接收到订阅消息
+     * 接收到订阅消息  设置的url的监听
      * @param event
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
