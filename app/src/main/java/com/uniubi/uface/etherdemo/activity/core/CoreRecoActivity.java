@@ -419,7 +419,6 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
             // 这里显示屏保  这里不能开灯
             isScreenSaver = true;
             snowView.setVisibility(View.VISIBLE);
-            snowView.setSchoolName("美国");
 
             // 关灯
             FileNodeOperator.close(FileNodeOperator.LED_PATH);
@@ -444,6 +443,10 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
 
         if (!event.urlad2.isEmpty()) {
             bottom_webView.loadUrl(event.urlad2);
+        }
+
+        if (!event.schooleNameLine1.isEmpty()) {
+            snowView.setSchoolName(event.schooleNameLine1, event.schooleNameLine2);
         }
     }
 }

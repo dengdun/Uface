@@ -49,7 +49,8 @@ public class FaceCreateHandler extends AbstractEtherRequestHandler {
     public void handle(HttpRequest request, HttpResponse response, HttpContext context) throws HttpException, IOException {
 
         Map<String, String> params = HttpRequestParser.parseParams(request);
-        if (!params.containsKey("faceId") || !params.containsKey("personId") || !params.containsKey("imgBase64")) {
+        if (!params.containsKey("faceId") || !params.containsKey("personId") || !params.containsKey("imgBase64")
+                || !params.containsKey("imagePath") || !params.containsKey("name")|| !params.containsKey("cardNo")) {
             response(response, "Please fill in whole params");
             return;
         }
