@@ -4,7 +4,9 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -61,6 +63,12 @@ public class SnowView extends View {
 
     private void init(Context context) {
         bitmap = BitmapFactory.decodeResource(context.getResources(), R.mipmap.face_lock);
+        Typeface font = Typeface.create(Typeface.SANS_SERIF, Typeface.BOLD);
+        paint.setTypeface(font);
+        paint.setTextSize(20f);
+        paint.setColor(Color.WHITE);
+        stratTime();
+
     }
     private int yinzi = 10*8;
     @Override
@@ -70,12 +78,13 @@ public class SnowView extends View {
             Scaledbitmap = Bitmap.createScaledBitmap(bitmap, getWidth(), getHeight(), true);
         }
         canvas.drawBitmap(Scaledbitmap, 0,0, paint);
-
+        paint.setTextSize(40f);
         canvas.drawText(schoolName, 20, getHeight()/10*8, paint);
-        currentDate = new Date();
 
-        canvas.drawText(currentDate.getHours() + ":" + currentDate.getMinutes(), 20, getHeight()/10*8, paint);
-        canvas.drawText(currentDate.getMonth() + "月" + currentDate.getDate() + "日  星期" + currentDate.getDay(), getWidth()/2 , getHeight()/10*8 , paint);
+        currentDate = new Date();
+        paint.setTextSize(50f);
+        canvas.drawText(currentDate.getHours() + ":" + currentDate.getMinutes(), getWidth()/2, getHeight()/10*9, paint);
+        canvas.drawText(currentDate.getMonth() + "月" + currentDate.getDate() + "日  星期" + currentDate.getDay(), getWidth()/2 , getHeight()/10*9+40f , paint);
     }
 
     public void setSchoolName (String name) {
@@ -88,7 +97,7 @@ public class SnowView extends View {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                postInvalidate();
+                postInvalidate(getWidth()/2, getHeight()/10*9 - 40, getWidth(), getHeight());
             }
         }, 2000, 6000);
     }

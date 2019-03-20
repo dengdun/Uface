@@ -416,16 +416,19 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(ScreenSaverMessageEvent event) {
         if (event.isScreenSaver) {
+            // 这里显示屏保  这里不能开灯
             isScreenSaver = true;
             snowView.setVisibility(View.VISIBLE);
             snowView.setSchoolName("美国");
-            snowView.stratTime();
-            // 开灯
-            FileNodeOperator.open(FileNodeOperator.LED_PATH);
-        } else {
-            isScreenSaver = false;
+
             // 关灯
             FileNodeOperator.close(FileNodeOperator.LED_PATH);
+
+        } else {
+            isScreenSaver = false;
+            // 开灯
+            FileNodeOperator.open(FileNodeOperator.LED_PATH);
+
             snowView.setVisibility(View.INVISIBLE);
         }
     }
