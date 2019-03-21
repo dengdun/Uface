@@ -145,7 +145,7 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
             }
         });
         //WebView加载web资源
-        top_webView.loadUrl((String)ShareUtils.get(getApplicationContext(), "urlad", "http://localhost:8090"));
+        top_webView.loadUrl((String)ShareUtils.get(getApplicationContext(), "urlad2", "http://localhost:8090"));
         // 覆盖WebView默认使用第三方或系统默认浏览器打开网页的行为，使网页用WebView打开
         top_webView.setWebViewClient(new WebViewClient(){
             @Override
