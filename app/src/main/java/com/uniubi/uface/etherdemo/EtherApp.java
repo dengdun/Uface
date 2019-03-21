@@ -2,6 +2,7 @@ package com.uniubi.uface.etherdemo;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 
 import com.uniubi.andserver.EtherAndServerManager;
 import com.uniubi.ether.Ether;
@@ -20,6 +21,7 @@ import com.uniubi.uface.ether.config.configenum.service.ScenePhotoWholeResult;
 import com.uniubi.uface.ether.config.configenum.service.WorkMode;
 import com.uniubi.uface.ether.core.cvhandle.FaceHandler;
 import com.uniubi.uface.ether.utils.AppLog;
+import com.uniubi.uface.etherdemo.activity.SplashActivity;
 import com.uniubi.uface.etherdemo.serverhandle.ChangeRocModeHandler;
 import com.uniubi.uface.etherdemo.serverhandle.FaceCreateHandler;
 import com.uniubi.uface.etherdemo.serverhandle.FaceDeleteHandler;
@@ -134,7 +136,26 @@ public class EtherApp extends Application {
         EtherAndServerManager.getInstance().startAndServer(this);
 
         AppLog.e("hwcode "+ FaceHandler.getHwCode());
+
+        // 程序崩溃时触发线程  以下用来捕获程序崩溃异常
+        Thread.setDefaultUncaughtExceptionHandler(restartHandler);
     }
+
+
+
+    // 创建服务用于捕获崩溃异常
+    private Thread.UncaughtExceptionHandler restartHandler = new Thread.UncaughtExceptionHandler() {
+        public void uncaughtException(Thread thread, Throwable ex) {
+            restartApp();//发生崩溃异常时,重启应用
+        }
+    };
+    public void restartApp(){
+        Intent intent = new Intent(getApplicationContext(), SplashActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        getApplicationContext().startActivity(intent);
+        android.os.Process.killProcess(android.os.Process.myPid());  //结束进程之前可以把你程序的注销或者退出代码放在这段代码之前
+    }
+
 
 
 }
