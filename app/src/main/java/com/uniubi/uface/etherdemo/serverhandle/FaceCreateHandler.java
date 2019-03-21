@@ -13,6 +13,8 @@ import com.uniubi.uface.ether.core.cvhandle.FaceHandler;
 import com.uniubi.uface.ether.core.exception.CvFaceException;
 import com.uniubi.uface.ether.db.OfflineFaceInfo;
 import com.uniubi.uface.ether.db.impl.OfflineFaceInfoImpl;
+import com.uniubi.uface.etherdemo.EtherApp;
+import com.uniubi.uface.etherdemo.database.PersonTable;
 import com.yanzhenjie.andserver.RequestMethod;
 import com.yanzhenjie.andserver.annotation.RequestMapping;
 import com.yanzhenjie.andserver.util.HttpRequestParser;
@@ -60,9 +62,16 @@ public class FaceCreateHandler extends AbstractEtherRequestHandler {
         String imagePath = params.get("imagePath");
         String name = params.get("name");
         String cardNo = params.get("cardNo");
-        // 把personID 姓名/ faceId存在一个里面  三个字段都拼接到一个字段里面
-        personId += personId + "/" + name + "/" + faceId;
-        faceId = cardNo;
+
+        PersonTable personTable = new PersonTable();
+        personTable.setName(name);
+        personTable.setCardNO(cardNo);
+        personTable.setFaceId(faceId);
+        personTable.setPseronId(personId);
+        // 自己创建的数据库保存数据 姓名/卡号数据
+        EtherApp.daoSession.getPersonTableDao().save(personTable);
+
+
         if (!TextUtils.isEmpty(faceId) && !TextUtils.isEmpty(personId)) {
             if (TextUtils.isEmpty(imgBase64)) {
                 return;

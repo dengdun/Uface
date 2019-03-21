@@ -3,6 +3,7 @@ package com.uniubi.uface.etherdemo;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 
 import com.uniubi.andserver.EtherAndServerManager;
 import com.uniubi.ether.Ether;
@@ -22,6 +23,8 @@ import com.uniubi.uface.ether.config.configenum.service.WorkMode;
 import com.uniubi.uface.ether.core.cvhandle.FaceHandler;
 import com.uniubi.uface.ether.utils.AppLog;
 import com.uniubi.uface.etherdemo.activity.SplashActivity;
+import com.uniubi.uface.etherdemo.database.DaoMaster;
+import com.uniubi.uface.etherdemo.database.DaoSession;
 import com.uniubi.uface.etherdemo.serverhandle.ChangeRocModeHandler;
 import com.uniubi.uface.etherdemo.serverhandle.FaceAllDeleteHandler;
 import com.uniubi.uface.etherdemo.serverhandle.FaceCreateHandler;
@@ -34,7 +37,6 @@ import com.uniubi.uface.etherdemo.utils.SerialUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-
 /**
  * description:
  * version:
@@ -46,7 +48,7 @@ import java.util.List;
 
 public class EtherApp extends Application {
     public static Context context;
-
+    public static DaoSession daoSession;
     @Override
     public void onCreate() {
         super.onCreate();
@@ -73,7 +75,8 @@ public class EtherApp extends Application {
                 .withOccupancyArea(0.4f)
                 .withMaxAliveCount(10)
                 .build();
-
+        // 自己初始化一个数据库,跟他们的名字不一样吧...
+        initGreenDao();
         FaceCreateHandler faceCreateHandler = new FaceCreateHandler("/faceCreate");
         FaceDeleteHandler faceDeleteHandler = new FaceDeleteHandler("/faceDelete");
         ChangeRocModeHandler rocModeHandler = new ChangeRocModeHandler("/changeReco");
@@ -160,6 +163,10 @@ public class EtherApp extends Application {
         android.os.Process.killProcess(android.os.Process.myPid());  //结束进程之前可以把你程序的注销或者退出代码放在这段代码之前
     }
 
-
-
+    private void initGreenDao() {
+        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, "person_base.db");
+        SQLiteDatabase db = helper.getWritableDatabase();
+        DaoMaster daoMaster = new DaoMaster(db);
+        daoSession = daoMaster.newSession();
+    }
 }

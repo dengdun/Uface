@@ -37,12 +37,12 @@ import com.uniubi.uface.ether.core.bean.IdentifyResult;
 import com.uniubi.uface.ether.core.cvhandle.FaceHandler;
 import com.uniubi.uface.ether.core.exception.CvFaceException;
 import com.uniubi.uface.ether.core.faceprocess.IdentifyResultCallBack;
-import com.uniubi.uface.ether.db.OfflineFaceInfo;
-import com.uniubi.uface.ether.db.impl.OfflineFaceInfoImpl;
 import com.uniubi.uface.ether.outdevice.utils.FileNodeOperator;
+import com.uniubi.uface.etherdemo.EtherApp;
 import com.uniubi.uface.etherdemo.R;
 import com.uniubi.uface.etherdemo.bean.ScreenSaverMessageEvent;
 import com.uniubi.uface.etherdemo.bean.SettingMessageEvent;
+import com.uniubi.uface.etherdemo.database.PersonTable;
 import com.uniubi.uface.etherdemo.utils.CameraUtils;
 import com.uniubi.uface.etherdemo.utils.NetUtils;
 import com.uniubi.uface.etherdemo.utils.ShareUtils;
@@ -122,19 +122,12 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
 
     private void initWebView() {
         WebSettings webSettings = bottom_webView.getSettings();
+
         // 设置与Js交互的权限
         webSettings.setJavaScriptEnabled(true);
         // 设置允许JS弹窗
         webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
-        WebSettings settings = top_webView.getSettings();
-        // 设置与Js交互的权限
-        settings.setJavaScriptEnabled(true);
-        // 设置允许JS弹窗
-        settings.setJavaScriptCanOpenWindowsAutomatically(true);
-
-        //WebView加载web资源
-        bottom_webView.loadUrl((String)ShareUtils.get(getApplicationContext(), "urlad", "http://localhost:8090"));
-
+        bottom_webView.addJavascriptInterface(this, "app");
         //覆盖WebView默认使用第三方或系统默认浏览器打开网页的行为，使网页用WebView打开
         bottom_webView.setWebViewClient(new WebViewClient(){
             @Override
@@ -146,6 +139,15 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
             }
         });
         //WebView加载web资源
+        bottom_webView.loadUrl((String)ShareUtils.get(getApplicationContext(), "urlad", "http://localhost:8090"));
+        WebSettings settings = top_webView.getSettings();
+
+        // 设置与Js交互的权限
+        settings.setJavaScriptEnabled(true);
+        // 设置允许JS弹窗
+        settings.setJavaScriptCanOpenWindowsAutomatically(true);
+        top_webView.addJavascriptInterface(this, "app");
+        //WebView加载web资源
         top_webView.loadUrl((String)ShareUtils.get(getApplicationContext(), "urlad2", "http://localhost:8090"));
         // 覆盖WebView默认使用第三方或系统默认浏览器打开网页的行为，使网页用WebView打开
         top_webView.setWebViewClient(new WebViewClient(){
@@ -156,7 +158,7 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
                 return true;
             }
         });
-        top_webView.addJavascriptInterface(this, "app");
+
         bottom_webView.addJavascriptInterface(this, "app");
 
         cardNo.setInputType(InputType.TYPE_NULL);
@@ -169,13 +171,13 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 Toast.makeText(getApplicationContext(), "输入框的值:" + cardNo.getText().toString(), Toast.LENGTH_LONG).show();
-                OfflineFaceInfo offlineFaceInfo = OfflineFaceInfoImpl.getFaceInfoImpl().queryByFaceId(cardNo.getText().toString());
-                // faceID, 姓名 personId
-                String[] split = offlineFaceInfo.getPersonId().split("/");
-                final String cardNoIn = offlineFaceInfo.getFaceId();
+                List<PersonTable> personTables = EtherApp.daoSession.queryRaw(PersonTable.class, "where cardNO = ?", cardNo.getText().toString().trim());
+                if (personTables == null || (personTables != null && personTables.size() == 0)) return;
+
+                PersonTable personTable = personTables.get(0);
                 // 调用js方法
-                // 参数  faceid 姓名 卡号
-                bottom_webView.evaluateJavascript("javascript: callJS(" + split[0] + "," + split[1] + "," + split[2] + ","+ cardNoIn +")", new ValueCallback<String>() {
+                // 参数  faceID, 姓名, personId, 卡号
+                bottom_webView.evaluateJavascript("javascript: callJS(" + personTable.getFaceId() + "," + personTable.getName() + "," + personTable.getPseronId() + ","+ personTable.getCardNO() +")", new ValueCallback<String>() {
                     @Override
                     public void onReceiveValue(String s) {
                         // 清空文字
@@ -358,13 +360,11 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
                 // 屏保的时候不让提交数据
                 if (isScreenSaver) return;
                 if (recognition.isAlivePass()&&recognition.isVerifyPass()) {
-//                    textScore.setText("都通过");
-                    String personId = recognition.getPersonId();
-                    // faceID, 姓名 personId
-                    String[] split = personId.split("/");
+                    List<PersonTable> personTables = EtherApp.daoSession.queryRaw(PersonTable.class, "where FACE_ID = ? and PSERON_ID = ?", recognition.getFaceId(), recognition.getPersonId());
+                    if (personTables == null || (personTables != null && personTables.size() == 0)) return;
+                    PersonTable personTable = personTables.get(0);
 
-
-                    NetUtils.sendMessage(split[0], split[2], recognition.getScore(), split[1], recognition.getFaceId());
+                    NetUtils.sendMessage(recognition.getPersonId(), recognition.getFaceId(), recognition.getScore(), personTable.getName(), personTable.getCardNO());
                     return;
                 }
                 if (recognition.isAlivePass()&&!recognition.isVerifyPass()){

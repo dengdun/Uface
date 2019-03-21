@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-
+apply plugin: 'org.greenrobot.greendao' // apply plugin
 android {
     compileSdkVersion 27
     defaultConfig {
@@ -42,5 +42,14 @@ dependencies {
     implementation 'com.uniubi.uface.ether:baselib:0.1.9-release'//基础库模块
     implementation 'com.uniubi.uface.ether:core:0.1.9-release@aar'//人脸识别核心模块（可选）
     implementation 'com.uniubi.uface.ether:outdevice:0.1.6-release@aar'//外设模块（可选）
+    implementation 'org.greenrobot:greendao:3.2.2' // add library
+}
 
+greendao {
+    schemaVersion 1 //数据库版本号
+    daoPackage 'com.uniubi.uface.etherdemo.database'
+// 设置DaoMaster、DaoSession、Dao 包名
+    targetGenDir 'src/main/java'//设置DaoMaster、DaoSession、Dao目录
+    generateTests false //设置为true以自动生成单元测试。
+    targetGenDirTests 'src/main/java' //应存储生成的单元测试的基本目录。默认为 src / androidTest / java。
 }
