@@ -23,6 +23,7 @@ import com.uniubi.uface.ether.core.cvhandle.FaceHandler;
 import com.uniubi.uface.ether.utils.AppLog;
 import com.uniubi.uface.etherdemo.activity.SplashActivity;
 import com.uniubi.uface.etherdemo.serverhandle.ChangeRocModeHandler;
+import com.uniubi.uface.etherdemo.serverhandle.FaceAllDeleteHandler;
 import com.uniubi.uface.etherdemo.serverhandle.FaceCreateHandler;
 import com.uniubi.uface.etherdemo.serverhandle.FaceDeleteHandler;
 import com.uniubi.uface.etherdemo.serverhandle.PongHandler;
@@ -76,6 +77,8 @@ public class EtherApp extends Application {
         FaceCreateHandler faceCreateHandler = new FaceCreateHandler("/faceCreate");
         FaceDeleteHandler faceDeleteHandler = new FaceDeleteHandler("/faceDelete");
         ChangeRocModeHandler rocModeHandler = new ChangeRocModeHandler("/changeReco");
+        // 删除所有人的
+        FaceAllDeleteHandler faceAllDeleteHandler = new FaceAllDeleteHandler("/deleteAll");
 
         SettingHandler settingHandler = new SettingHandler("/setting");
         PongHandler pongHandler = new PongHandler("/pong");
@@ -87,6 +90,7 @@ public class EtherApp extends Application {
         handlers.add(rocModeHandler);
         handlers.add(settingHandler);
         handlers.add(startRecoHandler);
+        handlers.add(faceAllDeleteHandler);
 
         // 心跳包
         handlers.add(pongHandler);
