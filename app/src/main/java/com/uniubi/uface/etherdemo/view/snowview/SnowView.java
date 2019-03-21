@@ -68,6 +68,7 @@ public class SnowView extends View {
         paint.setTypeface(font);
         paint.setTextSize(20f);
         paint.setColor(Color.WHITE);
+        paint.setAntiAlias(true); // 抗锯齿
         simpleDateFormat = new SimpleDateFormat("HH:mm");
         simpleDateDateFormat = new SimpleDateFormat("MM 月 dd 日 E");
 
