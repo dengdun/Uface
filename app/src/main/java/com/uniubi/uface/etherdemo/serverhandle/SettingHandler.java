@@ -53,7 +53,7 @@ public class SettingHandler extends AbstractEtherRequestHandler {
 
         EventBus.getDefault().post(new SettingMessageEvent(urlad, urlad2, resulturl, schooleNameLine1, schooleNameLine2));
 
-        response(response, "{\"success\":\"true\", \"message\": \"设置成功\"}");
+        response(response, "{\"success\":true, \"message\": \"设置成功\"}");
     }
 
     private void response(HttpResponse response, String info) {

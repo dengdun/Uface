@@ -121,6 +121,9 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
     }
 
     private void initWebView() {
+
+        // WebView加载web资源
+        bottom_webView.loadUrl((String)ShareUtils.get(getApplicationContext(), "urlad", "http://localhost:8090"));
         WebSettings webSettings = bottom_webView.getSettings();
 
         // 设置与Js交互的权限
@@ -128,27 +131,26 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
         // 设置允许JS弹窗
         webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
         bottom_webView.addJavascriptInterface(this, "app");
-        //覆盖WebView默认使用第三方或系统默认浏览器打开网页的行为，使网页用WebView打开
+        // 覆盖WebView默认使用第三方或系统默认浏览器打开网页的行为，使网页用WebView打开
         bottom_webView.setWebViewClient(new WebViewClient(){
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                // TODO Auto-generated method stub
                 // 返回值是true的时候控制去WebView打开，为false调用系统浏览器或第三方浏览器
                 view.loadUrl(url);
                 return true;
             }
         });
-        //WebView加载web资源
-        bottom_webView.loadUrl((String)ShareUtils.get(getApplicationContext(), "urlad", "http://localhost:8090"));
-        WebSettings settings = top_webView.getSettings();
 
+
+        WebSettings settings = top_webView.getSettings();
         // 设置与Js交互的权限
         settings.setJavaScriptEnabled(true);
         // 设置允许JS弹窗
         settings.setJavaScriptCanOpenWindowsAutomatically(true);
-        top_webView.addJavascriptInterface(this, "app");
         //WebView加载web资源
         top_webView.loadUrl((String)ShareUtils.get(getApplicationContext(), "urlad2", "http://localhost:8090"));
+        top_webView.addJavascriptInterface(this, "app");
+
         // 覆盖WebView默认使用第三方或系统默认浏览器打开网页的行为，使网页用WebView打开
         top_webView.setWebViewClient(new WebViewClient(){
             @Override
@@ -159,7 +161,6 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
             }
         });
 
-        bottom_webView.addJavascriptInterface(this, "app");
 
         cardNo.setInputType(InputType.TYPE_NULL);
         cardNo.addTextChangedListener(new TextWatcher() {
