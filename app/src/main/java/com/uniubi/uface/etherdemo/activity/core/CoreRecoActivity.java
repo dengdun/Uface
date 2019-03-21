@@ -14,6 +14,7 @@ import android.view.TextureView;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.webkit.JavascriptInterface;
 import android.webkit.ValueCallback;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -155,6 +156,9 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
                 return true;
             }
         });
+        top_webView.addJavascriptInterface(this, "app");
+        bottom_webView.addJavascriptInterface(this, "app");
+
         cardNo.setInputType(InputType.TYPE_NULL);
         cardNo.addTextChangedListener(new TextWatcher() {
             @Override
@@ -448,5 +452,10 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
         if (!event.schooleNameLine1.isEmpty()) {
             snowView.setSchoolName(event.schooleNameLine1, event.schooleNameLine2);
         }
+    }
+
+    @JavascriptInterface
+    private void callAndroid() {
+        cardNo.setFocusable(true);
     }
 }
