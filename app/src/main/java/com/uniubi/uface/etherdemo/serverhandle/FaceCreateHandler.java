@@ -85,14 +85,14 @@ public class FaceCreateHandler extends AbstractEtherRequestHandler {
                     OfflineFaceInfoImpl.getFaceInfoImpl().saveFaceInfo(info);
 
                     EtherFaceManager.getInstance().addFeatureToLib(info.getFeature(), info.getPersonId(), info.getFaceId());
-                    response(response, "{\"success\":\"true\", \"message\": \"添加人脸成功\"}");
+                    response(response, "{\"success\":true, \"message\": \"添加人脸成功\"}");
                 } catch (CvFaceException e) {
                     e.printStackTrace();
-                    response(response, "{\"success\":\"false\", \"message\": \"图片中未检测到人脸\"}");
+                    response(response, "{\"success\":false, \"message\": \"图片中未检测到人脸\"}");
                 }
 
             } else {
-                response(response, "{\"success\":\"false\", \"message\": \"图片解析异常\"}");
+                response(response, "{\"success\":false, \"message\": \"图片解析异常\"}");
             }
         }
 

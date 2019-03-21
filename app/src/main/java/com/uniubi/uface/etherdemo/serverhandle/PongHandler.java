@@ -28,7 +28,7 @@ public class PongHandler extends AbstractEtherRequestHandler {
             return;
         }
 
-        response(response,"{\"success\":\"true\", \"message\": \"pong\"}");
+        response(response,"{\"success\":true, \"message\": \"pong\"}");
     }
 
     private void response(HttpResponse response, String info) {

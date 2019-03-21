@@ -33,7 +33,7 @@ public class SettingHandler extends AbstractEtherRequestHandler {
         if (!params.containsKey("urlad")||!params.containsKey("urlad2")
                 || !params.containsKey("resulturl") || !params.containsKey("startApp") || !params.containsKey("schooleNameLine1")
                 || !params.containsKey("schooleNameLine2")) {
-            response(response, "{\"success\":\"true\", \"message\": \"参数不正确\"}");
+            response(response, "{\"success\":true, \"message\": \"参数不正确\"}");
             return;
         }
         String urlad = params.get("urlad");
