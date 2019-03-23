@@ -5,6 +5,8 @@ import android.text.TextUtils;
 import com.uniubi.uface.ether.andserver.handler.AbstractEtherRequestHandler;
 import com.uniubi.uface.ether.core.EtherFaceManager;
 import com.uniubi.uface.ether.db.impl.OfflineFaceInfoImpl;
+import com.uniubi.uface.etherdemo.EtherApp;
+import com.uniubi.uface.etherdemo.database.PersonTable;
 import com.yanzhenjie.andserver.util.HttpRequestParser;
 
 import org.apache.httpcore.HttpException;
@@ -14,6 +16,7 @@ import org.apache.httpcore.entity.StringEntity;
 import org.apache.httpcore.protocol.HttpContext;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -46,7 +49,13 @@ public class FaceDeleteHandler extends AbstractEtherRequestHandler {
         boolean isDelete = OfflineFaceInfoImpl.getFaceInfoImpl().deleteByFaceId(faceId);
         if (isDelete){
             EtherFaceManager.getInstance().removeFeatureFromLib(personId, faceId);
-            response(response,"{\"success\":false, \"message\": \"删除人脸成功\"}");
+            List<PersonTable> personTables = EtherApp.daoSession.queryRaw(PersonTable.class, "where FACE_ID = ? and PSERON_ID = ?", faceId,personId);
+            if (personTables != null && personTables.size()> 0) {
+                for (PersonTable p:personTables) {
+                    EtherApp.daoSession.getPersonTableDao().delete(p);
+                }
+            }
+            response(response,"{\"success\":true, \"message\": \"删除人脸成功\"}");
         }else {
             response(response,"{\"success\":false, \"message\": \"删除人脸失败\"}");
         }

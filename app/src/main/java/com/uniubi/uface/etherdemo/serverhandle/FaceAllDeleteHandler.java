@@ -2,6 +2,8 @@ package com.uniubi.uface.etherdemo.serverhandle;
 
 import com.uniubi.uface.ether.andserver.handler.AbstractEtherRequestHandler;
 import com.uniubi.uface.ether.core.EtherFaceManager;
+import com.uniubi.uface.etherdemo.EtherApp;
+import com.uniubi.uface.etherdemo.database.PersonTable;
 import com.yanzhenjie.andserver.RequestMethod;
 import com.yanzhenjie.andserver.annotation.RequestMapping;
 
@@ -33,8 +35,8 @@ public class FaceAllDeleteHandler extends AbstractEtherRequestHandler {
     public void handle(HttpRequest request, HttpResponse response, HttpContext context) throws HttpException, IOException {
 
         EtherFaceManager.getInstance().removeAll();
-
-        response(response,"{\"success\":false, \"message\": \"格式化设备成功\"}");
+        EtherApp.daoSession.deleteAll(PersonTable.class);
+        response(response,"{\"success\":true, \"message\": \"格式化设备成功\"}");
     }
 
     private void response(HttpResponse response, String info) {
