@@ -92,7 +92,7 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
     SnowView snowView;
 
     // 正在屏保
-    private static boolean isScreenSaver = false;
+    private static boolean isScreenSaver = true;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -123,33 +123,23 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
         InputDevice inputDevice = InputDevice.getDevice(event.getDeviceId());
-
-        Log.i("测试", event.toString());
-        Log.i("测试吧", inputDevice.toString());
-        Log.i("测试吧2", inputDevice.getName());
-        Log.i("测试吧2", inputDevice.getControllerNumber()+"");
         Log.i("测试吧2", inputDevice.getId()+"");
         if (inputDevice.getName().equals("EHUOYAN.COM RfidLoginer")) {
-            Log.i("测试1", event.toString());
             // 刷卡器事件  全部事件拦截
             if (event.getAction() == KeyEvent.ACTION_UP) {
-                Log.i("测试2", event.toString());
-                Log.i("测试2", resultCode);
                 if (event.getKeyCode() == KeyEvent.KEYCODE_SHIFT_LEFT) {
-                    Log.i("测试3", event.toString());
-                    Log.i("测试3", resultCode);
                     // 开始刷卡
                     resultCode = "";
                 } else if(event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-                    Log.i("测试4", event.toString());
-                    Log.i("测试4", resultCode);
                     // 刷卡结束
                     Toast.makeText(CoreRecoActivity.this, resultCode, Toast.LENGTH_LONG).show();
+                    String cardNo = resultCode.toUpperCase();
+                    List<PersonTable> personTables = EtherApp.daoSession.queryRaw(PersonTable.class, "where CARD_NO = ? ", cardNo);
+                    if (personTables != null || (personTables != null && personTables.size() > 0)) {
+                        PersonTable personTable = personTables.get(0);
+                        NetUtils.sendMessage(personTable.getPseronId(), personTable.getFaceId(), 100f, personTable.getName(), personTable.getCardNO());
+                    }
                 } else {
-                    Log.i("测试5", event.toString());
-                    Log.i("测试5", (char)event.getUnicodeChar()+"");
-                    Log.i("测试5", resultCode);
-                    Log.i("测试5", Character.toString((char)event.getUnicodeChar()));
                     resultCode += Character.toString((char)event.getUnicodeChar());
                 }
             }
@@ -197,46 +187,11 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
                 return true;
             }
         });
-
-
-
-//        InputMethodManager imm = (InputMethodManager)CoreRecoActivity.this.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-//        cardNo.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-//
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-//                Toast.makeText(getApplicationContext(), "输入框的值:" + cardNo.getText().toString(), Toast.LENGTH_LONG).show();
-//                List<PersonTable> personTables = EtherApp.daoSession.queryRaw(PersonTable.class, "where cardNO = ?", cardNo.getText().toString().trim());
-//                if (personTables == null || (personTables != null && personTables.size() == 0)) return;
-//
-//                PersonTable personTable = personTables.get(0);
-//                // 调用js方法
-//                // 参数  faceID, 姓名, personId, 卡号
-//                bottom_webView.evaluateJavascript("javascript: callJS(" + personTable.getFaceId() + "," + personTable.getName() + "," + personTable.getPseronId() + ","+ personTable.getCardNO() +")", new ValueCallback<String>() {
-//                    @Override
-//                    public void onReceiveValue(String s) {
-//                        // 清空文字
-//                        cardNo.setText("");
-//                    }
-//                });
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable editable) {
-//
-//            }
-//        });
-
     }
 
     private void init() {
         faceHandler = new FaceHandler();
         faceHandler.init();
-
     }
 
     private void initCamera() {
@@ -386,18 +341,22 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
 
     @Override
     public void onWholeIdentifyResult(final IdentifyResult recognition) {
+        Log.i("测试1", "分数=" + recognition.getScore());
         if (isScreenSaver) return;
+        Log.i("测试2", "分数=" + recognition.getScore());
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 Toast.makeText(getApplicationContext(), recognition.getScore() + "", Toast.LENGTH_LONG).show();
                 // 屏保的时候不让提交数据
-
+                Log.i("测试3", "分数=" + recognition.getScore());
                 if (recognition.isAlivePass()&&recognition.isVerifyPass()) {
+                    Log.i("测试4", "分数=" + recognition.getScore());
                     List<PersonTable> personTables = EtherApp.daoSession.queryRaw(PersonTable.class, "where FACE_ID = ? and PSERON_ID = ?", recognition.getFaceId(), recognition.getPersonId());
+                    Log.i("测试4", "分数=" + recognition.getScore());
                     if (personTables == null || (personTables != null && personTables.size() == 0)) return;
                     PersonTable personTable = personTables.get(0);
-
+                    Log.i("测试5", "分数=" + recognition.getScore());
                     NetUtils.sendMessage(recognition.getPersonId(), recognition.getFaceId(), recognition.getScore(), personTable.getName(), personTable.getCardNO());
                     return;
                 }

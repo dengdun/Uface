@@ -61,7 +61,8 @@ public class FaceCreateHandler extends AbstractEtherRequestHandler {
         String imgBase64 = params.get("imgBase64");
         String imagePath = params.get("imagePath");
         String name = params.get("name");
-        String cardNo = params.get("cardNo");
+        // 卡号变大写
+        String cardNo = params.get("cardNo").toUpperCase();
 
         PersonTable personTable = new PersonTable();
         personTable.setName(name);
