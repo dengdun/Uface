@@ -7,19 +7,16 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Editable;
-import android.text.InputType;
-import android.text.TextWatcher;
+import android.util.Log;
+import android.view.InputDevice;
+import android.view.KeyEvent;
 import android.view.TextureView;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.webkit.JavascriptInterface;
-import android.webkit.ValueCallback;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import com.uniubi.faceapi.CvFace;
@@ -93,10 +90,10 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
 
     @BindView(R.id.snow)
     SnowView snowView;
-    @BindView(R.id.cardNo)
-    EditText cardNo;
+
     // 正在屏保
-    private boolean isScreenSaver = false;
+    private static boolean isScreenSaver = false;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -118,6 +115,47 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
         initCamera();
         initWebView();
         etherFaceManager.startService(this, this, this);
+
+    }
+
+    private String resultCode = "";
+
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        InputDevice inputDevice = InputDevice.getDevice(event.getDeviceId());
+
+        Log.i("测试", event.toString());
+        Log.i("测试吧", inputDevice.toString());
+        Log.i("测试吧2", inputDevice.getName());
+        Log.i("测试吧2", inputDevice.getControllerNumber()+"");
+        Log.i("测试吧2", inputDevice.getId()+"");
+        if (inputDevice.getName().equals("EHUOYAN.COM RfidLoginer")) {
+            Log.i("测试1", event.toString());
+            // 刷卡器事件  全部事件拦截
+            if (event.getAction() == KeyEvent.ACTION_UP) {
+                Log.i("测试2", event.toString());
+                Log.i("测试2", resultCode);
+                if (event.getKeyCode() == KeyEvent.KEYCODE_SHIFT_LEFT) {
+                    Log.i("测试3", event.toString());
+                    Log.i("测试3", resultCode);
+                    // 开始刷卡
+                    resultCode = "";
+                } else if(event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+                    Log.i("测试4", event.toString());
+                    Log.i("测试4", resultCode);
+                    // 刷卡结束
+                    Toast.makeText(CoreRecoActivity.this, resultCode, Toast.LENGTH_LONG).show();
+                } else {
+                    Log.i("测试5", event.toString());
+                    Log.i("测试5", (char)event.getUnicodeChar()+"");
+                    Log.i("测试5", resultCode);
+                    Log.i("测试5", Character.toString((char)event.getUnicodeChar()));
+                    resultCode += Character.toString((char)event.getUnicodeChar());
+                }
+            }
+            return true;
+        }
+        return super.dispatchKeyEvent(event);
     }
 
     private void initWebView() {
@@ -130,7 +168,7 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
         webSettings.setJavaScriptEnabled(true);
         // 设置允许JS弹窗
         webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
-        bottom_webView.addJavascriptInterface(this, "app");
+
         // 覆盖WebView默认使用第三方或系统默认浏览器打开网页的行为，使网页用WebView打开
         bottom_webView.setWebViewClient(new WebViewClient(){
             @Override
@@ -149,7 +187,6 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
         settings.setJavaScriptCanOpenWindowsAutomatically(true);
         //WebView加载web资源
         top_webView.loadUrl((String)ShareUtils.get(getApplicationContext(), "urlad", "http://localhost:8090"));
-        top_webView.addJavascriptInterface(this, "app");
 
         // 覆盖WebView默认使用第三方或系统默认浏览器打开网页的行为，使网页用WebView打开
         top_webView.setWebViewClient(new WebViewClient(){
@@ -162,36 +199,37 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
         });
 
 
-        cardNo.setInputType(InputType.TYPE_NULL);
-        cardNo.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                Toast.makeText(getApplicationContext(), "输入框的值:" + cardNo.getText().toString(), Toast.LENGTH_LONG).show();
-                List<PersonTable> personTables = EtherApp.daoSession.queryRaw(PersonTable.class, "where cardNO = ?", cardNo.getText().toString().trim());
-                if (personTables == null || (personTables != null && personTables.size() == 0)) return;
-
-                PersonTable personTable = personTables.get(0);
-                // 调用js方法
-                // 参数  faceID, 姓名, personId, 卡号
-                bottom_webView.evaluateJavascript("javascript: callJS(" + personTable.getFaceId() + "," + personTable.getName() + "," + personTable.getPseronId() + ","+ personTable.getCardNO() +")", new ValueCallback<String>() {
-                    @Override
-                    public void onReceiveValue(String s) {
-                        // 清空文字
-                        cardNo.setText("");
-                    }
-                });
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-            }
-        });
+//        InputMethodManager imm = (InputMethodManager)CoreRecoActivity.this.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+//        cardNo.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//                Toast.makeText(getApplicationContext(), "输入框的值:" + cardNo.getText().toString(), Toast.LENGTH_LONG).show();
+//                List<PersonTable> personTables = EtherApp.daoSession.queryRaw(PersonTable.class, "where cardNO = ?", cardNo.getText().toString().trim());
+//                if (personTables == null || (personTables != null && personTables.size() == 0)) return;
+//
+//                PersonTable personTable = personTables.get(0);
+//                // 调用js方法
+//                // 参数  faceID, 姓名, personId, 卡号
+//                bottom_webView.evaluateJavascript("javascript: callJS(" + personTable.getFaceId() + "," + personTable.getName() + "," + personTable.getPseronId() + ","+ personTable.getCardNO() +")", new ValueCallback<String>() {
+//                    @Override
+//                    public void onReceiveValue(String s) {
+//                        // 清空文字
+//                        cardNo.setText("");
+//                    }
+//                });
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable editable) {
+//
+//            }
+//        });
 
     }
 
@@ -240,15 +278,9 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
                 etherFaceManager.pushRGBFrameData(data);
             }
         });
-//        cameraIR.initCamera(1, new CameraUtils.OnCameraDataEnableListener() {
-//            @Override
-//            public void onCameraDataCallback(byte[] data, int camId) {
-//                etherFaceManager.pushIRFrameData(data);
-//            }
-//        });
+
 
         textureRGBView.setSurfaceTextureListener(cameraRGB);
-//        textureIRView.setSurfaceTextureListener(cameraIR);
     }
 
 
@@ -354,12 +386,13 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
 
     @Override
     public void onWholeIdentifyResult(final IdentifyResult recognition) {
+        if (isScreenSaver) return;
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 Toast.makeText(getApplicationContext(), recognition.getScore() + "", Toast.LENGTH_LONG).show();
                 // 屏保的时候不让提交数据
-                if (isScreenSaver) return;
+
                 if (recognition.isAlivePass()&&recognition.isVerifyPass()) {
                     List<PersonTable> personTables = EtherApp.daoSession.queryRaw(PersonTable.class, "where FACE_ID = ? and PSERON_ID = ?", recognition.getFaceId(), recognition.getPersonId());
                     if (personTables == null || (personTables != null && personTables.size() == 0)) return;
@@ -369,29 +402,15 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
                     return;
                 }
                 if (recognition.isAlivePass()&&!recognition.isVerifyPass()){
-//                    textScore.setText("识别未通过");
                     return;
                 }
                 if (!recognition.isAlivePass()&&recognition.isVerifyPass()){
-//                    textScore.setText("活体未通过");
                     return;
                 }
                 if (!recognition.isAlivePass()&&!recognition.isVerifyPass()){
-//                    textScore.setText("都未通过");
                     return;
                 }
 
-            }
-        });
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-//                textScore.setVisibility(View.GONE);
             }
         });
     }
@@ -400,6 +419,8 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
     protected void onDestroy() {
         super.onDestroy();
         etherFaceManager.stopService(this);
+        // 关灯
+        FileNodeOperator.close(FileNodeOperator.LED_PATH);
     }
 
     @Override
@@ -453,10 +474,5 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
         if (!event.schooleNameLine1.isEmpty()) {
             snowView.setSchoolName(event.schooleNameLine1, event.schooleNameLine2);
         }
-    }
-
-    @JavascriptInterface
-    private void callAndroid() {
-        cardNo.setFocusable(true);
     }
 }
