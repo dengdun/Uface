@@ -123,7 +123,6 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
         InputDevice inputDevice = InputDevice.getDevice(event.getDeviceId());
-        Log.i("测试吧2", inputDevice.getId()+"");
         if (inputDevice.getName().equals("EHUOYAN.COM RfidLoginer")) {
             // 刷卡器事件  全部事件拦截
             if (event.getAction() == KeyEvent.ACTION_UP) {
@@ -137,7 +136,8 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
                     List<PersonTable> personTables = EtherApp.daoSession.queryRaw(PersonTable.class, "where CARD_NO = ? ", cardNo);
                     if (personTables != null || (personTables != null && personTables.size() > 0)) {
                         PersonTable personTable = personTables.get(0);
-                        NetUtils.sendMessage(personTable.getPseronId(), personTable.getFaceId(), 100f, personTable.getName(), personTable.getCardNO());
+                        // 屏保的时候不传开锁指令。
+                        if (!isScreenSaver) NetUtils.sendMessage(personTable.getPseronId(), personTable.getFaceId(), 100f, personTable.getName(), personTable.getCardNO());
                     }
                 } else {
                     resultCode += Character.toString((char)event.getUnicodeChar());
@@ -280,7 +280,6 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
             @Override
             public void run() {
                 faceView.setVisibility(View.GONE);
-//                textAlive.setVisibility(View.INVISIBLE);
             }
         });
     }
@@ -304,34 +303,16 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
     @Override
     public void onIdentifySuccess(final IdentifyResult result) {
 
-//        runOnUiThread(new Runnable() {
-//            @Override
-//            public void run() {
-//                textScore.setText(result.getScore() + "分");
-//            }
-//        });
     }
 
     @Override
     public void onIdentifyFailed(final IdentifyResult result) {
 
-//        runOnUiThread(new Runnable() {
-//            @Override
-//            public void run() {
-//                textScore.setText(result.getScore() + "分");
-//            }
-//        });
     }
 
     @Override
     public void onAliveCallBack(final AliveResult result) {
-//        runOnUiThread(new Runnable() {
-//            @Override
-//            public void run() {
-//                textAlive.setText("活体" + result.isAlive());
-//                textAlive.setVisibility(View.VISIBLE);
-//            }
-//        });
+
     }
 
     @Override
