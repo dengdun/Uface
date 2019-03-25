@@ -137,7 +137,7 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
                     if (personTables != null || (personTables != null && personTables.size() > 0)) {
                         PersonTable personTable = personTables.get(0);
                         // 屏保的时候不传开锁指令。
-                        if (!isScreenSaver) NetUtils.sendMessage(personTable.getPseronId(), personTable.getFaceId(), 100f, personTable.getName(), personTable.getCardNO());
+                        if (!isScreenSaver) NetUtils.sendMessage(personTable.getPseronId(), personTable.getFaceId(), 100f, personTable.getName(), personTable.getCardNO(), null);
                     }
                 } else {
                     resultCode += Character.toString((char)event.getUnicodeChar());
@@ -338,7 +338,7 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
                     if (personTables == null || (personTables != null && personTables.size() == 0)) return;
                     PersonTable personTable = personTables.get(0);
                     Log.i("测试5", "分数=" + recognition.getScore());
-                    NetUtils.sendMessage(recognition.getPersonId(), recognition.getFaceId(), recognition.getScore(), personTable.getName(), personTable.getCardNO());
+                    NetUtils.sendMessage(recognition.getPersonId(), recognition.getFaceId(), recognition.getScore(), personTable.getName(), personTable.getCardNO(), recognition.getBitmap());
                     return;
                 }
                 if (recognition.isAlivePass()&&!recognition.isVerifyPass()){

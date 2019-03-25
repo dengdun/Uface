@@ -1,10 +1,11 @@
 package com.uniubi.uface.etherdemo.utils;
 
+import android.graphics.Bitmap;
 import android.util.Log;
 
 import com.uniubi.uface.etherdemo.EtherApp;
 
-import java.io.DataOutput;
+import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,13 +13,17 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.UUID;
 
 /**
  * 发送网络请求的
  */
 public class NetUtils {
+    private static final String PREFIX = "--";                            //前缀
+    private static final String BOUNDARY = UUID.randomUUID().toString();  //边界标识 随机生成
+    private static final String LINE_END = "\r\n";
 
-    public static void sendMessage(final String personId, final String faceId, final Float score, final String name, final String cardNo) {
+    public static void sendMessage(final String personId, final String faceId, final Float score, final String name, final String cardNo, final Bitmap face) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -35,7 +40,7 @@ public class NetUtils {
                     connection.setRequestMethod("POST");
                     // 设置编码格式
                     connection.setRequestProperty("Charset", "UTF-8");
-                    connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+                    connection.setRequestProperty("Content-Type", "multipart/form-data");
                     Log.i("测试", "3");
 //                    connection.addRequestProperty("Content-Type",
 //                            "application/json;charset=utf-8");
@@ -59,28 +64,34 @@ public class NetUtils {
 //                    connection.setRequestProperty("cardNo", cardNo);
                     // 设置容许输出
                     connection.setDoOutput(true);
-                    Log.i("测试", "5");
-                    DataOutput dataOutput = new DataOutputStream(connection.getOutputStream());
-                    Log.i("测试", "6");
+                    DataOutputStream dataOutput = new DataOutputStream(connection.getOutputStream());
                     dataOutput.write(stringBuilder.toString().getBytes());
-                    Log.i("测试", "7");
+                    if (face != null) {
+                        StringBuilder fileSb = new StringBuilder();
+                        fileSb.append(PREFIX)
+                                .append(BOUNDARY)
+                                .append(LINE_END)
+                                .append("Content-Disposition: form-data; name=\"file\"; filename=\"pic.jpg\"" + LINE_END)
+                                .append("Content-Type: image/jpg" + LINE_END) //此处的ContentType不同于 请求头 中Content-Type
+                                .append("Content-Transfer-Encoding: 8bit" + LINE_END)
+                                .append(LINE_END);
+                        dataOutput.writeBytes(fileSb.toString());
+                        dataOutput.write(bitmap2Byte(face));
+                        dataOutput.writeBytes(LINE_END);
+                    }
+                    dataOutput.writeBytes(PREFIX + BOUNDARY + PREFIX + LINE_END);
+                    dataOutput.flush();
+                    dataOutput.close();
+
                     // 获取返回数据
                     if(connection.getResponseCode() == 200){
-                        Log.i("测试", "8");
                         InputStream is = connection.getInputStream();
-                        Log.i("测试", "9");
                     }
-                    Log.i("测试", "10");
                 } catch (MalformedURLException e) {
-                    Log.i("测试", "报错1");
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 } catch (IOException e) {
-                    Log.i("测试", "报错2");
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 } finally {
-                    Log.i("测试", "关掉链接");
                     if(connection!=null){
                         connection.disconnect();
                     }
@@ -131,4 +142,15 @@ public class NetUtils {
         }).start();
     }
 
+    public static byte[] bitmap2Byte(Bitmap bitmap) {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+        try {
+            out.flush();
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return out.toByteArray();
+    }
 }
