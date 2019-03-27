@@ -27,6 +27,19 @@ public class CameraUtils implements TextureView.SurfaceTextureListener {
 
     private OnCameraDataEnableListener listener;
     /**
+     * 这是自己新增的类，为的是给一个回调
+     */
+    private OnCameraDataEnableListener screenshotListener;
+
+    public OnCameraDataEnableListener getScreenshotListener() {
+        return screenshotListener;
+    }
+
+    public void setScreenshotListener(OnCameraDataEnableListener screenshotListener) {
+        this.screenshotListener = screenshotListener;
+    }
+
+    /**
      * 取流监听
      */
     private Timer timer = new Timer();
@@ -190,6 +203,10 @@ public class CameraUtils implements TextureView.SurfaceTextureListener {
             if (data != null && data.length > 0) {
                 mCamera.addCallbackBuffer(data);
                 listener.onCameraDataCallback(data,camId);
+                if (screenshotListener != null) {
+                    screenshotListener.onCameraDataCallback(data, camId);
+                    screenshotListener = null;
+                }
                 count++;
             }
         }
