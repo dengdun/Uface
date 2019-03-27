@@ -35,6 +35,7 @@ import com.uniubi.uface.ether.core.cvhandle.FaceHandler;
 import com.uniubi.uface.ether.core.exception.CvFaceException;
 import com.uniubi.uface.ether.core.faceprocess.IdentifyResultCallBack;
 import com.uniubi.uface.ether.outdevice.utils.FileNodeOperator;
+import com.uniubi.uface.ether.utils.ImageUtils;
 import com.uniubi.uface.etherdemo.EtherApp;
 import com.uniubi.uface.etherdemo.R;
 import com.uniubi.uface.etherdemo.bean.ScreenSaverMessageEvent;
@@ -328,17 +329,15 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+
                 Toast.makeText(getApplicationContext(), recognition.getScore() + "", Toast.LENGTH_LONG).show();
                 // 屏保的时候不让提交数据
-                Log.i("测试3", "分数=" + recognition.getScore());
                 if (recognition.isAlivePass()&&recognition.isVerifyPass()) {
-                    Log.i("测试4", "分数=" + recognition.getScore());
                     List<PersonTable> personTables = EtherApp.daoSession.queryRaw(PersonTable.class, "where FACE_ID = ? and PSERON_ID = ?", recognition.getFaceId(), recognition.getPersonId());
-                    Log.i("测试4", "分数=" + recognition.getScore());
                     if (personTables == null || (personTables != null && personTables.size() == 0)) return;
                     PersonTable personTable = personTables.get(0);
-                    Log.i("测试5", "分数=" + recognition.getScore());
-                    NetUtils.sendMessage(recognition.getPersonId(), recognition.getFaceId(), recognition.getScore(), personTable.getName(), personTable.getCardNO(), recognition.getBitmap());
+                    Bitmap bitmap = ImageUtils.rotateBitmap(ImageUtils.yuvImg2BitMap(recognition.getRgbYuvData(), 640, 480), 90);
+                    NetUtils.sendMessage(recognition.getPersonId(), recognition.getFaceId(), recognition.getScore(), personTable.getName(), personTable.getCardNO(), bitmap);
                     return;
                 }
                 if (recognition.isAlivePass()&&!recognition.isVerifyPass()){
@@ -355,6 +354,56 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
         });
     }
 
+    /**
+     * Converts YUV420 NV21 to RGB8888
+     *
+     * @param data byte array on YUV420 NV21 format.
+     * @param width pixels width
+     * @param height pixels height
+     * @return a RGB8888 pixels int array. Where each int is a pixels ARGB.
+     */
+    public static int[] convertYUV420_NV21toRGB8888(byte [] data, int width, int height) {
+        int size = width*height;
+        int offset = size;
+        int[] pixels = new int[size];
+        int u, v, y1, y2, y3, y4;
+
+        // i percorre os Y and the final pixels
+        // k percorre os pixles U e V
+        for(int i=0, k=0; i < size; i+=2, k+=2) {
+            y1 = data[i  ]&0xff;
+            y2 = data[i+1]&0xff;
+            y3 = data[width+i  ]&0xff;
+            y4 = data[width+i+1]&0xff;
+
+            u = data[offset+k  ]&0xff;
+            v = data[offset+k+1]&0xff;
+            u = u-128;
+            v = v-128;
+
+            pixels[i  ] = convertYUVtoRGB(y1, u, v);
+            pixels[i+1] = convertYUVtoRGB(y2, u, v);
+            pixels[width+i  ] = convertYUVtoRGB(y3, u, v);
+            pixels[width+i+1] = convertYUVtoRGB(y4, u, v);
+
+            if (i!=0 && (i+2)%width==0)
+                i+=width;
+        }
+
+        return pixels;
+    }
+
+    private static int convertYUVtoRGB(int y, int u, int v) {
+        int r,g,b;
+
+        r = y + (int)(1.402f*v);
+        g = y - (int)(0.344f*u +0.714f*v);
+        b = y + (int)(1.772f*u);
+        r = r>255? 255 : r<0 ? 0 : r;
+        g = g>255? 255 : g<0 ? 0 : g;
+        b = b>255? 255 : b<0 ? 0 : b;
+        return 0xff000000 | (b<<16) | (g<<8) | r;
+    }
     @Override
     protected void onDestroy() {
         super.onDestroy();

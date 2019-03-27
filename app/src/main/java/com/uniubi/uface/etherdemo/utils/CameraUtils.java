@@ -186,7 +186,7 @@ public class CameraUtils implements TextureView.SurfaceTextureListener {
     Camera.PreviewCallback frameCallback = new Camera.PreviewCallback() {
         @Override
         public void onPreviewFrame(byte[] data, Camera camera) {
-            //传递进来的data,默认是YUV420SP的
+            // 传递进来的data,默认是YUV420SP的
             if (data != null && data.length > 0) {
                 mCamera.addCallbackBuffer(data);
                 listener.onCameraDataCallback(data,camId);

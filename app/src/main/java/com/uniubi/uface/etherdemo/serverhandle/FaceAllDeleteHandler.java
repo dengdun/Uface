@@ -35,6 +35,7 @@ public class FaceAllDeleteHandler extends AbstractEtherRequestHandler {
     public void handle(HttpRequest request, HttpResponse response, HttpContext context) throws HttpException, IOException {
 
         EtherFaceManager.getInstance().removeAll();
+        EtherFaceManager.getInstance().removeVerifyData();
         EtherApp.daoSession.deleteAll(PersonTable.class);
         response(response,"{\"success\":true, \"message\": \"格式化设备成功\"}");
     }

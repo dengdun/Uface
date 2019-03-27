@@ -40,10 +40,8 @@ public class NetUtils {
                     connection.setRequestMethod("POST");
                     // 设置编码格式
                     connection.setRequestProperty("Charset", "UTF-8");
-                    connection.setRequestProperty("Content-Type", "multipart/form-data");
-                    Log.i("测试", "3");
-//                    connection.addRequestProperty("Content-Type",
-//                            "application/json;charset=utf-8");
+                    connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+
                     // 传递自定义参数
                     StringBuilder stringBuilder = new StringBuilder()
                             .append("personId").append("=").append(personId)
@@ -55,8 +53,10 @@ public class NetUtils {
                             .append("name").append("=").append(name)
                             .append("&")
                             .append("cardNo").append("=").append(cardNo);
-                    Log.i("测试", "4");
-
+                    if (face != null) {
+                        String facebase64 = Base64BitmapUtil.bitmapToBase64(face);
+                        stringBuilder.append("&").append("face").append("=").append(facebase64);
+                    }
 //                    connection.setRequestProperty("personId", personId);
 //                    connection.setRequestProperty("faceId", faceId);
 //                    connection.setRequestProperty("score", score+"");
@@ -66,20 +66,20 @@ public class NetUtils {
                     connection.setDoOutput(true);
                     DataOutputStream dataOutput = new DataOutputStream(connection.getOutputStream());
                     dataOutput.write(stringBuilder.toString().getBytes());
-                    if (face != null) {
-                        StringBuilder fileSb = new StringBuilder();
-                        fileSb.append(PREFIX)
-                                .append(BOUNDARY)
-                                .append(LINE_END)
-                                .append("Content-Disposition: form-data; name=\"file\"; filename=\"pic.jpg\"" + LINE_END)
-                                .append("Content-Type: image/jpg" + LINE_END) //此处的ContentType不同于 请求头 中Content-Type
-                                .append("Content-Transfer-Encoding: 8bit" + LINE_END)
-                                .append(LINE_END);
-                        dataOutput.writeBytes(fileSb.toString());
-                        dataOutput.write(bitmap2Byte(face));
-                        dataOutput.writeBytes(LINE_END);
-                    }
-                    dataOutput.writeBytes(PREFIX + BOUNDARY + PREFIX + LINE_END);
+//                    if (face != null) {
+//                        StringBuilder fileSb = new StringBuilder();
+//                        fileSb.append(PREFIX)
+//                                .append(BOUNDARY)
+//                                .append(LINE_END)
+//                                .append("Content-Disposition: form-data; name=\"file\"; filename=\"pic.jpg\"" + LINE_END)
+//                                .append("Content-Type: image/jpg" + LINE_END) //此处的ContentType不同于 请求头 中Content-Type
+//                                .append("Content-Transfer-Encoding: 8bit" + LINE_END)
+//                                .append(LINE_END);
+//                        dataOutput.writeBytes(fileSb.toString());
+//                        dataOutput.write(face);
+//                        dataOutput.writeBytes(LINE_END);
+//                    }
+//                    dataOutput.writeBytes(PREFIX + BOUNDARY + PREFIX + LINE_END);
                     dataOutput.flush();
                     dataOutput.close();
 
