@@ -1,6 +1,7 @@
 package com.uniubi.uface.etherdemo.utils;
 
 import android.graphics.Bitmap;
+import android.util.Base64;
 import android.util.Log;
 
 import com.uniubi.uface.etherdemo.EtherApp;
@@ -54,7 +55,7 @@ public class NetUtils {
                             .append("&")
                             .append("cardNo").append("=").append(cardNo);
                     if (face != null) {
-                        String facebase64 = Base64BitmapUtil.bitmapToBase64(face);
+                        String facebase64 = bitmapToBase64(face);
                         stringBuilder.append("&").append("face").append("=").append(facebase64);
                     }
 //                    connection.setRequestProperty("personId", personId);
@@ -142,15 +143,33 @@ public class NetUtils {
         }).start();
     }
 
-    public static byte[] bitmap2Byte(Bitmap bitmap) {
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+    public static String bitmapToBase64(Bitmap bitmap) {
+
+        String result = null;
+        ByteArrayOutputStream baos = null;
         try {
-            out.flush();
-            out.close();
+            if (bitmap != null) {
+                baos = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+
+                baos.flush();
+                baos.close();
+
+                byte[] bitmapBytes = baos.toByteArray();
+                result = Base64.encodeToString(bitmapBytes, Base64.URL_SAFE | Base64.NO_WRAP);
+            }
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                if (baos != null) {
+                    baos.flush();
+                    baos.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
-        return out.toByteArray();
+        return result;
     }
 }
