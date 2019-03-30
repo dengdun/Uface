@@ -21,6 +21,7 @@ public class CameraUtils implements TextureView.SurfaceTextureListener {
     private Context mContext;
     private byte[] cameraData = new byte[640 * 480 * 3 / 2];
 
+
     public interface OnCameraDataEnableListener{
         void onCameraDataCallback(byte[] data, int camId);
     }
@@ -200,6 +201,7 @@ public class CameraUtils implements TextureView.SurfaceTextureListener {
         @Override
         public void onPreviewFrame(byte[] data, Camera camera) {
             // 传递进来的data,默认是YUV420SP的
+            // 如果是屏保状态的话，就不给底推识别数据。
             if (data != null && data.length > 0) {
                 mCamera.addCallbackBuffer(data);
                 listener.onCameraDataCallback(data,camId);

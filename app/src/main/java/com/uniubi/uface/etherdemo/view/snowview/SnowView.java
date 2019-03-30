@@ -63,7 +63,6 @@ public class SnowView extends View {
         stratTime();
 
     }
-    private int yinzi = 10*8;
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);

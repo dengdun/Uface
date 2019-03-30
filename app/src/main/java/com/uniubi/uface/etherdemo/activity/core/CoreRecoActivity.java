@@ -115,7 +115,7 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
         init();
         initCamera();
         initWebView();
-        etherFaceManager.startService(this, this, this);
+//        etherFaceManager.startService(this, this, this);
 
     }
 
@@ -241,7 +241,8 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
         cameraRGB.initCamera(0, new CameraUtils.OnCameraDataEnableListener() {
             @Override
             public void onCameraDataCallback(byte[] data, int camId) {
-                etherFaceManager.pushRGBFrameData(data);
+                    etherFaceManager.pushRGBFrameData(data);
+
             }
         });
 
@@ -398,9 +399,10 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
 
             // 关灯
             FileNodeOperator.close(FileNodeOperator.LED_PATH);
-
+            etherFaceManager.stopService(this);
         } else {
             isScreenSaver = false;
+            etherFaceManager.startService(this, this, this);
             // 开灯
             FileNodeOperator.open(FileNodeOperator.LED_PATH);
 
