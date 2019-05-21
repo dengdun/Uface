@@ -39,9 +39,9 @@ dependencies {
     implementation 'net.zetetic:android-database-sqlcipher:3.5.7@aar'
     implementation 'org.greenrobot:eventbus:3.1.1'
 
-    implementation 'com.uniubi.uface.ether:baselib:0.1.9-release'//基础库模块
-    implementation 'com.uniubi.uface.ether:core:0.1.9-release@aar'//人脸识别核心模块（可选）
-    implementation 'com.uniubi.uface.ether:outdevice:0.1.6-release@aar'//外设模块（可选）
+    implementation 'com.uniubi.uface.ether:baselib:0.2.6-release'//基础库模块
+    implementation 'com.uniubi.uface.ether:core:0.2.6-release@aar'//人脸识别核心模块（可选）
+    implementation 'com.uniubi.uface.ether:outdevice:0.2.1-release@aar'//外设模块（可选）
     implementation 'org.greenrobot:greendao:3.2.2' // add library
 }
 
