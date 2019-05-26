@@ -14,6 +14,8 @@ import android.view.TextureView;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.webkit.WebResourceError;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -81,7 +83,7 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
     private EtherFaceManager etherFaceManager;
 
     private ServiceOptions serviceOptions;
-
+    private String resultCode = "";
     private int deviceType = 2;
 
     @BindView(R.id.top_webView)
@@ -98,9 +100,9 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //无title
+        // 无title
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        //全屏
+        // 全屏
         getWindow().setFlags(WindowManager.LayoutParams. FLAG_FULLSCREEN ,
                 WindowManager.LayoutParams. FLAG_FULLSCREEN);
         setContentView(R.layout.activity_coretest);
@@ -118,8 +120,6 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
 //        etherFaceManager.startService(this, this, this);
 
     }
-
-    private String resultCode = "";
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
@@ -147,7 +147,6 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
 
                                 }
                             });
-
                         }
                     }
                 } else {
@@ -164,12 +163,18 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
         // WebView加载web资源
         bottom_webView.loadUrl((String)ShareUtils.get(getApplicationContext(), "urlad2", "http://localhost:8090"));
         WebSettings webSettings = bottom_webView.getSettings();
-
+        webSettings.setMediaPlaybackRequiresUserGesture(false);
         // 设置与Js交互的权限
         webSettings.setJavaScriptEnabled(true);
         // 设置允许JS弹窗
         webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
 
+        bottom_webView.setWebViewClient(new WebViewClient(){
+            @Override
+            public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
+
+            }
+        });
         // 覆盖WebView默认使用第三方或系统默认浏览器打开网页的行为，使网页用WebView打开
         bottom_webView.setWebViewClient(new WebViewClient(){
             @Override
@@ -178,12 +183,19 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
                 view.loadUrl(url);
                 return true;
             }
-        });
 
+            @Override
+            public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
+                super.onReceivedError(view, request, error);
+                // 报错了，继续加载当前页
+                view.loadUrl(request.getUrl().toString());
+            }
+        });
 
         WebSettings settings = top_webView.getSettings();
         // 设置与Js交互的权限
         settings.setJavaScriptEnabled(true);
+        settings.setMediaPlaybackRequiresUserGesture(false);
         // 设置允许JS弹窗
         settings.setJavaScriptCanOpenWindowsAutomatically(true);
         //WebView加载web资源
@@ -196,6 +208,13 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
                 //返回值是true的时候控制去WebView打开，为false调用系统浏览器或第三方浏览器
                 view.loadUrl(url);
                 return true;
+            }
+
+            @Override
+            public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
+                super.onReceivedError(view, request, error);
+                // 报错了，继续加载当前页
+                view.loadUrl(request.getUrl().toString());
             }
         });
     }
@@ -334,6 +353,7 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
 
     @Override
     public void onWholeIdentifyResult(final IdentifyResult recognition) {
+        // 人脸识别的回调
         Log.i("测试1", "分数=" + recognition.getScore());
         if (isScreenSaver) return;
         Log.i("测试2", "分数=" + recognition.getScore());
@@ -363,6 +383,11 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
 
             }
         });
+    }
+
+    @Override
+    public void onTrackStart() {
+
     }
 
 

@@ -37,7 +37,7 @@ public class OutDeviceActivity extends AppCompatActivity {
         switch (view.getId()) {
             case R.id.btn_id:
                 //身份证相关
-                startActivity(new Intent(this, IDCardActivity.class));
+//                startActivity(new Intent(this, IDCardActivity.class));
                 break;
             case R.id.btn_serial:
                 //串口读取相关
@@ -49,7 +49,7 @@ public class OutDeviceActivity extends AppCompatActivity {
                 break;
             case R.id.btn_fp:
                 //指纹相关
-                startActivity(new Intent(this,FpActivity.class));
+//                startActivity(new Intent(this,FpActivity.class));
                 break;
             case R.id.btn_back:
                 //返回上一层

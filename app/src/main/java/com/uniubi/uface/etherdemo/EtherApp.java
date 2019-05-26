@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.tencent.bugly.crashreport.CrashReport;
 import com.uniubi.andserver.EtherAndServerManager;
 import com.uniubi.ether.Ether;
 import com.uniubi.uface.ether.andserver.handler.AbstractEtherRequestHandler;
@@ -52,6 +53,7 @@ public class EtherApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        CrashReport.initCrashReport(getApplicationContext(), "7a0e2c4097", false);
         this.context = getApplicationContext();
         AlgorithmOptions algorithmOptions = AlgorithmOptions.newBuilder()
                 .withDataSourceFormat(DataSourceFormat.CV_PIX_FMT_NV21)
