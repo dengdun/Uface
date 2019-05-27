@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.media.AudioManager;
 
 import com.tencent.bugly.crashreport.CrashReport;
 import com.uniubi.andserver.EtherAndServerManager;
@@ -34,7 +35,9 @@ import com.uniubi.uface.etherdemo.serverhandle.PongHandler;
 import com.uniubi.uface.etherdemo.serverhandle.ScreenHandler;
 import com.uniubi.uface.etherdemo.serverhandle.SettingHandler;
 import com.uniubi.uface.etherdemo.serverhandle.StartRecoHandler;
+import com.uniubi.uface.etherdemo.utils.AudioUtils;
 import com.uniubi.uface.etherdemo.utils.SerialUtils;
+import com.uniubi.uface.etherdemo.utils.ShareferenceManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +49,6 @@ import java.util.List;
  * @author caojun
  * @date 2018/8/7
  */
-
 public class EtherApp extends Application {
     public static Context context;
     public static DaoSession daoSession;
@@ -130,14 +132,20 @@ public class EtherApp extends Application {
                 .build();
         ether.init(this);
 
-        //iot通道
+        // 如果是第一次进来的话，就设置音量最大
+        if(ShareferenceManager.firstRun()){
+            AudioUtils.setMaxVolum();
+            ShareferenceManager.setFirstRun(false);
+        }
+
+
+        //iot通道  物联网通道
 //        EtherIotManager.getInstance().init(new DeviceStatusListener() {
 //            @Override
 //            public void deviceEnable() {
 //
 //            }
-//
-//            @Override
+//            @Overrideadb
 //            public void deviceDisable() {
 //
 //            }

@@ -7,6 +7,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Map;
 
+/**
+ * 保存配置的工具
+ */
 public class ShareUtils {
 
     /**
