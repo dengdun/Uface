@@ -53,8 +53,9 @@ public class EtherApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        CrashReport.initCrashReport(getApplicationContext(), "7a0e2c4097", false);
         this.context = getApplicationContext();
+        CrashReport.initCrashReport(getApplicationContext(), "7a0e2c4097", true);
+        CrashReport.setIsDevelopmentDevice(context, true);
         AlgorithmOptions algorithmOptions = AlgorithmOptions.newBuilder()
                 .withDataSourceFormat(DataSourceFormat.CV_PIX_FMT_NV21)
                 .withDataSourceWidth(640)
@@ -150,14 +151,13 @@ public class EtherApp extends Application {
         Thread.setDefaultUncaughtExceptionHandler(restartHandler);
     }
 
-
-
     // 创建服务用于捕获崩溃异常
     private Thread.UncaughtExceptionHandler restartHandler = new Thread.UncaughtExceptionHandler() {
         public void uncaughtException(Thread thread, Throwable ex) {
             restartApp();//发生崩溃异常时,重启应用
         }
     };
+
     public void restartApp(){
         Intent intent = new Intent(getApplicationContext(), SplashActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -171,4 +171,5 @@ public class EtherApp extends Application {
         DaoMaster daoMaster = new DaoMaster(db);
         daoSession = daoMaster.newSession();
     }
+
 }

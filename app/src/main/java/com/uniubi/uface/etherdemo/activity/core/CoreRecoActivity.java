@@ -135,7 +135,7 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
                     Toast.makeText(CoreRecoActivity.this, resultCode, Toast.LENGTH_LONG).show();
                     String cardNo = resultCode.toUpperCase();
                     List<PersonTable> personTables = EtherApp.daoSession.queryRaw(PersonTable.class, "where CARD_NO = ? ", cardNo);
-                    if (personTables != null || (personTables != null && personTables.size() > 0)) {
+                    if (personTables != null && personTables.size() > 0) {
                         final PersonTable personTable = personTables.get(0);
                         // 屏保的时候不传开锁指令。
                         if (!isScreenSaver){
@@ -159,7 +159,6 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
     }
 
     private void initWebView() {
-
         // WebView加载web资源
         bottom_webView.loadUrl((String)ShareUtils.get(getApplicationContext(), "urlad2", "http://localhost:8090"));
         WebSettings webSettings = bottom_webView.getSettings();
