@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebResourceRequest;
@@ -101,6 +102,29 @@ public class FullScreenView extends FrameLayout {
             View webview = getChildAt(i);
             webview.layout(left, top, right, bottom);
         }
-
     }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        // 当前的控件，是个广告页，点任何地方就是隐藏广告页
+        return super.dispatchTouchEvent(ev);
+    }
+
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
+//         super.onInterceptTouchEvent(ev);
+         return true;
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+
+        } else if (event.getAction() == MotionEvent.ACTION_UP) {
+            setVisibility(View.GONE);
+        }
+        return true;
+    }
+
+
 }
