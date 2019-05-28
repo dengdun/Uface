@@ -138,18 +138,6 @@ public class EtherApp extends Application {
             ShareferenceManager.setFirstRun(false);
         }
 
-
-        //iot通道  物联网通道
-//        EtherIotManager.getInstance().init(new DeviceStatusListener() {
-//            @Override
-//            public void deviceEnable() {
-//
-//            }
-//            @Overrideadb
-//            public void deviceDisable() {
-//
-//            }
-//        });
         //启动andserver服务
         EtherAndServerManager.getInstance().startAndServer(this);
 

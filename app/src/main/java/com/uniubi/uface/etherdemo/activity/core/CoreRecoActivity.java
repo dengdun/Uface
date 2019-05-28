@@ -1,5 +1,6 @@
 package com.uniubi.uface.etherdemo.activity.core;
 
+import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -159,9 +160,20 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
     }
 
     private void initWebView() {
+        final String cachePath = getApplicationContext().getDir("cache",Context.MODE_PRIVATE).getPath();
         // WebView加载web资源
         bottom_webView.loadUrl((String)ShareUtils.get(getApplicationContext(), "urlad2", "http://localhost:8090"));
+        // 使用硬件GPU加载
+        bottom_webView.setLayerType(View.LAYER_TYPE_HARDWARE,null);
         WebSettings webSettings = bottom_webView.getSettings();
+        // Dom Storage（Web Storage）存储机制
+        webSettings.setDomStorageEnabled(true);
+        // Application Cache 存储机制 主要是对浏览器缓存的补充
+        webSettings.setAppCacheEnabled(true);
+        // 设置缓存的地址
+        webSettings.setAppCachePath(cachePath);
+        webSettings.setAppCacheMaxSize(5*1024*1024);
+
         webSettings.setMediaPlaybackRequiresUserGesture(false);
         // 设置与Js交互的权限
         webSettings.setJavaScriptEnabled(true);
@@ -192,14 +204,24 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
         });
 
         WebSettings settings = top_webView.getSettings();
+        // Dom Storage（Web Storage）存储机制
+        settings.setDomStorageEnabled(true);
         // 设置与Js交互的权限
         settings.setJavaScriptEnabled(true);
         settings.setMediaPlaybackRequiresUserGesture(false);
         // 设置允许JS弹窗
         settings.setJavaScriptCanOpenWindowsAutomatically(true);
+
+        // Application Cache 存储机制 主要是对浏览器缓存的补充
+        settings.setAppCacheEnabled(true);
+        // 设置缓存的地址
+        settings.setAppCachePath(cachePath);
+        settings.setAppCacheMaxSize(5*1024*1024);
+
         //WebView加载web资源
         top_webView.loadUrl((String)ShareUtils.get(getApplicationContext(), "urlad", "http://localhost:8090"));
-
+        // 使用硬件GPU加载
+        top_webView.setLayerType(View.LAYER_TYPE_HARDWARE,null);
         // 覆盖WebView默认使用第三方或系统默认浏览器打开网页的行为，使网页用WebView打开
         top_webView.setWebViewClient(new WebViewClient(){
             @Override

@@ -22,6 +22,7 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.6" />
 
+
     <WebView
         android:id="@+id/top_webView"
         android:layout_width="match_parent"
@@ -94,6 +95,9 @@
         app:layout_constraintRight_toRightOf="@id/vertical_guide_line"
         app:layout_constraintTop_toTopOf="@id/horizontal_guide_line" />
 
-
+    <com.uniubi.uface.etherdemo.view.ad.FullScreenView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </com.uniubi.uface.etherdemo.view.ad.FullScreenView>
 
 </android.support.constraint.ConstraintLayout>
