@@ -125,6 +125,4 @@ public class FullScreenView extends FrameLayout {
         }
         return true;
     }
-
-
 }

@@ -36,6 +36,7 @@ import com.uniubi.uface.etherdemo.serverhandle.ScreenHandler;
 import com.uniubi.uface.etherdemo.serverhandle.SettingHandler;
 import com.uniubi.uface.etherdemo.serverhandle.StartRecoHandler;
 import com.uniubi.uface.etherdemo.utils.AudioUtils;
+import com.uniubi.uface.etherdemo.utils.NetUtils;
 import com.uniubi.uface.etherdemo.utils.SerialUtils;
 import com.uniubi.uface.etherdemo.utils.ShareferenceManager;
 
@@ -58,6 +59,8 @@ public class EtherApp extends Application {
         this.context = getApplicationContext();
         CrashReport.initCrashReport(getApplicationContext(), "7a0e2c4097", true);
         CrashReport.setIsDevelopmentDevice(context, true);
+
+
         AlgorithmOptions algorithmOptions = AlgorithmOptions.newBuilder()
                 .withDataSourceFormat(DataSourceFormat.CV_PIX_FMT_NV21)
                 .withDataSourceWidth(640)
@@ -145,6 +148,8 @@ public class EtherApp extends Application {
 
         // 程序崩溃时触发线程  以下用来捕获程序崩溃异常
         Thread.setDefaultUncaughtExceptionHandler(restartHandler);
+
+
     }
 
     // 创建服务用于捕获崩溃异常

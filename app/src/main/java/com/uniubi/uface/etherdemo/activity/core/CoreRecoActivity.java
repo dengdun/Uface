@@ -118,6 +118,7 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
         init();
         initCamera();
         initWebView();
+        NetUtils.startRepeatApp();
 //        etherFaceManager.startService(this, this, this);
 
     }

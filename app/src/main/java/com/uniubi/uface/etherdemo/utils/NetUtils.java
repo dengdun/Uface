@@ -5,6 +5,9 @@ import android.util.Base64;
 import android.util.Log;
 
 import com.uniubi.uface.etherdemo.EtherApp;
+import com.uniubi.uface.etherdemo.http.RequestEntity;
+import com.uniubi.uface.etherdemo.http.ResponseEntity;
+import com.uniubi.uface.etherdemo.http.RetrofitManager;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
@@ -15,6 +18,18 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
+
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.Observer;
+import io.reactivex.Scheduler;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Action;
+import io.reactivex.functions.BiFunction;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * 发送网络请求的
@@ -46,6 +61,7 @@ public class NetUtils {
                     // 传递自定义参数
                     StringBuilder stringBuilder = new StringBuilder()
                             .append("personId").append("=").append(personId)
+
                             .append("&")
                             .append("faceId").append("=").append(faceId)
                             .append("&")
@@ -58,11 +74,6 @@ public class NetUtils {
                         String facebase64 = bitmapToBase64(face);
                         stringBuilder.append("&").append("face").append("=").append(facebase64);
                     }
-//                    connection.setRequestProperty("personId", personId);
-//                    connection.setRequestProperty("faceId", faceId);
-//                    connection.setRequestProperty("score", score+"");
-//                    connection.setRequestProperty("name", URLEncoder.encode( name, "utf-8"));
-//                    connection.setRequestProperty("cardNo", cardNo);
                     // 设置容许输出
                     connection.setDoOutput(true);
                     DataOutputStream dataOutput = new DataOutputStream(connection.getOutputStream());
@@ -143,6 +154,57 @@ public class NetUtils {
         }).start();
     }
 
+    /**
+     * startApp这没有链接上的话，就要一直尝试链接树莓派
+     */
+    public static void startRepeatApp() {
+        RetrofitManager.getInstance()
+                .apiService
+                .startApp()
+                .retryWhen(new Function<Observable<Throwable>, ObservableSource<?>>() {
+                    @Override
+                    public ObservableSource<?> apply(final Observable<Throwable> throwableObservable) throws Exception {
+                        return throwableObservable.flatMap(new Function<Throwable, ObservableSource<?>>() {
+                            @Override
+                            public ObservableSource<?> apply(Throwable throwable) throws Exception {
+                                if (throwable instanceof IOException) {
+                                    return Observable.just(1).delay(3, TimeUnit.SECONDS);
+                                } else {
+                                    return Observable.error(new Throwable(""));
+                                }
+                            }
+                        });
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Consumer<ResponseEntity>() {
+                    @Override
+                    public void accept(ResponseEntity requestEntity) throws Exception {
+                        Log.i("jin", "get result");
+                    }
+
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        Log.i("jin", "throw erro");
+                    }
+                }, new Action() {
+                    @Override
+                    public void run() throws Exception {
+                        Log.i("jin", "run throw erro");
+                    }
+                });
+
+
+    }
+
+
+    /**
+     * 把图片转base64
+     * @param bitmap
+     * @return
+     */
     public static String bitmapToBase64(Bitmap bitmap) {
 
         String result = null;
