@@ -155,12 +155,16 @@ public class NetUtils {
     }
 
     /**
-     * startApp这没有链接上的话，就要一直尝试链接树莓派
+     * startApp这没有链接上的话，就要一直尝试链接树莓派,发送已经开机上线的通知
      */
     public static void startRepeatApp() {
+        String startAppUrl = ShareferenceManager.getStartAppUrl();
+        // 把整个地址中的host替换成空字符串替换过来
+
+
         RetrofitManager.getInstance()
                 .apiService
-                .startApp()
+                .startApp(startAppUrl)
                 .retryWhen(new Function<Observable<Throwable>, ObservableSource<?>>() {
                     @Override
                     public ObservableSource<?> apply(final Observable<Throwable> throwableObservable) throws Exception {

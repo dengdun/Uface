@@ -14,6 +14,6 @@ public interface ApiService {
      * @param url
      * @return
      */
-    @GET("startApp")
-    Observable<ResponseEntity> startApp();
+    @GET
+    Observable<ResponseEntity> startApp(@Url String url);
 }

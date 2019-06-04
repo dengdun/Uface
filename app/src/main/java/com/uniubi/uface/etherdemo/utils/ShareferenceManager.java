@@ -24,4 +24,9 @@ public class ShareferenceManager {
     public static final boolean firstRun() {
         return (Boolean) ShareUtils.get(EtherApp.context, "first_run", false);
     }
+
+    public static String getStartAppUrl() {
+        return (String)ShareUtils.get(EtherApp.context, "startApp", "");
+    }
+
 }

@@ -3,6 +3,10 @@ package com.uniubi.uface.etherdemo.http;
 import android.os.Environment;
 
 import com.uniubi.uface.ether.network.LoggerIntercept;
+import com.uniubi.uface.etherdemo.EtherApp;
+import com.uniubi.uface.etherdemo.utils.RegularUtils;
+import com.uniubi.uface.etherdemo.utils.ShareUtils;
+import com.uniubi.uface.etherdemo.utils.ShareferenceManager;
 
 import java.io.File;
 import java.util.concurrent.TimeUnit;
@@ -27,7 +31,7 @@ public class RetrofitManager {
     private RetrofitManager() {
         Retrofit retrofit = new Retrofit.Builder()
                 .client(initOkHttpClient())
-                .baseUrl("http://192.168.1.10:8080/")
+                .baseUrl(RegularUtils.getHost(ShareferenceManager.getStartAppUrl()))
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build();

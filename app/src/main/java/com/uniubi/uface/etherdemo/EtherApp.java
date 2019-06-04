@@ -60,7 +60,6 @@ public class EtherApp extends Application {
         CrashReport.initCrashReport(getApplicationContext(), "7a0e2c4097", true);
         CrashReport.setIsDevelopmentDevice(context, true);
 
-
         AlgorithmOptions algorithmOptions = AlgorithmOptions.newBuilder()
                 .withDataSourceFormat(DataSourceFormat.CV_PIX_FMT_NV21)
                 .withDataSourceWidth(640)
