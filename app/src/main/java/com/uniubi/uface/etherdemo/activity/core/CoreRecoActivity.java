@@ -119,7 +119,7 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
         initCamera();
         initWebView();
         NetUtils.startRepeatApp();
-//        etherFaceManager.startService(this, this, this);
+        etherFaceManager.startService(this, this, this);
 
     }
 
@@ -446,10 +446,10 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
 
             // 关灯
             FileNodeOperator.close(FileNodeOperator.LED_PATH);
-            etherFaceManager.stopService(this);
+//            etherFaceManager.stopService(this);
         } else {
             isScreenSaver = false;
-            etherFaceManager.startService(this, this, this);
+//            etherFaceManager.startService(this, this, this);
             // 开灯
             FileNodeOperator.open(FileNodeOperator.LED_PATH);
 
