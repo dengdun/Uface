@@ -130,6 +130,8 @@ public class CameraUtils implements TextureView.SurfaceTextureListener {
                 mCamera.setDisplayOrientation(orientation);
                 mCamera.startPreview();
                 confirmCameraData();
+
+
             } catch (Exception e) {
                 e.printStackTrace();
                 //相机不可用

@@ -124,7 +124,7 @@ public class EtherApp extends Application {
                 .withIsExternalStorage(true)
                 .withOfflineServerWebsitePath("").build();
 
-//        CommonOptions commonOptions = new CommonOptions("84E0F420874101FA", "06CA983C214E4FBF82E90A00B05A4822", "025cb4d148f5b71f14dfdcf0e68ae5a9");
+
         CommonOptions commonOptions = new CommonOptions(SerialUtils.getDeviceSerial(), "06CA983C214E4FBF82E90A00B05A4822", "025cb4d148f5b71f14dfdcf0e68ae5a9");
 
         Ether ether = new Ether.Builder(commonOptions)
@@ -147,14 +147,12 @@ public class EtherApp extends Application {
 
         // 程序崩溃时触发线程  以下用来捕获程序崩溃异常
         Thread.setDefaultUncaughtExceptionHandler(restartHandler);
-
-
     }
 
     // 创建服务用于捕获崩溃异常
     private Thread.UncaughtExceptionHandler restartHandler = new Thread.UncaughtExceptionHandler() {
         public void uncaughtException(Thread thread, Throwable ex) {
-            restartApp();//发生崩溃异常时,重启应用
+            restartApp();// 发生崩溃异常时,重启应用
         }
     };
 
@@ -171,5 +169,4 @@ public class EtherApp extends Application {
         DaoMaster daoMaster = new DaoMaster(db);
         daoSession = daoMaster.newSession();
     }
-
 }

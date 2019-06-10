@@ -6,6 +6,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -54,6 +55,12 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -97,6 +104,7 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
 
     // 正在屏保
     private static boolean isScreenSaver = true;
+    private byte[] yuvByteData;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -120,7 +128,17 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
         initWebView();
         NetUtils.startRepeatApp();
         etherFaceManager.startService(this, this, this);
-
+        // 这里是读取assert的保存的一张空白的yuv的图片，保存下来，位了在屏保的时候推送到底层的识别。
+        try {
+            InputStream inputStream = getApplication().getResources().getAssets().open("white.yuv");
+            yuvByteData = new byte[inputStream.available()];
+            inputStream.read(yuvByteData);
+            inputStream.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -282,15 +300,19 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
         cameraRGB.initCamera(0, new CameraUtils.OnCameraDataEnableListener() {
             @Override
             public void onCameraDataCallback(byte[] data, int camId) {
+                // 判断是否屏保，
+                if (isScreenSaver) {
+                    if (yuvByteData !=null)
+                        etherFaceManager.pushRGBFrameData(yuvByteData);
+                } else {
                     etherFaceManager.pushRGBFrameData(data);
+                }
 
             }
         });
 
-
         textureRGBView.setSurfaceTextureListener(cameraRGB);
     }
-
 
     private void bitmapCompare() {
         Resources res = getResources();
@@ -446,10 +468,8 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
 
             // 关灯
             FileNodeOperator.close(FileNodeOperator.LED_PATH);
-//            etherFaceManager.stopService(this);
         } else {
             isScreenSaver = false;
-//            etherFaceManager.startService(this, this, this);
             // 开灯
             FileNodeOperator.open(FileNodeOperator.LED_PATH);
 
