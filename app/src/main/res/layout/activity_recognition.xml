@@ -149,7 +149,7 @@
         android:id="@+id/first_group"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
+        android:visibility="visible"
         app:constraint_referenced_ids="school_icon, school_name, time, operator_flow, card_view, open, temp_open, final_open"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -160,7 +160,8 @@
         android:id="@+id/two_group"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:constraint_referenced_ids="recycle_view, fvRGB, fvIR"/>
+        android:visibility="gone"
+        app:constraint_referenced_ids="recycle_view, fvRGB, fvIR, rgb_camera, ir_camera"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycle_view"

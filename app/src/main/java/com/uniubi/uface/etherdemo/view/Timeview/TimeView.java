@@ -24,7 +24,7 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 /**
- * 显示时间的控件
+ * 显示时间的控件  使用Rx封装了
  */
 public class TimeView extends android.support.v7.widget.AppCompatTextView {
 
@@ -50,43 +50,35 @@ public class TimeView extends android.support.v7.widget.AppCompatTextView {
 
     private void init() {
 
-        simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd  \nHH:mm");
+        simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd  \nHH:mm:ss");
         paint = new Paint();
         paint.setTextSize(50);
         paint.setColor(Color.BLACK);
         super.setText(simpleDateFormat.format(new Date()));
-//        Observable.interval(1, TimeUnit.SECONDS)
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(new Observer<Long>() {
-//                    @Override
-//                    public void onSubscribe(Disposable disposable) {
-//                        mDisposable=disposable;
-//                    }
-//
-//                    @Override
-//                    public void onNext(Long aLong) {
-//                        Log.i("hao", "");
-//                    }
-//
-//                    @Override
-//                    public void onError(Throwable e) {
-//
-//                    }
-//
-//                    @Override
-//                    public void onComplete() {
-//
-//                    }
-//                });
+        Observable.interval(1, TimeUnit.SECONDS)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Long>() {
+                    @Override
+                    public void onSubscribe(Disposable disposable) {
+                        mDisposable=disposable;
+
+                    }
+
+                    @Override
+                    public void onNext(Long aLong) {
+                        setText(simpleDateFormat.format(new Date()));
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
-
-
-//    @Override
-//    protected void onDraw(Canvas canvas) {
-//
-//        canvas.drawText("55555555", 20 , 20, paint);
-//    }
-
-
 }
