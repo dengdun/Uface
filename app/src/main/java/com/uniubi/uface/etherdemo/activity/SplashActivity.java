@@ -11,6 +11,7 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.uniubi.uface.etherdemo.R;
 import com.uniubi.uface.etherdemo.activity.core.CoreRecoActivity;
 import com.uniubi.uface.etherdemo.bean.StartAppEvent;
 import com.uniubi.uface.etherdemo.utils.NetUtils;

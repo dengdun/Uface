@@ -31,20 +31,22 @@
         </activity>
         <activity android:name=".activity.SplashActivity"
             android:screenOrientation="portrait">
+
+        </activity>
+        <activity android:name=".activity.CoreRecoTempActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.outdevice.IDCardActivity" />
         <activity android:name=".activity.outdevice.OutDeviceActivity"></activity>
         <activity android:name=".activity.outdevice.SerialPortActivity" />
         <activity android:name=".activity.outdevice.OpenCloseActivity" />
         <activity android:name=".activity.core.CoreMainActivity" />
         <activity android:name=".activity.core.CoreInterfaceActivity" />
         <activity android:name=".activity.core.CoreNaviActivity" />
-        <activity android:name=".activity.outdevice.FpActivity" />
 
         <receiver android:name=".receiver.IotReceiver">
             <intent-filter>

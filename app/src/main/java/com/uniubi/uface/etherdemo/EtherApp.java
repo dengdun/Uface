@@ -146,7 +146,7 @@ public class EtherApp extends Application {
         AppLog.e("hwcode "+ FaceHandler.getHwCode());
 
         // 程序崩溃时触发线程  以下用来捕获程序崩溃异常
-        Thread.setDefaultUncaughtExceptionHandler(restartHandler);
+//        Thread.setDefaultUncaughtExceptionHandler(restartHandler);
     }
 
     // 创建服务用于捕获崩溃异常

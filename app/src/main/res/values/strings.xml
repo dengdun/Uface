@@ -73,4 +73,11 @@
     <string name="pref_ringtone_silent">Silent</string>
 
     <string name="pref_title_vibrate">Vibrate</string>
+
+
+    <string name="operator_flow">智能柜操作流程 1. 选择存物或取物； 2. 刷脸或刷卡进行身份核实； 3. 柜门打开； 4. 存取物品后关好柜门</string>
+
+    <string name="open">存件</string>
+    <string name="temp_open">中途取件</string>
+    <string name="final_open">取件</string>
 </resources>
