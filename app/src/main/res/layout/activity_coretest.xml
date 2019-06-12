@@ -67,7 +67,7 @@
         android:textSize="@dimen/poritrait_camera_info_textSize" />-->
 
 
-    <com.uniubi.uface.etherdemo.view.FaceView
+    <com.uniubi.uface.ether.view.FaceView
         android:id="@+id/fvRGB"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -76,7 +76,7 @@
         app:layout_constraintRight_toRightOf="@id/vertical_guide_line"
         app:layout_constraintTop_toTopOf="@id/horizontal_guide_line" />
 
-    <com.uniubi.uface.etherdemo.view.FaceView
+    <com.uniubi.uface.ether.view.FaceView
         android:id="@+id/fvIR"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -85,7 +85,7 @@
         app:layout_constraintRight_toRightOf="@id/vertical_guide_line"
         app:layout_constraintTop_toTopOf="@id/horizontal_guide_line" />
 
-    <com.uniubi.uface.etherdemo.view.snowview.SnowView
+    <com.uniubi.uface.ether.view.snowview.SnowView
         android:id="@+id/snow"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -95,9 +95,9 @@
         app:layout_constraintRight_toRightOf="@id/vertical_guide_line"
         app:layout_constraintTop_toTopOf="@id/horizontal_guide_line" />
 
-    <!--<com.uniubi.uface.etherdemo.view.ad.FullScreenView-->
+    <!--<FullScreenView-->
         <!--android:layout_width="match_parent"-->
         <!--android:layout_height="match_parent">-->
-    <!--</com.uniubi.uface.etherdemo.view.ad.FullScreenView>-->
+    <!--</FullScreenView>-->
 
 </android.support.constraint.ConstraintLayout>

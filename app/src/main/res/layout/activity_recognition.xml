@@ -70,7 +70,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.uniubi.uface.etherdemo.view.Timeview.TimeView
+    <com.uniubi.uface.ether.view.Timeview.TimeView
         android:id="@+id/time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -146,11 +146,12 @@
         app:layout_constraintTop_toTopOf="@id/first_line_three"
         app:layout_constraintBottom_toBottomOf="@id/first_line_four"/>
 
+    <!--第一屏-->
     <android.support.constraint.Group
         android:id="@+id/first_group"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="visible"
+        android:visibility="gone"
         app:constraint_referenced_ids="school_icon, school_name, time, operator_flow, card_view, open, temp_open, final_open"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -161,7 +162,7 @@
         android:id="@+id/two_group"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
+
         app:constraint_referenced_ids="recycle_view, fvRGB, fvIR, rgb_camera, ir_camera"/>
 
     <android.support.v7.widget.RecyclerView
@@ -192,7 +193,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@id/two_line_two" />
 
-    <com.uniubi.uface.etherdemo.view.FaceView
+    <com.uniubi.uface.ether.view.FaceView
         android:id="@+id/fvRGB"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -201,7 +202,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@id/two_line_two" />
 
-    <com.uniubi.uface.etherdemo.view.FaceView
+    <com.uniubi.uface.ether.view.FaceView
         android:id="@+id/fvIR"
         android:layout_width="0dp"
         android:layout_height="0dp"
