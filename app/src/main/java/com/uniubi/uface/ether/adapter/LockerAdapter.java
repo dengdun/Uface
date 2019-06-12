@@ -16,7 +16,6 @@ public class LockerAdapter extends RecyclerView.Adapter {
         ViewGroup.MarginLayoutParams layoutParams = new ViewGroup.MarginLayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 50);
         layoutParams.setMargins(10, 10, 10, 10);
         imageView.setLayoutParams(layoutParams);
-
         imageView.setBackgroundColor(Color.BLUE);
 
         return new LockerHolder(imageView);

@@ -162,8 +162,7 @@
         android:id="@+id/two_group"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-
-        app:constraint_referenced_ids="recycle_view, fvRGB, fvIR, rgb_camera, ir_camera"/>
+        app:constraint_referenced_ids="recycle_view, fvRGB, fvIR, rgb_camera, ir_camera, btn_back, put"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycle_view"
@@ -174,6 +173,33 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="@id/two_line_one"/>
 
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/btn_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/back"
+        android:backgroundTint="@color/colorPrimary"
+        app:layout_constraintTop_toTopOf="@id/two_line_one"
+        app:layout_constraintBottom_toBottomOf="@id/two_line_two"
+        app:layout_constraintLeft_toLeftOf="parent"/>
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/put"
+        android:text="@string/open"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/two_line_one"
+        app:layout_constraintBottom_toBottomOf="@id/two_line_two"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"/>
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/timer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/two_line_one"
+        app:layout_constraintBottom_toBottomOf="@id/two_line_two"
+        app:layout_constraintRight_toRightOf="parent"/>
 
     <TextureView
         android:id="@+id/rgb_camera"

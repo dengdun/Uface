@@ -80,4 +80,5 @@
     <string name="open">存件</string>
     <string name="temp_open">中途取件</string>
     <string name="final_open">取件</string>
+    <string name="back">返回</string>
 </resources>
