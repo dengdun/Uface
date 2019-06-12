@@ -27,6 +27,7 @@ import android.widget.Toast;
 
 import com.uniubi.faceapi.CvFace;
 import com.uniubi.uface.ether.EtherApp;
+import com.uniubi.uface.ether.adapter.GridItemDecoration;
 import com.uniubi.uface.ether.adapter.LockerAdapter;
 import com.uniubi.uface.ether.base.UfaceEtherImpl;
 import com.uniubi.uface.ether.config.ServiceOptions;
@@ -148,6 +149,9 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
         recyclerView.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.HORIZONTAL));
         LockerAdapter lockerAdapter = new LockerAdapter();
         recyclerView.setAdapter(lockerAdapter);
+
+        GridItemDecoration gridItemDecoration = new GridItemDecoration();
+        recyclerView.addItemDecoration(gridItemDecoration);
     }
 
     @Override

@@ -13,7 +13,10 @@ public class LockerAdapter extends RecyclerView.Adapter {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         ImageView imageView = new ImageView(parent.getContext());
-        imageView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        ViewGroup.MarginLayoutParams layoutParams = new ViewGroup.MarginLayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 50);
+        layoutParams.setMargins(10, 10, 10, 10);
+        imageView.setLayoutParams(layoutParams);
+
         imageView.setBackgroundColor(Color.BLUE);
 
         return new LockerHolder(imageView);
