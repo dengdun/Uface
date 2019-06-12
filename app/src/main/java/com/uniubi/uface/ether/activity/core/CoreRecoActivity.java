@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import com.uniubi.faceapi.CvFace;
 import com.uniubi.uface.ether.EtherApp;
+import com.uniubi.uface.ether.R;
 import com.uniubi.uface.ether.base.UfaceEtherImpl;
 import com.uniubi.uface.ether.bean.ScreenSaverMessageEvent;
 import com.uniubi.uface.ether.bean.SettingMessageEvent;
@@ -48,7 +49,6 @@ import com.uniubi.uface.ether.utils.NetUtils;
 import com.uniubi.uface.ether.utils.ShareUtils;
 import com.uniubi.uface.ether.view.FaceView;
 import com.uniubi.uface.ether.view.snowview.SnowView;
-import com.uniubi.uface.etherdemo.R;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -296,9 +296,9 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
         cameraRGB.initCamera(0, new CameraUtils.OnCameraDataEnableListener() {
             @Override
             public void onCameraDataCallback(byte[] data, int camId) {
-                // 判断是否屏保，
+                // 判断是否屏保
                 if (isScreenSaver) {
-                    if (yuvByteData !=null)
+                    if (yuvByteData != null)
                         etherFaceManager.pushRGBFrameData(yuvByteData);
                 } else {
                     etherFaceManager.pushRGBFrameData(data);
@@ -400,29 +400,36 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-
                 Toast.makeText(getApplicationContext(), recognition.getScore() + "", Toast.LENGTH_LONG).show();
-                // 屏保的时候不让提交数据
-                if (recognition.isAlivePass()&&recognition.isVerifyPass()) {
-                    List<PersonTable> personTables = EtherApp.daoSession.queryRaw(PersonTable.class, "where FACE_ID = ? and PSERON_ID = ?", recognition.getFaceId(), recognition.getPersonId());
-                    if (personTables == null || (personTables != null && personTables.size() == 0)) return;
-                    PersonTable personTable = personTables.get(0);
-                    Bitmap bitmap = ImageUtils.rotateBitmap(ImageUtils.yuvImg2BitMap(recognition.getRgbYuvData(), 640, 480), 90);
-                    NetUtils.sendMessage(recognition.getPersonId(), recognition.getFaceId(), recognition.getScore(), personTable.getName(), personTable.getCardNO(), bitmap);
-                    return;
-                }
-                if (recognition.isAlivePass()&&!recognition.isVerifyPass()){
-                    return;
-                }
-                if (!recognition.isAlivePass()&&recognition.isVerifyPass()){
-                    return;
-                }
-                if (!recognition.isAlivePass()&&!recognition.isVerifyPass()){
-                    return;
-                }
-
             }
         });
+        // 屏保的时候不让提交数据
+        if (recognition.isAlivePass()&&recognition.isVerifyPass()) {
+            List<PersonTable> personTables = EtherApp.daoSession.queryRaw(PersonTable.class, "where FACE_ID = ? and PSERON_ID = ?", recognition.getFaceId(), recognition.getPersonId());
+            if (personTables == null || (personTables != null && personTables.size() == 0)) return;
+            PersonTable personTable = personTables.get(0);
+            Bitmap bitmap = ImageUtils.rotateBitmap(ImageUtils.yuvImg2BitMap(recognition.getRgbYuvData(), 640, 480), 90);
+            NetUtils.sendMessage(recognition.getPersonId(), recognition.getFaceId(), recognition.getScore(), personTable.getName(), personTable.getCardNO(), bitmap);
+
+            return;
+        }
+        if (recognition.isAlivePass()&&!recognition.isVerifyPass()){
+            return;
+        }
+        if (!recognition.isAlivePass()&&recognition.isVerifyPass()){
+            return;
+        }
+        if (!recognition.isAlivePass()&&!recognition.isVerifyPass()){
+            return;
+        }
+
+//        runOnUiThread(new Runnable() {
+//            @Override
+//            public void run() {
+//
+//
+//            }
+//        });
     }
 
     @Override

@@ -9,7 +9,7 @@ import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.uniubi.uface.etherdemo.R;
+import com.uniubi.uface.ether.R;
 import com.uniubi.uface.ether.core.bean.CheckFace;
 
 import java.util.List;

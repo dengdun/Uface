@@ -7,7 +7,6 @@ import android.view.View;
 import android.widget.Button;
 
 import com.uniubi.uface.ether.activity.AndServerTestActivity;
-import com.uniubi.uface.etherdemo.R;
 import com.uniubi.uface.ether.activity.IotReceiveActivity;
 import com.uniubi.uface.ether.activity.core.CoreNaviActivity;
 import com.uniubi.uface.ether.activity.outdevice.OutDeviceActivity;

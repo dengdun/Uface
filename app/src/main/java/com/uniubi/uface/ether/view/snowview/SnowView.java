@@ -10,9 +10,9 @@ import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.uniubi.uface.ether.utils.ShareUtils;
 import com.uniubi.uface.ether.EtherApp;
-import com.uniubi.uface.etherdemo.R;
+import com.uniubi.uface.ether.R;
+import com.uniubi.uface.ether.utils.ShareUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

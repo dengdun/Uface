@@ -27,6 +27,7 @@ import android.widget.Toast;
 
 import com.uniubi.faceapi.CvFace;
 import com.uniubi.uface.ether.EtherApp;
+import com.uniubi.uface.ether.R;
 import com.uniubi.uface.ether.adapter.GridItemDecoration;
 import com.uniubi.uface.ether.adapter.LockerAdapter;
 import com.uniubi.uface.ether.base.UfaceEtherImpl;
@@ -43,14 +44,13 @@ import com.uniubi.uface.ether.core.bean.IdentifyResult;
 import com.uniubi.uface.ether.core.cvhandle.FaceHandler;
 import com.uniubi.uface.ether.core.exception.CvFaceException;
 import com.uniubi.uface.ether.core.faceprocess.IdentifyResultCallBack;
+import com.uniubi.uface.ether.database.PersonTable;
 import com.uniubi.uface.ether.outdevice.utils.FileNodeOperator;
 import com.uniubi.uface.ether.utils.CameraUtils;
 import com.uniubi.uface.ether.utils.ImageUtils;
 import com.uniubi.uface.ether.utils.NetUtils;
 import com.uniubi.uface.ether.utils.ShareUtils;
 import com.uniubi.uface.ether.view.FaceView;
-import com.uniubi.uface.etherdemo.R;
-import com.uniubi.uface.ether.database.PersonTable;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -65,8 +65,8 @@ import butterknife.ButterKnife;
  * @author qiaopeng
  * @date 2018/08/02
  *
- *  直接把代码改造成识别页.
- *  目前可以识别.
+ *  这里是最新的界面的一些功能
+ *
  */
 public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyResultCallBack, EtherFaceManager.OnServerConnectListener {
 

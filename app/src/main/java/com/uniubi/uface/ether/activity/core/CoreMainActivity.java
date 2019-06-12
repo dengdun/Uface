@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
+import com.uniubi.uface.ether.R;
 import com.uniubi.uface.ether.base.UfaceEtherImpl;
 import com.uniubi.uface.ether.config.AlgorithmOptions;
 import com.uniubi.uface.ether.config.CommonOptions;
@@ -16,7 +17,6 @@ import com.uniubi.uface.ether.config.ServiceOptions;
 import com.uniubi.uface.ether.config.configenum.service.RecoMode;
 import com.uniubi.uface.ether.config.configenum.service.RecoPattern;
 import com.uniubi.uface.ether.config.configenum.service.WorkMode;
-import com.uniubi.uface.etherdemo.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

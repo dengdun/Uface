@@ -6,10 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
 import com.uniubi.andserver.EtherAndServerManager;
+import com.uniubi.uface.ether.R;
 import com.uniubi.uface.ether.utils.WifiUtils;
-import com.uniubi.uface.etherdemo.R;
-import com.uniubi.uface.ether.andserver.EtherAndServer;
-import com.uniubi.uface.ether.utils.NetUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

@@ -9,8 +9,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.uniubi.iot.iotbean.AsyncEvent;
+import com.uniubi.uface.ether.R;
 import com.uniubi.uface.ether.receiver.IotReceiver;
-import com.uniubi.uface.etherdemo.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

@@ -8,7 +8,7 @@ import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.SystemClock;
 
-import com.uniubi.uface.etherdemo.R;
+import com.uniubi.uface.ether.R;
 
 import java.util.ArrayList;
 import java.util.Random;

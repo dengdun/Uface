@@ -9,7 +9,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.uniubi.uface.etherdemo.R;
+import com.uniubi.uface.ether.R;
 import com.uniubi.uface.ether.outdevice.serialport.EtherSerialPortManager;
 import com.uniubi.uface.ether.utils.StringUtils;
 

@@ -16,11 +16,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.uniubi.faceapi.CvFace;
-import com.uniubi.uface.ether.utils.PhotoUtils;
-import com.uniubi.uface.ether.view.dialog.SelectPhotoDialog;
-import com.uniubi.uface.etherdemo.R;
+import com.uniubi.uface.ether.R;
 import com.uniubi.uface.ether.core.cvhandle.FaceHandler;
 import com.uniubi.uface.ether.core.exception.CvFaceException;
+import com.uniubi.uface.ether.utils.PhotoUtils;
+import com.uniubi.uface.ether.view.dialog.SelectPhotoDialog;
 
 import java.io.File;
 import java.io.IOException;

@@ -6,8 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
+import com.uniubi.uface.ether.R;
 import com.uniubi.uface.ether.UfaceEtherOutDevice;
-import com.uniubi.uface.etherdemo.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
