@@ -95,6 +95,9 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
     private static boolean isScreenSaver = true;
     private byte[] yuvByteData;
 
+    @BindView(R.id.adwebview)
+    WebView adWebView;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -167,48 +170,48 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
     }
 
     private void initWebView() {
-//        final String cachePath = getApplicationContext().getDir("cache",Context.MODE_PRIVATE).getPath();
-//        // WebView加载web资源
-//        bottom_webView.loadUrl((String)ShareUtils.get(getApplicationContext(), "urlad2", "http://localhost:8090"));
-//        // 使用硬件GPU加载
-//        bottom_webView.setLayerType(View.LAYER_TYPE_HARDWARE,null);
-//        WebSettings webSettings = bottom_webView.getSettings();
-//        // Dom Storage（Web Storage）存储机制
-//        webSettings.setDomStorageEnabled(true);
-//        // Application Cache 存储机制 主要是对浏览器缓存的补充
-//        webSettings.setAppCacheEnabled(true);
-//        // 设置缓存的地址
-//        webSettings.setAppCachePath(cachePath);
-//        webSettings.setAppCacheMaxSize(5*1024*1024);
-//
-//        webSettings.setMediaPlaybackRequiresUserGesture(false);
-//        // 设置与Js交互的权限
-//        webSettings.setJavaScriptEnabled(true);
-//        // 设置允许JS弹窗
-//        webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
-//
-//        bottom_webView.setWebViewClient(new WebViewClient(){
-//            @Override
-//            public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
-//
-//            }
-//        });
-//        // 覆盖WebView默认使用第三方或系统默认浏览器打开网页的行为，使网页用WebView打开
-//        bottom_webView.setWebViewClient(new WebViewClient(){
-//            @Override
-//            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-//                // 返回值是true的时候控制去WebView打开，为false调用系统浏览器或第三方浏览器
-//                view.loadUrl(url);
-//                return true;
-//            }
-//
-//            @Override
-//            public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
-//                super.onReceivedError(view, request, error);
-//                // 报错了，继续加载当前页
-//                view.loadUrl(request.getUrl().toString());
-//            }
-//        });
+        final String cachePath = getApplicationContext().getDir("cache",Context.MODE_PRIVATE).getPath();
+        // WebView加载web资源
+        adWebView.loadUrl((String)ShareUtils.get(getApplicationContext(), "urlad2", "http://home.wuhan.gov.cn/"));
+        // 使用硬件GPU加载
+        adWebView.setLayerType(View.LAYER_TYPE_HARDWARE,null);
+        WebSettings webSettings = adWebView.getSettings();
+        // Dom Storage（Web Storage）存储机制
+        webSettings.setDomStorageEnabled(true);
+        // Application Cache 存储机制 主要是对浏览器缓存的补充
+        webSettings.setAppCacheEnabled(true);
+        // 设置缓存的地址
+        webSettings.setAppCachePath(cachePath);
+        webSettings.setAppCacheMaxSize(5*1024*1024);
+
+        webSettings.setMediaPlaybackRequiresUserGesture(false);
+        // 设置与Js交互的权限
+        webSettings.setJavaScriptEnabled(true);
+        // 设置允许JS弹窗
+        webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
+
+        adWebView.setWebViewClient(new WebViewClient(){
+            @Override
+            public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
+
+            }
+        });
+        // 覆盖WebView默认使用第三方或系统默认浏览器打开网页的行为，使网页用WebView打开
+        adWebView.setWebViewClient(new WebViewClient(){
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                // 返回值是true的时候控制去WebView打开，为false调用系统浏览器或第三方浏览器
+                view.loadUrl(url);
+                return true;
+            }
+
+            @Override
+            public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
+                super.onReceivedError(view, request, error);
+                // 报错了，继续加载当前页
+                view.loadUrl(request.getUrl().toString());
+            }
+        });
 
 
     }
