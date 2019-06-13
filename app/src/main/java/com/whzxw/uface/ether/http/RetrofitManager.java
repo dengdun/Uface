@@ -1,14 +1,10 @@
 package com.whzxw.uface.ether.http;
 
-import android.os.Environment;
-
 import com.whzxw.uface.ether.utils.RegularUtils;
 import com.whzxw.uface.ether.utils.ShareferenceManager;
 
-import java.io.File;
 import java.util.concurrent.TimeUnit;
 
-import okhttp3.Cache;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
@@ -56,8 +52,8 @@ public class RetrofitManager {
                     HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
                     httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
                     // 指定缓存路径,缓存大小100Mb
-                    Cache cache = new Cache(new File(Environment.getDownloadCacheDirectory(), "HttpCache"),
-                            1024 * 1024 * 100);
+//                    Cache cache = new Cache(new File(Environment.getDownloadCacheDirectory(), "HttpCache"),
+//                            1024 * 1024 * 100);
                     mOkHttpClient = new OkHttpClient.Builder()
                             //设置连接超时时间
                             .connectTimeout(30, TimeUnit.SECONDS)
@@ -77,7 +73,7 @@ public class RetrofitManager {
 //                            .addInterceptor(InterceptorHelper.getRetryInterceptor())
 
                             //缓存
-                            .cache(cache)
+//                            .cache(cache)
                             .build();
                 }
             }

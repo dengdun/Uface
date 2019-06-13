@@ -394,42 +394,41 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
     @Override
     public void onWholeIdentifyResult(final IdentifyResult recognition) {
         // 人脸识别的回调
-        Log.i("测试1", "分数=" + recognition.getScore());
+        Log.i("coreCall", "分数=" + recognition.getScore());
         if (isScreenSaver) return;
-        Log.i("测试2", "分数=" + recognition.getScore());
+        Log.i("coreCall", "分数=" + recognition.getScore());
+
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                Log.i("coreCall", "主线程运行。。。");
                 Toast.makeText(getApplicationContext(), recognition.getScore() + "", Toast.LENGTH_LONG).show();
             }
         });
+
         // 屏保的时候不让提交数据
         if (recognition.isAlivePass()&&recognition.isVerifyPass()) {
-            List<PersonTable> personTables = EtherApp.daoSession.queryRaw(PersonTable.class, "where FACE_ID = ? and PSERON_ID = ?", recognition.getFaceId(), recognition.getPersonId());
-            if (personTables == null || (personTables != null && personTables.size() == 0)) return;
-            PersonTable personTable = personTables.get(0);
-            Bitmap bitmap = ImageUtils.rotateBitmap(ImageUtils.yuvImg2BitMap(recognition.getRgbYuvData(), 640, 480), 90);
-            NetHttpUtil.sendMessage(recognition.getPersonId(), recognition.getFaceId(), recognition.getScore(), personTable.getName(), personTable.getCardNO(), bitmap);
-
+            Log.i("coreCall", "通过正在启动柜门");
+//            List<PersonTable> personTables = EtherApp.daoSession.queryRaw(PersonTable.class, "where FACE_ID = ? and PSERON_ID = ?", recognition.getFaceId(), recognition.getPersonId());
+//            if (personTables == null || (personTables != null && personTables.size() == 0)) return;
+//            PersonTable personTable = personTables.get(0);
+//            Bitmap bitmap = ImageUtils.rotateBitmap(ImageUtils.yuvImg2BitMap(recognition.getRgbYuvData(), 640, 480), 90);
+//            NetHttpUtil.sendMessage(recognition.getPersonId(), recognition.getFaceId(), recognition.getScore(), personTable.getName(), personTable.getCardNO(), bitmap);
+            NetHttpUtil.sendMessage(recognition.getPersonId(), recognition.getFaceId(), recognition.getScore(), "姓名", "00", null);
             return;
         }
         if (recognition.isAlivePass()&&!recognition.isVerifyPass()){
+            Log.i("coreCall", "活体检测通过， 识别没通过");
             return;
         }
         if (!recognition.isAlivePass()&&recognition.isVerifyPass()){
+            Log.i("coreCall", "活体检测没通过， 识别通过");
             return;
         }
         if (!recognition.isAlivePass()&&!recognition.isVerifyPass()){
+            Log.i("coreCall", "活体检测没通过， 识别没通过");
             return;
         }
-
-//        runOnUiThread(new Runnable() {
-//            @Override
-//            public void run() {
-//
-//
-//            }
-//        });
     }
 
     @Override

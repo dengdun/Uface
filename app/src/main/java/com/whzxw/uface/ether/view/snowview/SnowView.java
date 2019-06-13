@@ -8,16 +8,27 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
-import com.whzxw.uface.ether.EtherApp;
+import com.uniubi.uface.ether.BuildConfig;
 import com.uniubi.uface.ether.R;
+import com.whzxw.uface.ether.EtherApp;
 import com.whzxw.uface.ether.utils.ShareUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
+
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Action;
+import io.reactivex.functions.Consumer;
 
 public class SnowView extends View {
     Paint paint = new Paint();
@@ -28,7 +39,7 @@ public class SnowView extends View {
     private String schoolNameLine1 = (String) ShareUtils.get(EtherApp.context,"schooleNameLine1", "湖北省武汉市");
     private String schoolNameLine2 = (String)ShareUtils.get(EtherApp.context,"schooleNameLine2", "高中");
     private SimpleDateFormat simpleDateFormat, simpleDateDateFormat;
-
+    private String versionCode = null;
     public SnowView(Context context) {
         super(context);
         init(context);
@@ -62,6 +73,41 @@ public class SnowView extends View {
 
         stratTime();
 
+
+        Observable.create(new ObservableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(final ObservableEmitter<Boolean> e) throws Exception {
+                setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        e.onNext(true);
+                    }
+                });
+            }
+        })
+                .buffer(2, TimeUnit.SECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<List<Boolean>>() {
+                    @Override
+                    public void accept(List<Boolean> booleans) throws Exception {
+                        if (booleans.size() > 5) {
+                            Log.i("canvas", "> 5");
+                            versionCode  = BuildConfig.VERSION_CODE +"";
+                            invalidate();
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+
+                    }
+                }, new Action() {
+                    @Override
+                    public void run() throws Exception {
+                        versionCode = null;
+                    }
+                });
+
     }
     @Override
     protected void onDraw(Canvas canvas) {
@@ -76,10 +122,16 @@ public class SnowView extends View {
         canvas.drawText(schoolNameLine2, 10, getHeight()/10*9 + 30f, paint);
 
 
-        paint.setTextSize(40f);
-        canvas.drawText(simpleDateFormat.format(new Date()), getWidth()/10*6 , getHeight()/10*9 +10f, paint);
-        paint.setTextSize(14f);
-        canvas.drawText(simpleDateDateFormat.format(new Date()), getWidth()/10*6 , getHeight()/10*9+30f , paint);
+        if (versionCode != null) {
+            paint.setTextSize(10f);
+            canvas.drawText(BuildConfig.VERSION_CODE +"", getWidth()/10*6 , getHeight()/10*9 +10f, paint);
+            versionCode = null;
+        } else {
+            paint.setTextSize(40f);
+            canvas.drawText(simpleDateFormat.format(new Date()), getWidth()/10*6 , getHeight()/10*9 +10f, paint);
+            paint.setTextSize(14f);
+            canvas.drawText(simpleDateDateFormat.format(new Date()), getWidth()/10*6 , getHeight()/10*9+30f , paint);
+        }
     }
 
     public void setSchoolName (String schooleNameLine1, String schoolNameLine2) {
@@ -98,4 +150,7 @@ public class SnowView extends View {
             }
         }, 2000, 60000);
     }
+
+
+
 }

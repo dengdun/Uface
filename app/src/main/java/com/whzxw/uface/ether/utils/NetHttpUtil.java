@@ -157,7 +157,6 @@ public class NetHttpUtil {
         String startAppUrl = ShareferenceManager.getStartAppUrl();
         // 把整个地址中的host替换成空字符串替换过来
 
-
         RetrofitManager.getInstance()
                 .apiService
                 .startApp(startAppUrl)

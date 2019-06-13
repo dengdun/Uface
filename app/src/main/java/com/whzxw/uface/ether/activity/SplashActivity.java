@@ -44,7 +44,7 @@ public class SplashActivity extends AppCompatActivity {
 
         linearLayout.addView(textView);
         setContentView(linearLayout);
-        NetHttpUtil.startApp();
+        NetHttpUtil.startRepeatApp();
 
 
         new Handler().postDelayed(new Runnable() {
