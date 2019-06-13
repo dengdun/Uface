@@ -45,7 +45,7 @@ import com.uniubi.uface.ether.database.PersonTable;
 import com.uniubi.uface.ether.outdevice.utils.FileNodeOperator;
 import com.uniubi.uface.ether.utils.CameraUtils;
 import com.uniubi.uface.ether.utils.ImageUtils;
-import com.uniubi.uface.ether.utils.NetUtils;
+import com.uniubi.uface.ether.utils.NetHttpUtil;
 import com.uniubi.uface.ether.utils.ShareUtils;
 import com.uniubi.uface.ether.view.FaceView;
 import com.uniubi.uface.ether.view.snowview.SnowView;
@@ -122,7 +122,7 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
         init();
         initCamera();
         initWebView();
-        NetUtils.startRepeatApp();
+        NetHttpUtil.startRepeatApp();
         etherFaceManager.startService(this, this, this);
         // 这里是读取assert的保存的一张空白的yuv的图片，保存下来，位了在屏保的时候推送到底层的识别。
         try {
@@ -159,7 +159,7 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
                                 @Override
                                 public void onCameraDataCallback(byte[] data, int camId) {
                                     Bitmap bitmap = ImageUtils.rotateBitmap(ImageUtils.yuvImg2BitMap(data,640, 480), 90);
-                                    NetUtils.sendMessage(personTable.getPseronId(), personTable.getFaceId(), 100f, personTable.getName(), personTable.getCardNO(), bitmap);
+                                    NetHttpUtil.sendMessage(personTable.getPseronId(), personTable.getFaceId(), 100f, personTable.getName(), personTable.getCardNO(), bitmap);
 
                                 }
                             });
@@ -409,7 +409,7 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
             if (personTables == null || (personTables != null && personTables.size() == 0)) return;
             PersonTable personTable = personTables.get(0);
             Bitmap bitmap = ImageUtils.rotateBitmap(ImageUtils.yuvImg2BitMap(recognition.getRgbYuvData(), 640, 480), 90);
-            NetUtils.sendMessage(recognition.getPersonId(), recognition.getFaceId(), recognition.getScore(), personTable.getName(), personTable.getCardNO(), bitmap);
+            NetHttpUtil.sendMessage(recognition.getPersonId(), recognition.getFaceId(), recognition.getScore(), personTable.getName(), personTable.getCardNO(), bitmap);
 
             return;
         }

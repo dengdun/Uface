@@ -48,7 +48,7 @@ import com.uniubi.uface.ether.database.PersonTable;
 import com.uniubi.uface.ether.outdevice.utils.FileNodeOperator;
 import com.uniubi.uface.ether.utils.CameraUtils;
 import com.uniubi.uface.ether.utils.ImageUtils;
-import com.uniubi.uface.ether.utils.NetUtils;
+import com.uniubi.uface.ether.utils.NetHttpUtil;
 import com.uniubi.uface.ether.utils.ShareUtils;
 import com.uniubi.uface.ether.view.FaceView;
 
@@ -176,7 +176,7 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
                                 @Override
                                 public void onCameraDataCallback(byte[] data, int camId) {
                                     Bitmap bitmap = ImageUtils.rotateBitmap(ImageUtils.yuvImg2BitMap(data,640, 480), 90);
-                                    NetUtils.sendMessage(personTable.getPseronId(), personTable.getFaceId(), 100f, personTable.getName(), personTable.getCardNO(), bitmap);
+                                    NetHttpUtil.sendMessage(personTable.getPseronId(), personTable.getFaceId(), 100f, personTable.getName(), personTable.getCardNO(), bitmap);
 
                                 }
                             });
@@ -386,7 +386,7 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
                     if (personTables == null || (personTables != null && personTables.size() == 0)) return;
                     PersonTable personTable = personTables.get(0);
                     Bitmap bitmap = ImageUtils.rotateBitmap(ImageUtils.yuvImg2BitMap(recognition.getRgbYuvData(), 640, 480), 90);
-                    NetUtils.sendMessage(recognition.getPersonId(), recognition.getFaceId(), recognition.getScore(), personTable.getName(), personTable.getCardNO(), bitmap);
+                    NetHttpUtil.sendMessage(recognition.getPersonId(), recognition.getFaceId(), recognition.getScore(), personTable.getName(), personTable.getCardNO(), bitmap);
                     return;
                 }
                 if (recognition.isAlivePass()&&!recognition.isVerifyPass()){

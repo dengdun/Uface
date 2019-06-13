@@ -30,7 +30,7 @@ import io.reactivex.schedulers.Schedulers;
 /**
  * 发送网络请求的
  */
-public class NetUtils {
+public class NetHttpUtil {
     private static final String PREFIX = "--";                            //前缀
     private static final String BOUNDARY = UUID.randomUUID().toString();  //边界标识 随机生成
     private static final String LINE_END = "\r\n";

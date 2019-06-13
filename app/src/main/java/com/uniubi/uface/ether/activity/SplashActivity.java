@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.uniubi.uface.ether.activity.core.CoreRecoActivity;
 import com.uniubi.uface.ether.bean.StartAppEvent;
-import com.uniubi.uface.ether.utils.NetUtils;
+import com.uniubi.uface.ether.utils.NetHttpUtil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -44,7 +44,7 @@ public class SplashActivity extends AppCompatActivity {
 
         linearLayout.addView(textView);
         setContentView(linearLayout);
-        NetUtils.startApp();
+        NetHttpUtil.startApp();
 
 
         new Handler().postDelayed(new Runnable() {
