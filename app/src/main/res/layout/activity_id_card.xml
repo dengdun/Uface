@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:paddingBottom="20dp"
     android:paddingTop="20dp"
-    tools:context="com.uniubi.uface.ether.activity.outdevice.IDCardActivity">
+    tools:context="com.whzxw.uface.ether.activity.outdevice.IDCardActivity">
 
     <Button
         android:layout_centerHorizontal="true"

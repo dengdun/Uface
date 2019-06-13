@@ -15,21 +15,21 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_LOGS" />
     <application
-        android:name="com.uniubi.uface.ether.EtherApp"
+        android:name="com.whzxw.uface.ether.EtherApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.uniubi.uface.ether.TestActivity">
+        <activity android:name="com.whzxw.uface.ether.TestActivity">
         </activity>
-        <activity android:name="com.uniubi.uface.ether.activity.AndServerTestActivity"></activity>
+        <activity android:name="com.whzxw.uface.ether.activity.AndServerTestActivity"></activity>
         <activity
-            android:name="com.uniubi.uface.ether.activity.core.CoreRecoActivity"
+            android:name="com.whzxw.uface.ether.activity.core.CoreRecoActivity"
             android:screenOrientation="portrait">
         </activity>
-        <activity android:name="com.uniubi.uface.ether.activity.SplashActivity"
+        <activity android:name="com.whzxw.uface.ether.activity.SplashActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -37,30 +37,30 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.uniubi.uface.ether.activity.CoreRecoTempActivity"
+        <activity android:name="com.whzxw.uface.ether.activity.CoreRecoTempActivity"
             android:screenOrientation="portrait">
 
         </activity>
-        <activity android:name="com.uniubi.uface.ether.activity.outdevice.OutDeviceActivity"></activity>
-        <activity android:name="com.uniubi.uface.ether.activity.outdevice.SerialPortActivity" />
-        <activity android:name="com.uniubi.uface.ether.activity.outdevice.OpenCloseActivity" />
-        <activity android:name="com.uniubi.uface.ether.activity.core.CoreMainActivity" />
-        <activity android:name="com.uniubi.uface.ether.activity.core.CoreInterfaceActivity" />
-        <activity android:name="com.uniubi.uface.ether.activity.core.CoreNaviActivity" />
+        <activity android:name="com.whzxw.uface.ether.activity.outdevice.OutDeviceActivity"></activity>
+        <activity android:name="com.whzxw.uface.ether.activity.outdevice.SerialPortActivity" />
+        <activity android:name="com.whzxw.uface.ether.activity.outdevice.OpenCloseActivity" />
+        <activity android:name="com.whzxw.uface.ether.activity.core.CoreMainActivity" />
+        <activity android:name="com.whzxw.uface.ether.activity.core.CoreInterfaceActivity" />
+        <activity android:name="com.whzxw.uface.ether.activity.core.CoreNaviActivity" />
 
-        <receiver android:name="com.uniubi.uface.ether.receiver.IotReceiver">
+        <receiver android:name="com.whzxw.uface.ether.receiver.IotReceiver">
             <intent-filter>
                 <action android:name="com.uniubi.uface.ether.msg" />
                 <action android:name="com.uniubi.uface.ether.msg.extra" />
             </intent-filter>
         </receiver>
-        <receiver android:name="com.uniubi.uface.ether.receiver.AutoStartReceiver">
+        <receiver android:name="com.whzxw.uface.ether.receiver.AutoStartReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
                 <category android:name="android.intent.category.HOME"/>
             </intent-filter>
         </receiver>
-        <activity android:name="com.uniubi.uface.ether.activity.IotReceiveActivity" />
+        <activity android:name="com.whzxw.uface.ether.activity.IotReceiveActivity" />
 
         <!-- 配置APP ID -->
         <meta-data

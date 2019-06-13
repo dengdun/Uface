@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:paddingBottom="10dp"
     android:paddingTop="10dp"
-    tools:context="com.uniubi.uface.ether.activity.outdevice.OpenCloseActivity">
+    tools:context="com.whzxw.uface.ether.activity.outdevice.OpenCloseActivity">
 
     <Button
         android:id="@+id/btn_open_1"

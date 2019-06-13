@@ -31,14 +31,14 @@
             android:textSize="@dimen/poritrait_camera_info_textSize" />
 
 
-        <com.uniubi.uface.ether.view.FaceView
+        <com.whzxw.uface.ether.view.FaceView
             android:id="@+id/fvRGB"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true" />
 
-        <com.uniubi.uface.ether.view.FaceView
+        <com.whzxw.uface.ether.view.FaceView
             android:id="@+id/fvIR"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
