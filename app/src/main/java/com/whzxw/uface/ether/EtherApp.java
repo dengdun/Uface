@@ -37,6 +37,7 @@ import com.whzxw.uface.ether.serverhandle.PongHandler;
 import com.whzxw.uface.ether.serverhandle.ScreenHandler;
 import com.whzxw.uface.ether.serverhandle.SettingHandler;
 import com.whzxw.uface.ether.serverhandle.StartRecoHandler;
+import com.whzxw.uface.ether.utils.XlogUitls;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -146,7 +147,10 @@ public class EtherApp extends Application {
         AppLog.e("hwcode "+ FaceHandler.getHwCode());
 
         // 程序崩溃时触发线程  以下用来捕获程序崩溃异常
-//        Thread.setDefaultUncaughtExceptionHandler(restartHandler);
+        Thread.setDefaultUncaughtExceptionHandler(restartHandler);
+
+        // 初始化xlog
+        XlogUitls.init(getApplicationContext());
     }
 
     // 创建服务用于捕获崩溃异常
@@ -168,5 +172,11 @@ public class EtherApp extends Application {
         SQLiteDatabase db = helper.getWritableDatabase();
         DaoMaster daoMaster = new DaoMaster(db);
         daoSession = daoMaster.newSession();
+    }
+
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+        XlogUitls.close();
     }
 }
