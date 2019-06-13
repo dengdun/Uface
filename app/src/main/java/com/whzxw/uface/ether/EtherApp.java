@@ -107,11 +107,13 @@ public class EtherApp extends Application {
 
         ServiceOptions serviceOptions = new ServiceOptions.Builder()
                 .withRecoMode(RecoMode.LOCALONLY)
+
                 .withRecoPattern(RecoPattern.VERIFY)
-                .withAliveLevel(AliveLevel.SINGLE)
+                .withAliveLevel(AliveLevel.SIMPLE)
                 .withWorkMode(WorkMode.OFFLINE)
                 .withScenePhotoRecResult(ScenePhotoRecResult.NON)
                 .withScenePhotoWholeResult(ScenePhotoWholeResult.SUCCESS)
+
                 .build();
 
         AndServerOptions andServerOptions = AndServerOptions.newBuilder()

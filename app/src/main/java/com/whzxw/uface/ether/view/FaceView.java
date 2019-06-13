@@ -114,7 +114,7 @@ public class FaceView extends View {
                             break;
                     }
 
-                    if (face.isIdentifyed()) {
+                    if (face.isIdentifyed() && face.isAlivePass()) {
                         mLinePaint.setColor(0xFF27FF50);
 //                        canvas.drawRect(rect, mLinePaint);
                         canvas.drawBitmap(passFaceBitmap,null,rect,mLinePaint);

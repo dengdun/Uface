@@ -90,7 +90,7 @@ public class NetHttpUtil {
 //                    dataOutput.writeBytes(PREFIX + BOUNDARY + PREFIX + LINE_END);
                     dataOutput.flush();
                     dataOutput.close();
-                    face.recycle();
+//                    if (face != null) face.recycle();
                     // 获取返回数据
                     if(connection.getResponseCode() == 200){
                         InputStream is = connection.getInputStream();
