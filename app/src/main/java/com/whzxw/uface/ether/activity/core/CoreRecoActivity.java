@@ -409,12 +409,11 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
         // 屏保的时候不让提交数据
         if (recognition.isAlivePass()&&recognition.isVerifyPass()) {
             Log.i("coreCall", "通过正在启动柜门");
-//            List<PersonTable> personTables = EtherApp.daoSession.queryRaw(PersonTable.class, "where FACE_ID = ? and PSERON_ID = ?", recognition.getFaceId(), recognition.getPersonId());
-//            if (personTables == null || (personTables != null && personTables.size() == 0)) return;
-//            PersonTable personTable = personTables.get(0);
+            List<PersonTable> personTables = EtherApp.daoSession.queryRaw(PersonTable.class, "where FACE_ID = ? and PSERON_ID = ?", recognition.getFaceId(), recognition.getPersonId());
+            if (personTables == null || (personTables != null && personTables.size() == 0)) return;
+            PersonTable personTable = personTables.get(0);
 //            Bitmap bitmap = ImageUtils.rotateBitmap(ImageUtils.yuvImg2BitMap(recognition.getRgbYuvData(), 640, 480), 90);
-//            NetHttpUtil.sendMessage(recognition.getPersonId(), recognition.getFaceId(), recognition.getScore(), personTable.getName(), personTable.getCardNO(), bitmap);
-            NetHttpUtil.sendMessage(recognition.getPersonId(), recognition.getFaceId(), recognition.getScore(), "姓名", "00", null);
+            NetHttpUtil.sendMessage(recognition.getPersonId(), recognition.getFaceId(), recognition.getScore(), personTable.getName(), personTable.getCardNO(), recognition.getBitmap());
             return;
         }
         if (recognition.isAlivePass()&&!recognition.isVerifyPass()){

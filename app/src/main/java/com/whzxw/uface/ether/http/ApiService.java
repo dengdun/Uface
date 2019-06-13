@@ -1,7 +1,7 @@
 package com.whzxw.uface.ether.http;
 
 import io.reactivex.Observable;
-import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.Url;
 
 /**
@@ -14,6 +14,6 @@ public interface ApiService {
      * @param url
      * @return
      */
-    @GET
+    @POST
     Observable<ResponseEntity> startApp(@Url String url);
 }

@@ -167,7 +167,7 @@ public class NetHttpUtil {
                             @Override
                             public ObservableSource<?> apply(Throwable throwable) throws Exception {
                                 if (throwable instanceof IOException) {
-                                    return Observable.just(1).delay(3, TimeUnit.SECONDS);
+                                    return Observable.just(1).delay(2, TimeUnit.SECONDS);
                                 } else {
                                     return Observable.error(new Throwable(""));
                                 }
