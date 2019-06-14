@@ -43,11 +43,11 @@ import com.whzxw.uface.ether.EtherApp;
 import com.whzxw.uface.ether.adapter.GridItemDecoration;
 import com.whzxw.uface.ether.adapter.LockerAdapter;
 import com.whzxw.uface.ether.database.PersonTable;
+import com.whzxw.uface.ether.http.ApiService;
 import com.whzxw.uface.ether.http.RetrofitManager;
 import com.whzxw.uface.ether.utils.CameraUtils;
 import com.whzxw.uface.ether.utils.NetHttpUtil;
 import com.whzxw.uface.ether.utils.ShareUtils;
-import com.whzxw.uface.ether.utils.ShareferenceManager;
 import com.whzxw.uface.ether.view.CountDownTimer;
 import com.whzxw.uface.ether.view.FaceView;
 
@@ -89,8 +89,10 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
     private ServiceOptions serviceOptions;
     private String resultCode = "";
     private int deviceType = 2;
-
-
+    /**
+     * 跳转识别是哪个按钮
+      */
+    int recoFromWhichButton = -1;
     // 是否正在显示屏保
     private static boolean isPreViewCamera = true;
     private byte[] yuvByteData;
@@ -400,6 +402,13 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
 
             // 创建
             Observable<IdentifyResult> identifyResultObservable = Observable.just(recognition);
+            Observable<Integer> just = Observable.just(recoFromWhichButton);
+            Observable<Object[]> dataObservable = Observable.zip(identifyResultObservable, just, new BiFunction<IdentifyResult, Integer, Object[]>() {
+                @Override
+                public Object[] apply(IdentifyResult identifyResult, Integer integer) throws Exception {
+                    return new Object[]{identifyResult, integer};
+                }
+            });
             // 创建查数据的观察事件
             Observable<PersonTable> personTableObservable = Observable.just(recognition).map(new Function<IdentifyResult, List<PersonTable>>() {
                 @Override
@@ -418,13 +427,17 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
                 }
             });
 
-            Observable.zip(identifyResultObservable, personTableObservable, new BiFunction<IdentifyResult, PersonTable, Observable<Object>>() {
+            Observable.zip(dataObservable, personTableObservable, new BiFunction<Object[], PersonTable, Observable<Object>>() {
                 @Override
-                public Observable<Object> apply(IdentifyResult identifyResult, PersonTable personTable) throws Exception {
+                public Observable<Object> apply(Object[] i, PersonTable personTable) throws Exception {
+                    IdentifyResult identifyResult = (IdentifyResult) i[0];
+                    String type = (String) i[1];
                     return RetrofitManager.getInstance()
                             .apiService
-                            .sendRecoResult(ShareferenceManager.getsendRecoResultUrl(), identifyResult.getPersonId(),
-                                    identifyResult.getFaceId(), identifyResult.getScore(), personTable.getName(), personTable.getCardNO(), identifyResult.getBitmap());
+                            .sendRecoResult(ApiService.recoCallBackUrl, identifyResult.getPersonId(),
+                                    identifyResult.getFaceId(), identifyResult.getScore(),
+                                    personTable.getName(), personTable.getCardNO(),
+                                    identifyResult.getBitmap(), type);
                 }
             }).subscribe(new Consumer<Observable<Object>>() {
                 @Override
@@ -498,10 +511,22 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
     }
 
     @OnClick({R.id.open, R.id.temp_open, R.id.final_open})
-    public void toRecoScreen() {
+    public void toRecoScreen(View view) {
         countDownTimer.startCountDown(15);
         firstScreenGroup.setVisibility(View.INVISIBLE);
         twoScreenGroup.setVisibility(View.VISIBLE);
+
+        switch (view.getId()) {
+            case R.id.open:
+                recoFromWhichButton = 0;
+                break;
+            case R.id.temp_open:
+                recoFromWhichButton = 1;
+                break;
+            case R.id.final_open:
+                recoFromWhichButton = 2;
+                break;
+        }
     }
 
 
