@@ -81,4 +81,5 @@
     <string name="temp_open">中途取件</string>
     <string name="final_open">取件</string>
     <string name="back">返回</string>
+    <string name="alert">提示信息</string>
 </resources>

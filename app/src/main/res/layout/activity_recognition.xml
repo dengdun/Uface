@@ -162,7 +162,7 @@
         android:id="@+id/two_group"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:constraint_referenced_ids="recycle_view, fvRGB, fvIR, rgb_camera, ir_camera, btn_back, put"/>
+        app:constraint_referenced_ids="recycle_view, fvRGB, fvIR, rgb_camera, ir_camera, btn_back, put, alert, countdowntimer"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycle_view"
@@ -194,13 +194,16 @@
         app:layout_constraintRight_toRightOf="parent"/>
 
     <com.whzxw.uface.ether.view.CountDownTimer
-        android:id="@+id/timer"
+        android:id="@+id/countdowntimer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="@id/two_line_one"
         app:layout_constraintBottom_toBottomOf="@id/two_line_two"
-        app:layout_constraintRight_toRightOf="parent"/>
-
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginEnd="12dp"/>
+    <android.support.constraint.Group
+        android:layout_width="0dp"
+        android:layout_height="wrap_content" />
     <TextureView
         android:id="@+id/rgb_camera"
         android:layout_width="0dp"
@@ -236,5 +239,15 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@id/two_line_two" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/alert"
+        android:text="@string/alert"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/two_line_two"/>
 
 </android.support.constraint.ConstraintLayout>

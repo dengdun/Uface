@@ -24,8 +24,20 @@ public class ShareferenceManager {
         return (Boolean) ShareUtils.get(EtherApp.context, "first_run", false);
     }
 
+    /**
+     * 开启通知
+     * @return
+     */
     public static String getStartAppUrl() {
         return (String)ShareUtils.get(EtherApp.context, "startApp", "http://www.192.168.1.1:8080/");
+    }
+
+    /**
+     * 识别成功通知
+     * @return
+     */
+    public static String getsendRecoResultUrl() {
+        return (String)ShareUtils.get(EtherApp.context, "resulturl", "http://www.192.168.1.1:8080/");
     }
 
 }

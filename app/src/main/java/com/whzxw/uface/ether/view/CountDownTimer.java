@@ -8,6 +8,7 @@ import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
@@ -17,20 +18,28 @@ import io.reactivex.schedulers.Schedulers;
  * 倒计时器
  */
 public class CountDownTimer extends AppCompatTextView {
+    /**
+     * 默认计时器的时间
+     */
+    public final static int COUNTNUMBER = 15;
+    private Disposable disposable;
+
     public CountDownTimer(Context context) {
         super(context);
-        startCountDown
-                ();
+        super.setTextSize(20f);
+        startCountDown(COUNTNUMBER);
     }
 
     public CountDownTimer(Context context, AttributeSet attrs) {
         super(context, attrs);
-        startCountDown();
+        super.setTextSize(20f);
+        startCountDown(COUNTNUMBER);
     }
 
     public CountDownTimer(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        startCountDown();
+        super.setTextSize(20f);
+        startCountDown(COUNTNUMBER);
     }
 
     DeadlineListener deadlineListener;
@@ -39,15 +48,14 @@ public class CountDownTimer extends AppCompatTextView {
         this.deadlineListener = deadlineListener;
     }
 
-    public void startCountDown() {
-        final int countDown = 15;
-        Observable
-                .interval(0, 1 , TimeUnit.SECONDS)
-                .take(countDown + 1)
+    public void startCountDown(final int CountdownNumber) {
+        disposable = Observable
+                .interval(0, 1, TimeUnit.SECONDS)
+                .take(CountdownNumber + 1)
                 .map(new Function<Long, Long>() {
                     @Override
                     public Long apply(Long aLong) throws Exception {
-                        return countDown - aLong;
+                        return CountdownNumber - aLong;
                     }
                 })
                 .subscribeOn(Schedulers.io())
@@ -69,7 +77,14 @@ public class CountDownTimer extends AppCompatTextView {
                             deadlineListener.deadline();
                     }
                 });
+    }
 
+    /**
+     * 强制停止计时器
+     */
+    public void stopCount() {
+        if (disposable != null)
+            disposable.dispose();
     }
 
 

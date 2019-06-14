@@ -2,11 +2,10 @@ package com.whzxw.uface.ether.activity;
 
 import android.content.Context;
 import android.content.pm.ActivityInfo;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.constraint.Group;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
@@ -26,40 +25,42 @@ import android.webkit.WebViewClient;
 import android.widget.Toast;
 
 import com.uniubi.faceapi.CvFace;
-import com.whzxw.uface.ether.EtherApp;
 import com.uniubi.uface.ether.R;
-import com.whzxw.uface.ether.adapter.GridItemDecoration;
-import com.whzxw.uface.ether.adapter.LockerAdapter;
 import com.uniubi.uface.ether.base.UfaceEtherImpl;
 import com.uniubi.uface.ether.config.ServiceOptions;
 import com.uniubi.uface.ether.config.configenum.algorithm.FaceOrientation;
-import com.uniubi.uface.ether.config.configenum.service.RecoMode;
-import com.uniubi.uface.ether.config.configenum.service.RecoPattern;
-import com.uniubi.uface.ether.config.configenum.service.WorkMode;
 import com.uniubi.uface.ether.core.EtherFaceManager;
 import com.uniubi.uface.ether.core.bean.AliveResult;
 import com.uniubi.uface.ether.core.bean.CheckFace;
-import com.uniubi.uface.ether.core.bean.DataSource;
 import com.uniubi.uface.ether.core.bean.IdentifyResult;
 import com.uniubi.uface.ether.core.cvhandle.FaceHandler;
-import com.uniubi.uface.ether.core.exception.CvFaceException;
 import com.uniubi.uface.ether.core.faceprocess.IdentifyResultCallBack;
-import com.whzxw.uface.ether.database.PersonTable;
 import com.uniubi.uface.ether.outdevice.utils.FileNodeOperator;
-import com.whzxw.uface.ether.utils.CameraUtils;
 import com.uniubi.uface.ether.utils.ImageUtils;
+import com.whzxw.uface.ether.EtherApp;
+import com.whzxw.uface.ether.adapter.GridItemDecoration;
+import com.whzxw.uface.ether.adapter.LockerAdapter;
+import com.whzxw.uface.ether.database.PersonTable;
+import com.whzxw.uface.ether.http.RetrofitManager;
+import com.whzxw.uface.ether.utils.CameraUtils;
 import com.whzxw.uface.ether.utils.NetHttpUtil;
 import com.whzxw.uface.ether.utils.ShareUtils;
+import com.whzxw.uface.ether.utils.ShareferenceManager;
+import com.whzxw.uface.ether.view.CountDownTimer;
 import com.whzxw.uface.ether.view.FaceView;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.Observable;
+import io.reactivex.functions.BiFunction;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+import io.reactivex.functions.Predicate;
 
 /**
  * @author qiaopeng
@@ -72,11 +73,7 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
 
     private FaceHandler faceHandler;
 
-    private TextureView textureRGBView;
 
-    private TextureView textureIRView;
-
-    private FaceView faceView;
 
     private CameraUtils cameraRGB;
 
@@ -92,12 +89,27 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
     // 正在屏保
     private static boolean isScreenSaver = true;
     private byte[] yuvByteData;
+    @BindView(R.id.rgb_camera)
+    TextureView textureRGBView;
+    @BindView(R.id.ir_camera)
+    TextureView textureIRView;
+
+    @BindView(R.id.fvRGB)
+    FaceView faceView;
 
     @BindView(R.id.adwebview)
     WebView adWebView;
 
     @BindView(R.id.recycle_view)
     RecyclerView recyclerView;
+
+    @BindView(R.id.first_group)
+    Group firstScreenGroup;
+    @BindView(R.id.two_group)
+    Group twoScreenGroup;
+
+    @BindView(R.id.countdowntimer)
+    CountDownTimer countDownTimer;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -113,16 +125,21 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
 
         serviceOptions = UfaceEtherImpl.getServiceOptions();
         etherFaceManager = EtherFaceManager.getInstance();
-        serviceOptions.setRecoMode(RecoMode.LOCALONLY);
-        serviceOptions.setRecoPattern(RecoPattern.IDENTIFY);
-        serviceOptions.setWorkMode(WorkMode.OFFLINE);
 
         init();
         initCamera();
         initWebView();
         initRecycleView();
-        etherFaceManager.startService(this, this, this);
+
         initWhiteYuvImage();
+        etherFaceManager.startService(this, this, this);
+
+        countDownTimer.setDeadlineListener(new CountDownTimer.DeadlineListener() {
+            @Override
+            public void deadline() {
+                toMainScreen();
+            }
+        });
     }
 
     private void initWhiteYuvImage() {
@@ -244,11 +261,6 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
     }
 
     private void initCamera() {
-        textureRGBView = findViewById(R.id.rgb_camera);
-        textureIRView = findViewById(R.id.ir_camera);
-
-        faceView = findViewById(R.id.fvRGB);
-
         switch (deviceType) {
             case 0:
                 faceView.initPaint(false, 0);
@@ -268,6 +280,12 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
 
                 cameraRGB = new CameraUtils(this, 0, 0);
                 cameraIR = new CameraUtils(this, 1, 0);
+                cameraIR.initCamera(1, new CameraUtils.OnCameraDataEnableListener() {
+                    @Override
+                    public void onCameraDataCallback(byte[] data, int camId) {
+                        etherFaceManager.pushIRFrameData(data);
+                    }
+                });
                 UfaceEtherImpl.getAlgorithmOptions().setFaceOrientation(FaceOrientation.CV_FACE_RIGHT);
                 break;
             case 2:
@@ -297,22 +315,6 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
 
         textureRGBView.setSurfaceTextureListener(cameraRGB);
     }
-
-    private void bitmapCompare() {
-        Resources res = getResources();
-        Bitmap bmp = BitmapFactory.decodeResource(res, R.drawable.famous);
-        try {
-            CvFace[] cvFaces = faceHandler.detectBGR(bmp, FaceOrientation.CV_FACE_UP);
-            byte[] feature = faceHandler.getFeatureBGR(bmp, cvFaces[0]);
-            List<DataSource> features = new ArrayList<DataSource>();
-            features.add(new DataSource(feature, "ufaceId", "1"));
-            etherFaceManager.setVerifyData(features);
-            bmp.recycle();
-        } catch (CvFaceException e) {
-            e.printStackTrace();
-        }
-    }
-
 
     @Override
     public void onFaceIn(CvFace[] cvFaces) {
@@ -367,35 +369,67 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
     @Override
     public void onWholeIdentifyResult(final IdentifyResult recognition) {
         // 人脸识别的回调
-        Log.i("测试1", "分数=" + recognition.getScore());
+        Log.i("coreCall", "分数=" + recognition.getScore());
         if (isScreenSaver) return;
-        Log.i("测试2", "分数=" + recognition.getScore());
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
+        Log.i("coreCall", "分数=" + recognition.getScore());
 
-                Toast.makeText(getApplicationContext(), recognition.getScore() + "", Toast.LENGTH_LONG).show();
-                // 屏保的时候不让提交数据
-                if (recognition.isAlivePass()&&recognition.isVerifyPass()) {
-                    List<PersonTable> personTables = EtherApp.daoSession.queryRaw(PersonTable.class, "where FACE_ID = ? and PSERON_ID = ?", recognition.getFaceId(), recognition.getPersonId());
-                    if (personTables == null || (personTables != null && personTables.size() == 0)) return;
-                    PersonTable personTable = personTables.get(0);
-                    Bitmap bitmap = ImageUtils.rotateBitmap(ImageUtils.yuvImg2BitMap(recognition.getRgbYuvData(), 640, 480), 90);
-                    NetHttpUtil.sendMessage(recognition.getPersonId(), recognition.getFaceId(), recognition.getScore(), personTable.getName(), personTable.getCardNO(), bitmap);
-                    return;
-                }
-                if (recognition.isAlivePass()&&!recognition.isVerifyPass()){
-                    return;
-                }
-                if (!recognition.isAlivePass()&&recognition.isVerifyPass()){
-                    return;
-                }
-                if (!recognition.isAlivePass()&&!recognition.isVerifyPass()){
-                    return;
-                }
+        // 屏保的时候不让提交数据
+        if (recognition.isAlivePass()&&recognition.isVerifyPass()) {
+            Log.i("coreCall", "通过正在启动柜门");
 
-            }
-        });
+//            List<PersonTable> personTables = EtherApp.daoSession.queryRaw(PersonTable.class, "where FACE_ID = ? and PSERON_ID = ?", recognition.getFaceId(), recognition.getPersonId());
+//            if (personTables == null || (personTables != null && personTables.size() == 0)) return;
+//            final PersonTable personTable = personTables.get(0);
+//            Bitmap bitmap = ImageUtils.rotateBitmap(ImageUtils.yuvImg2BitMap(recognition.getRgbYuvData(), 640, 480), 90);
+//            NetHttpUtil.sendMessage(recognition.getPersonId(), recognition.getFaceId(), recognition.getScore(), personTable.getName(), personTable.getCardNO(), bitmap);
+            // 创建
+            Observable<IdentifyResult> identifyResultObservable = Observable.just(recognition);
+            // 创建查数据的观察事件
+            Observable<PersonTable> personTableObservable = Observable.just(recognition).map(new Function<IdentifyResult, List<PersonTable>>() {
+                @Override
+                public List<PersonTable> apply(IdentifyResult identifyResult) throws Exception {
+                    return EtherApp.daoSession.queryRaw(PersonTable.class, "where FACE_ID = ? and PSERON_ID = ?", recognition.getFaceId(), recognition.getPersonId());
+                }
+            }).filter(new Predicate<List<PersonTable>>() {
+                @Override
+                public boolean test(List<PersonTable> personTables) throws Exception {
+                    return personTables != null && personTables.size() != 0;
+                }
+            }).map(new Function<List<PersonTable>, PersonTable>() {
+                @Override
+                public PersonTable apply(List<PersonTable> personTables) throws Exception {
+                    return personTables.get(0);
+                }
+            });
+
+            Observable.zip(identifyResultObservable, personTableObservable, new BiFunction<IdentifyResult, PersonTable, Observable<Object>>() {
+                @Override
+                public Observable<Object> apply(IdentifyResult identifyResult, PersonTable personTable) throws Exception {
+                    return RetrofitManager.getInstance()
+                            .apiService
+                            .sendRecoResult(ShareferenceManager.getsendRecoResultUrl(), identifyResult.getPersonId(),
+                                    identifyResult.getFaceId(), identifyResult.getScore(), personTable.getName(), personTable.getCardNO(), identifyResult.getBitmap());
+                }
+            }).subscribe(new Consumer<Observable<Object>>() {
+                @Override
+                public void accept(Observable<Object> objectObservable) throws Exception {
+
+                }
+            });
+            return;
+        }
+        if (recognition.isAlivePass()&&!recognition.isVerifyPass()){
+            Log.i("coreCall", "活体检测通过， 识别没通过");
+            return;
+        }
+        if (!recognition.isAlivePass()&&recognition.isVerifyPass()){
+            Log.i("coreCall", "活体检测没通过， 识别通过");
+            return;
+        }
+        if (!recognition.isAlivePass()&&!recognition.isVerifyPass()){
+            Log.i("coreCall", "活体检测没通过， 识别没通过");
+            return;
+        }
     }
 
     @Override
@@ -414,9 +448,9 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
 
     @Override
     public void onConnected() {
-        if (serviceOptions.getRecoMode() == RecoMode.LOCALONLY && serviceOptions.getRecoPattern() == RecoPattern.VERIFY) {
-            bitmapCompare();
-        }
+//        if (serviceOptions.getRecoMode() == RecoMode.LOCALONLY && serviceOptions.getRecoPattern() == RecoPattern.VERIFY) {
+//            bitmapCompare();
+//        }
     }
 
     @Override
@@ -426,8 +460,6 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
     @Override
     protected void onStart() {
         super.onStart();
-        // 注册接收是否屏保的广播
-//        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -435,10 +467,13 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
         super.onStop();
         cameraRGB.closeCamera();
         cameraIR.closeCamera();
-        // 注销接收是否屏保的广播
-//        EventBus.getDefault().unregister(this);
     }
 
+
+    private void toMainScreen() {
+        firstScreenGroup.setVisibility(View.VISIBLE);
+        twoScreenGroup.setVisibility(View.INVISIBLE);
+    }
 
 //    /**
 //     * 接收到订阅消息 设置屏幕保护的监听
