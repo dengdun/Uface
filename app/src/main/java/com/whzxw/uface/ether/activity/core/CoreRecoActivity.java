@@ -2,12 +2,11 @@ package com.whzxw.uface.ether.activity.core;
 
 import android.content.Context;
 import android.content.pm.ActivityInfo;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.InputDevice;
 import android.view.KeyEvent;
 import android.view.TextureView;
@@ -21,22 +20,16 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
-import com.tencent.mars.xlog.Log;
 import com.uniubi.faceapi.CvFace;
 import com.uniubi.uface.ether.R;
 import com.uniubi.uface.ether.base.UfaceEtherImpl;
 import com.uniubi.uface.ether.config.ServiceOptions;
 import com.uniubi.uface.ether.config.configenum.algorithm.FaceOrientation;
-import com.uniubi.uface.ether.config.configenum.service.RecoMode;
-import com.uniubi.uface.ether.config.configenum.service.RecoPattern;
-import com.uniubi.uface.ether.config.configenum.service.WorkMode;
 import com.uniubi.uface.ether.core.EtherFaceManager;
 import com.uniubi.uface.ether.core.bean.AliveResult;
 import com.uniubi.uface.ether.core.bean.CheckFace;
-import com.uniubi.uface.ether.core.bean.DataSource;
 import com.uniubi.uface.ether.core.bean.IdentifyResult;
 import com.uniubi.uface.ether.core.cvhandle.FaceHandler;
-import com.uniubi.uface.ether.core.exception.CvFaceException;
 import com.uniubi.uface.ether.core.faceprocess.IdentifyResultCallBack;
 import com.uniubi.uface.ether.outdevice.utils.FileNodeOperator;
 import com.uniubi.uface.ether.utils.ImageUtils;
@@ -57,7 +50,6 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -116,13 +108,11 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
 
         serviceOptions = UfaceEtherImpl.getServiceOptions();
         etherFaceManager = EtherFaceManager.getInstance();
-        serviceOptions.setRecoMode(RecoMode.LOCALONLY);
-        serviceOptions.setRecoPattern(RecoPattern.IDENTIFY);
-        serviceOptions.setWorkMode(WorkMode.OFFLINE);
+
         init();
         initCamera();
         initWebView();
-        NetHttpUtil.startRepeatApp();
+
         etherFaceManager.startService(this, this, this);
         // 这里是读取assert的保存的一张空白的yuv的图片，保存下来，位了在屏保的时候推送到底层的识别。
         try {
@@ -133,7 +123,6 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
@@ -274,6 +263,12 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
                 cameraIR = new CameraUtils(this, 1, 0);
 
                 UfaceEtherImpl.getAlgorithmOptions().setFaceOrientation(FaceOrientation.CV_FACE_UP);
+                cameraIR.initCamera(1, new CameraUtils.OnCameraDataEnableListener() {
+                    @Override
+                    public void onCameraDataCallback(byte[] data, int camId) {
+                        etherFaceManager.pushIRFrameData(data);
+                    }
+                });
                 break;
             case 1:
                 faceView.initPaint(false, 0);
@@ -287,7 +282,14 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
 
                 cameraRGB = new CameraUtils(this, 0, 90);
                 cameraIR = new CameraUtils(this, 1, 90);
+                cameraIR.initCamera(1, new CameraUtils.OnCameraDataEnableListener() {
+                    @Override
+                    public void onCameraDataCallback(byte[] data, int camId) {
+                        etherFaceManager.pushIRFrameData(data);
+                    }
+                });
                 UfaceEtherImpl.getAlgorithmOptions().setFaceOrientation(FaceOrientation.CV_FACE_LEFT);
+
                 break;
             default:
                 break;
@@ -297,48 +299,35 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
             @Override
             public void onCameraDataCallback(byte[] data, int camId) {
                 // 判断是否屏保
-                if (isScreenSaver) {
-                    if (yuvByteData != null)
-                        etherFaceManager.pushRGBFrameData(yuvByteData);
-                } else {
-                    etherFaceManager.pushRGBFrameData(data);
-                }
-
+//                if (isScreenSaver) {
+//                    if (yuvByteData != null)
+//                        etherFaceManager.pushRGBFrameData(yuvByteData);
+//                } else {
+//                    etherFaceManager.pushRGBFrameData(data);
+//                }
+                etherFaceManager.pushRGBFrameData(data);
             }
         });
 
         textureRGBView.setSurfaceTextureListener(cameraRGB);
+        textureIRView.setSurfaceTextureListener(cameraIR);
     }
 
-    private void bitmapCompare() {
-        Resources res = getResources();
-        Bitmap bmp = BitmapFactory.decodeResource(res, R.drawable.famous);
-        try {
-            CvFace[] cvFaces = faceHandler.detectBGR(bmp, FaceOrientation.CV_FACE_UP);
-            byte[] feature = faceHandler.getFeatureBGR(bmp, cvFaces[0]);
-            List<DataSource> features = new ArrayList<DataSource>();
-            features.add(new DataSource(feature, "ufaceId", "1"));
-            etherFaceManager.setVerifyData(features);
-            bmp.recycle();
-        } catch (CvFaceException e) {
-            e.printStackTrace();
-        }
-    }
+//    private void bitmapCompare() {
+//        Resources res = getResources();
+//        Bitmap bmp = BitmapFactory.decodeResource(res, R.drawable.famous);
+//        try {
+//            CvFace[] cvFaces = faceHandler.detectBGR(bmp, FaceOrientation.CV_FACE_UP);
+//            byte[] feature = faceHandler.getFeatureBGR(bmp, cvFaces[0]);
+//            List<DataSource> features = new ArrayList<DataSource>();
+//            features.add(new DataSource(feature, "ufaceId", "1"));
+//            etherFaceManager.setVerifyData(features);
+//            bmp.recycle();
+//        } catch (CvFaceException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        // 注册接收是否屏保的广播
-        EventBus.getDefault().register(this);
-    }
-    @Override
-    protected void onStop() {
-        super.onStop();
-        cameraRGB.closeCamera();
-        cameraIR.closeCamera();
-        // 注销接收是否屏保的广播
-        EventBus.getDefault().unregister(this);
-    }
 
 
     @Override
@@ -448,14 +437,29 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
 
     @Override
     public void onConnected() {
-        if (serviceOptions.getRecoMode() == RecoMode.LOCALONLY && serviceOptions.getRecoPattern() == RecoPattern.VERIFY) {
-            bitmapCompare();
-        }
+//        if (serviceOptions.getRecoMode() == RecoMode.LOCALONLY && serviceOptions.getRecoPattern() == RecoPattern.VERIFY) {
+//            bitmapCompare();
+//        }
     }
 
     @Override
     public void onDisconnected() {
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        // 注册接收是否屏保的广播
+        EventBus.getDefault().register(this);
+    }
+    @Override
+    protected void onStop() {
+        super.onStop();
+        cameraRGB.closeCamera();
+        cameraIR.closeCamera();
+        // 注销接收是否屏保的广播
+        EventBus.getDefault().unregister(this);
     }
 
     /**

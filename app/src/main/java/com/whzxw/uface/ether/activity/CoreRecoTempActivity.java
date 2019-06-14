@@ -255,7 +255,12 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
 
                 cameraRGB = new CameraUtils(this, 0, 0);
                 cameraIR = new CameraUtils(this, 1, 0);
-
+                cameraIR.initCamera(1, new CameraUtils.OnCameraDataEnableListener() {
+                    @Override
+                    public void onCameraDataCallback(byte[] data, int camId) {
+                        etherFaceManager.pushIRFrameData(data);
+                    }
+                });
                 UfaceEtherImpl.getAlgorithmOptions().setFaceOrientation(FaceOrientation.CV_FACE_UP);
                 break;
             case 1:
@@ -270,6 +275,12 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
 
                 cameraRGB = new CameraUtils(this, 0, 90);
                 cameraIR = new CameraUtils(this, 1, 90);
+                cameraIR.initCamera(1, new CameraUtils.OnCameraDataEnableListener() {
+                    @Override
+                    public void onCameraDataCallback(byte[] data, int camId) {
+                        etherFaceManager.pushIRFrameData(data);
+                    }
+                });
                 UfaceEtherImpl.getAlgorithmOptions().setFaceOrientation(FaceOrientation.CV_FACE_LEFT);
                 break;
             default:
@@ -300,22 +311,6 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
         } catch (CvFaceException e) {
             e.printStackTrace();
         }
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        // 注册接收是否屏保的广播
-//        EventBus.getDefault().register(this);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        cameraRGB.closeCamera();
-        cameraIR.closeCamera();
-        // 注销接收是否屏保的广播
-//        EventBus.getDefault().unregister(this);
     }
 
 
@@ -428,6 +423,22 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
     public void onDisconnected() {
 
     }
+    @Override
+    protected void onStart() {
+        super.onStart();
+        // 注册接收是否屏保的广播
+//        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        cameraRGB.closeCamera();
+        cameraIR.closeCamera();
+        // 注销接收是否屏保的广播
+//        EventBus.getDefault().unregister(this);
+    }
+
 
 //    /**
 //     * 接收到订阅消息 设置屏幕保护的监听

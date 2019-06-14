@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.whzxw.uface.ether.activity.core.CoreRecoActivity;
 import com.whzxw.uface.ether.bean.StartAppEvent;
 import com.whzxw.uface.ether.utils.NetHttpUtil;
+import com.whzxw.uface.ether.utils.XlogUitls;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -53,6 +54,10 @@ public class SplashActivity extends AppCompatActivity {
 
             }
         }, 1500);
+
+
+        XlogUitls.init(getApplication());
+
     }
 
     @Override

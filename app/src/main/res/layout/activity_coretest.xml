@@ -41,14 +41,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@id/horizontal_guide_line" />
 
-    <TextureView
-        android:id="@+id/rgb_camera"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="@id/vertical_guide_line"
-        app:layout_constraintTop_toTopOf="@id/horizontal_guide_line" />
+
 
     <TextureView
         android:id="@+id/ir_camera"
@@ -59,16 +52,8 @@
         app:layout_constraintRight_toRightOf="@id/vertical_guide_line"
         app:layout_constraintTop_toTopOf="@id/horizontal_guide_line" />
 
-    <!--<TextView
-        android:id="@+id/tv_info"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="#ffffff"
-        android:textSize="@dimen/poritrait_camera_info_textSize" />-->
-
-
-    <com.whzxw.uface.ether.view.FaceView
-        android:id="@+id/fvRGB"
+    <TextureView
+        android:id="@+id/rgb_camera"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -78,6 +63,15 @@
 
     <com.whzxw.uface.ether.view.FaceView
         android:id="@+id/fvIR"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="@id/vertical_guide_line"
+        app:layout_constraintTop_toTopOf="@id/horizontal_guide_line" />
+
+    <com.whzxw.uface.ether.view.FaceView
+        android:id="@+id/fvRGB"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"

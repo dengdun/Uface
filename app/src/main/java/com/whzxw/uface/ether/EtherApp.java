@@ -23,9 +23,6 @@ import com.uniubi.uface.ether.config.configenum.service.ScenePhotoWholeResult;
 import com.uniubi.uface.ether.config.configenum.service.WorkMode;
 import com.uniubi.uface.ether.core.cvhandle.FaceHandler;
 import com.uniubi.uface.ether.utils.AppLog;
-import com.whzxw.uface.ether.utils.AudioUtils;
-import com.whzxw.uface.ether.utils.SerialUtils;
-import com.whzxw.uface.ether.utils.ShareferenceManager;
 import com.whzxw.uface.ether.activity.SplashActivity;
 import com.whzxw.uface.ether.database.DaoMaster;
 import com.whzxw.uface.ether.database.DaoSession;
@@ -37,6 +34,9 @@ import com.whzxw.uface.ether.serverhandle.PongHandler;
 import com.whzxw.uface.ether.serverhandle.ScreenHandler;
 import com.whzxw.uface.ether.serverhandle.SettingHandler;
 import com.whzxw.uface.ether.serverhandle.StartRecoHandler;
+import com.whzxw.uface.ether.utils.AudioUtils;
+import com.whzxw.uface.ether.utils.SerialUtils;
+import com.whzxw.uface.ether.utils.ShareferenceManager;
 import com.whzxw.uface.ether.utils.XlogUitls;
 
 import java.util.ArrayList;
@@ -108,13 +108,11 @@ public class EtherApp extends Application {
 
         ServiceOptions serviceOptions = new ServiceOptions.Builder()
                 .withRecoMode(RecoMode.LOCALONLY)
-
-                .withRecoPattern(RecoPattern.VERIFY)
-                .withAliveLevel(AliveLevel.SIMPLE)
+                .withRecoPattern(RecoPattern.IDENTIFY)
+                .withAliveLevel(AliveLevel.HARD)
                 .withWorkMode(WorkMode.OFFLINE)
                 .withScenePhotoRecResult(ScenePhotoRecResult.NON)
                 .withScenePhotoWholeResult(ScenePhotoWholeResult.SUCCESS)
-
                 .build();
 
         AndServerOptions andServerOptions = AndServerOptions.newBuilder()
@@ -141,16 +139,16 @@ public class EtherApp extends Application {
             ShareferenceManager.setFirstRun(false);
         }
 
-        //启动andserver服务
+        // 启动andserver服务
         EtherAndServerManager.getInstance().startAndServer(this);
 
         AppLog.e("hwcode "+ FaceHandler.getHwCode());
 
-        // 程序崩溃时触发线程  以下用来捕获程序崩溃异常
-        Thread.setDefaultUncaughtExceptionHandler(restartHandler);
-
         // 初始化xlog
         XlogUitls.init(getApplicationContext());
+
+        // 程序崩溃时触发线程  以下用来捕获程序崩溃异常
+        Thread.setDefaultUncaughtExceptionHandler(restartHandler);
     }
 
     // 创建服务用于捕获崩溃异常
@@ -174,9 +172,5 @@ public class EtherApp extends Application {
         daoSession = daoMaster.newSession();
     }
 
-    @Override
-    public void onTerminate() {
-        super.onTerminate();
-        XlogUitls.close();
-    }
+
 }
