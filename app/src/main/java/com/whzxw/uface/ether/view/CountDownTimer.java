@@ -27,19 +27,16 @@ public class CountDownTimer extends AppCompatTextView {
     public CountDownTimer(Context context) {
         super(context);
         super.setTextSize(20f);
-        startCountDown(COUNTNUMBER);
     }
 
     public CountDownTimer(Context context, AttributeSet attrs) {
         super(context, attrs);
         super.setTextSize(20f);
-        startCountDown(COUNTNUMBER);
     }
 
     public CountDownTimer(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         super.setTextSize(20f);
-        startCountDown(COUNTNUMBER);
     }
 
     DeadlineListener deadlineListener;
@@ -83,8 +80,9 @@ public class CountDownTimer extends AppCompatTextView {
      * 强制停止计时器
      */
     public void stopCount() {
-        if (disposable != null)
+        if(disposable != null && !disposable.isDisposed()){
             disposable.dispose();
+        }
     }
 
 

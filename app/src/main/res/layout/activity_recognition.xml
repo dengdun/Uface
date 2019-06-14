@@ -10,7 +10,7 @@
         android:layout_width="0dp"
         android:layout_height="1dp"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.2" />
+        app:layout_constraintGuide_percent="0.1" />
 
     <android.support.constraint.Guideline
         android:id="@+id/first_line_two"
@@ -38,7 +38,7 @@
         android:layout_width="0dp"
         android:layout_height="1dp"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.3"/>
+        app:layout_constraintGuide_percent="0.24" />
 
     <android.support.constraint.Guideline
         android:id="@+id/two_line_two"
@@ -151,8 +151,8 @@
         android:id="@+id/first_group"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
-        app:constraint_referenced_ids="school_icon, school_name, time, operator_flow, card_view, open, temp_open, final_open"
+        android:visibility="visible"
+        app:constraint_referenced_ids="school_icon, school_name, time, operator_flow, card_view, open, temp_open, final_open, cameralid"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0" />
@@ -162,7 +162,8 @@
         android:id="@+id/two_group"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:constraint_referenced_ids="recycle_view, fvRGB, fvIR, rgb_camera, ir_camera, btn_back, put, alert, countdowntimer"/>
+        android:visibility="invisible"
+        app:constraint_referenced_ids="recycle_view,  btn_back, put, countdowntimer"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycle_view"
@@ -201,9 +202,7 @@
         app:layout_constraintBottom_toBottomOf="@id/two_line_two"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginEnd="12dp"/>
-    <android.support.constraint.Group
-        android:layout_width="0dp"
-        android:layout_height="wrap_content" />
+
     <TextureView
         android:id="@+id/rgb_camera"
         android:layout_width="0dp"
@@ -239,12 +238,30 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@id/two_line_two" />
+    <!--视频的遮羞布-->
+    <View
+        android:id="@+id/cameralid"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/cardview_light_background"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/two_line_two"/>
+
+    <!--<android.support.constraint.Group-->
+        <!--android:id="@+id/cameralid_group"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--app:constraint_referenced_ids="cameralid"/>-->
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/alert"
         android:text="@string/alert"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:visibility="gone"
+        android:background="@color/cardview_light_background"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"

@@ -56,6 +56,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import io.reactivex.Observable;
 import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
@@ -86,8 +87,8 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
     private int deviceType = 2;
 
 
-    // 正在屏保
-    private static boolean isScreenSaver = true;
+    // 是否正在显示屏保
+    private static boolean isPreViewCamera = true;
     private byte[] yuvByteData;
     @BindView(R.id.rgb_camera)
     TextureView textureRGBView;
@@ -188,7 +189,7 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
                     if (personTables != null && personTables.size() > 0) {
                         final PersonTable personTable = personTables.get(0);
                         // 屏保的时候不传开锁指令。
-                        if (!isScreenSaver){
+                        if (!isPreViewCamera){
                             cameraRGB.setScreenshotListener(new CameraUtils.OnCameraDataEnableListener() {
                                 @Override
                                 public void onCameraDataCallback(byte[] data, int camId) {
@@ -308,7 +309,14 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
         cameraRGB.initCamera(0, new CameraUtils.OnCameraDataEnableListener() {
             @Override
             public void onCameraDataCallback(byte[] data, int camId) {
-                etherFaceManager.pushRGBFrameData(data);
+                // 判断是否屏保
+                if (isPreViewCamera) {
+                    if (yuvByteData != null)
+                        etherFaceManager.pushRGBFrameData(yuvByteData);
+                } else {
+                    etherFaceManager.pushRGBFrameData(data);
+                }
+
 
             }
         });
@@ -370,18 +378,13 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
     public void onWholeIdentifyResult(final IdentifyResult recognition) {
         // 人脸识别的回调
         Log.i("coreCall", "分数=" + recognition.getScore());
-        if (isScreenSaver) return;
+        if (isPreViewCamera) return;
         Log.i("coreCall", "分数=" + recognition.getScore());
 
         // 屏保的时候不让提交数据
         if (recognition.isAlivePass()&&recognition.isVerifyPass()) {
             Log.i("coreCall", "通过正在启动柜门");
 
-//            List<PersonTable> personTables = EtherApp.daoSession.queryRaw(PersonTable.class, "where FACE_ID = ? and PSERON_ID = ?", recognition.getFaceId(), recognition.getPersonId());
-//            if (personTables == null || (personTables != null && personTables.size() == 0)) return;
-//            final PersonTable personTable = personTables.get(0);
-//            Bitmap bitmap = ImageUtils.rotateBitmap(ImageUtils.yuvImg2BitMap(recognition.getRgbYuvData(), 640, 480), 90);
-//            NetHttpUtil.sendMessage(recognition.getPersonId(), recognition.getFaceId(), recognition.getScore(), personTable.getName(), personTable.getCardNO(), bitmap);
             // 创建
             Observable<IdentifyResult> identifyResultObservable = Observable.just(recognition);
             // 创建查数据的观察事件
@@ -413,7 +416,7 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
             }).subscribe(new Consumer<Observable<Object>>() {
                 @Override
                 public void accept(Observable<Object> objectObservable) throws Exception {
-
+                    countDownTimer.stopCount();
                 }
             });
             return;
@@ -470,48 +473,23 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
     }
 
 
-    private void toMainScreen() {
+    /**
+     * 跳转到主屏幕
+     */
+    @OnClick(R.id.btn_back)
+    public void toMainScreen() {
         firstScreenGroup.setVisibility(View.VISIBLE);
         twoScreenGroup.setVisibility(View.INVISIBLE);
+        countDownTimer.stopCount();
+
     }
 
-//    /**
-//     * 接收到订阅消息 设置屏幕保护的监听
-//     * @param event
-//     */
-//    @Subscribe(threadMode = ThreadMode.MAIN)
-//    public void onMessageEvent(ScreenSaverMessageEvent event) {
-//        if (event.isScreenSaver) {
-//            // 这里显示屏保  这里不能开灯
-//            isScreenSaver = true;
-//            snowView.setVisibility(View.VISIBLE);
-//
-//            // 关灯
-//            FileNodeOperator.close(FileNodeOperator.LED_PATH);
-//        } else {
-//            isScreenSaver = false;
-//            // 开灯
-//            FileNodeOperator.open(FileNodeOperator.LED_PATH);
-//
-//            snowView.setVisibility(View.INVISIBLE);
-//        }
-//    }
-//    /**
-//     * 接收到订阅消息  设置的url的监听
-//     * @param event
-//     */
-//    @Subscribe(threadMode = ThreadMode.MAIN)
-//    public void onUrlMessageEvent(SettingMessageEvent event) {
-//        if (!event.urlad.isEmpty()) {
-//            top_webView.loadUrl(event.urlad);
-//        }
-//
-//        if (!event.urlad2.isEmpty()) {
-//            bottom_webView.loadUrl(event.urlad2);
-//        }
-//
-//        if (!event.schooleNameLine1.isEmpty()) {
-//            snowView.setSchoolName(event.schooleNameLine1, event.schooleNameLine2);
-//        }
-//    }
+    @OnClick({R.id.open, R.id.temp_open, R.id.final_open})
+    public void toRecoScreen() {
+        countDownTimer.startCountDown(15);
+        firstScreenGroup.setVisibility(View.INVISIBLE);
+        twoScreenGroup.setVisibility(View.VISIBLE);
+    }
+
+
 }
