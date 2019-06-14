@@ -4,14 +4,15 @@ package com.whzxw.uface.ether.http;
  * 网络请求返回实体
  */
 public class ResponseEntity {
-    boolean success;
-    String message;
+    private String success;
+    private String message;
+    private String result;
 
-    public boolean isSuccess() {
+    public String getSuccess() {
         return success;
     }
 
-    public void setSuccess(boolean success) {
+    public void setSuccess(String success) {
         this.success = success;
     }
 
@@ -21,5 +22,13 @@ public class ResponseEntity {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public String getResult() {
+        return result;
+    }
+
+    public void setResult(String result) {
+        this.result = result;
     }
 }

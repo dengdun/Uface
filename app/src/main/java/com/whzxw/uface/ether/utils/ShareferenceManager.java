@@ -40,4 +40,5 @@ public class ShareferenceManager {
         return (String)ShareUtils.get(EtherApp.context, "resulturl", "http://www.192.168.1.1:8080/");
     }
 
+
 }

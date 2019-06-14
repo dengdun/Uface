@@ -195,7 +195,7 @@
         app:layout_constraintRight_toRightOf="parent"/>
 
     <com.whzxw.uface.ether.view.CountDownTimer
-        android:id="@+id/countdowntimer"
+        android:id="@+id/countdown_timer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="@id/two_line_one"

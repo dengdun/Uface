@@ -1,12 +1,14 @@
 package com.whzxw.uface.ether.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.constraint.Group;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -63,6 +65,8 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
 
+import static com.whzxw.uface.ether.activity.SplashActivity.INTENT_DEVNAME;
+
 /**
  * @author qiaopeng
  * @date 2018/08/02
@@ -109,8 +113,11 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
     @BindView(R.id.two_group)
     Group twoScreenGroup;
 
-    @BindView(R.id.countdowntimer)
+    @BindView(R.id.countdown_timer)
     CountDownTimer countDownTimer;
+
+    @BindView(R.id.school_name)
+    AppCompatTextView schoolNameView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -126,6 +133,7 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
 
         serviceOptions = UfaceEtherImpl.getServiceOptions();
         etherFaceManager = EtherFaceManager.getInstance();
+
 
         init();
         initCamera();
@@ -259,6 +267,11 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
     private void init() {
         faceHandler = new FaceHandler();
         faceHandler.init();
+
+
+        Intent intent = getIntent();
+        String schoolName = intent.getStringExtra(INTENT_DEVNAME);
+        schoolNameView.setText(schoolName);
     }
 
     private void initCamera() {

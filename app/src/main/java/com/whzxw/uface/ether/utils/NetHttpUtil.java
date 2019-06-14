@@ -5,8 +5,6 @@ import android.util.Base64;
 import android.util.Log;
 
 import com.whzxw.uface.ether.EtherApp;
-import com.whzxw.uface.ether.http.ResponseEntity;
-import com.whzxw.uface.ether.http.RetrofitManager;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
@@ -17,15 +15,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
-
-import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Action;
-import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * 发送网络请求的
@@ -148,54 +137,6 @@ public class NetHttpUtil {
                 }
             }
         }).start();
-    }
-
-    /**
-     * startApp这没有链接上的话，就要一直尝试链接树莓派,发送已经开机上线的通知
-     */
-    public static void startRepeatApp() {
-        String startAppUrl = ShareferenceManager.getStartAppUrl();
-        // 把整个地址中的host替换成空字符串替换过来
-
-        RetrofitManager.getInstance()
-                .apiService
-                .startApp(startAppUrl)
-                .retryWhen(new Function<Observable<Throwable>, ObservableSource<?>>() {
-                    @Override
-                    public ObservableSource<?> apply(final Observable<Throwable> throwableObservable) throws Exception {
-                        return throwableObservable.flatMap(new Function<Throwable, ObservableSource<?>>() {
-                            @Override
-                            public ObservableSource<?> apply(Throwable throwable) throws Exception {
-                                if (throwable instanceof IOException) {
-                                    return Observable.just(1).delay(2, TimeUnit.SECONDS);
-                                } else {
-                                    return Observable.error(new Throwable(""));
-                                }
-                            }
-                        });
-                    }
-                })
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(new Consumer<ResponseEntity>() {
-                    @Override
-                    public void accept(ResponseEntity requestEntity) throws Exception {
-                        Log.i("jin", "get result");
-                    }
-
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        Log.i("jin", "throw erro");
-                    }
-                }, new Action() {
-                    @Override
-                    public void run() throws Exception {
-                        Log.i("jin", "run throw erro");
-                    }
-                });
-
-
     }
 
 
