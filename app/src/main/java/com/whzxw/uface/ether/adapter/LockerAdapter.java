@@ -8,7 +8,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.whzxw.uface.ether.http.CabinetBean;
+
+import java.util.List;
+
 public class LockerAdapter extends RecyclerView.Adapter {
+    List<CabinetBean> list;
+    public LockerAdapter(List<CabinetBean> list) {
+        this.list = list;
+    }
+
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -23,19 +32,19 @@ public class LockerAdapter extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        if (position%3 == 0) {
-            holder.itemView.setBackgroundColor(Color.BLUE);
-        } else if (position %3 == 1) {
+        // used为0表示未存放，1表示已存放；
+        if (list.get(position).getUsed() == 0) {
+            holder.itemView.setBackgroundColor(Color.GREEN);
+        } else if (list.get(position).getUsed() == 1) {
             holder.itemView.setBackgroundColor(Color.RED);
-        } else if (position %3 == 2) {
-            holder.itemView.setBackgroundColor(Color.YELLOW);
+        } else {
+            holder.itemView.setBackgroundColor(Color.DKGRAY);
         }
-
     }
 
     @Override
     public int getItemCount() {
-        return 30;
+        return list.size();
     }
 
     class LockerHolder extends RecyclerView.ViewHolder {
@@ -48,5 +57,9 @@ public class LockerAdapter extends RecyclerView.Adapter {
         public ImageView getImageView() {
             return imageView;
         }
+    }
+
+    public void setList(List<CabinetBean> list) {
+        this.list = list;
     }
 }

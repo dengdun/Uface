@@ -44,6 +44,7 @@ import com.whzxw.uface.ether.adapter.GridItemDecoration;
 import com.whzxw.uface.ether.adapter.LockerAdapter;
 import com.whzxw.uface.ether.database.PersonTable;
 import com.whzxw.uface.ether.http.ApiService;
+import com.whzxw.uface.ether.http.CabinetBean;
 import com.whzxw.uface.ether.http.ResponseEntity;
 import com.whzxw.uface.ether.http.RetrofitManager;
 import com.whzxw.uface.ether.utils.CameraUtils;
@@ -55,7 +56,10 @@ import com.whzxw.uface.ether.view.FaceView;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -63,6 +67,7 @@ import butterknife.OnClick;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Action;
 import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
@@ -130,7 +135,7 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
 
     @BindView(R.id.camera_title)
     AppCompatTextView title;
-
+    private LockerAdapter lockerAdapter;
 
 
     @Override
@@ -187,7 +192,7 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getApplicationContext(), 10);
         recyclerView.setLayoutManager(gridLayoutManager);
         recyclerView.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.HORIZONTAL));
-        LockerAdapter lockerAdapter = new LockerAdapter();
+        lockerAdapter = new LockerAdapter(new ArrayList<CabinetBean>());
         recyclerView.setAdapter(lockerAdapter);
 
         GridItemDecoration gridItemDecoration = new GridItemDecoration();
@@ -416,6 +421,8 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
             Observable<Object[]> dataObservable = Observable.zip(identifyResultObservable, just, new BiFunction<IdentifyResult, Integer, Object[]>() {
                 @Override
                 public Object[] apply(IdentifyResult identifyResult, Integer integer) throws Exception {
+                    Bitmap bitmap = ImageUtils.rotateBitmap(ImageUtils.yuvImg2BitMap(recognition.getRgbYuvData(), 640, 480), 90);
+                    identifyResult.setBitmap(bitmap);
                     return new Object[]{identifyResult, integer};
                 }
             });
@@ -442,18 +449,25 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
 
                     return new Object[]{objects[0], objects[1], personTable};
                 }
-            }).flatMap(new Function<Object[], Observable<ResponseEntity>>() {
+            }).flatMap(new Function<Object[], Observable<ResponseEntity<String>>>() {
                 @Override
-                public Observable<ResponseEntity> apply(Object[] objects) throws Exception {
+                public Observable<ResponseEntity<String>> apply(Object[] objects) throws Exception {
                     IdentifyResult identifyResult = (IdentifyResult) objects[0];
                     Integer type = (Integer) objects[1];
                     PersonTable personTable = (PersonTable) objects[2];
+
+                    Map<String, String> params = new HashMap<>();
+                    params.put("personId", identifyResult.getPersonId());
+                    params.put("faceId", identifyResult.getFaceId());
+                    params.put("score", identifyResult.getScore()+"");
+                    params.put("name", personTable.getName());
+                    params.put("cardNo", personTable.getCardNO());
+                    params.put("face", NetHttpUtil.bitmapToBase64(identifyResult.getBitmap()));
+                    params.put("type", type+"");
+
                     return RetrofitManager.getInstance()
                             .apiService
-                            .sendRecoResult(ApiService.recoCallBackUrl, identifyResult.getPersonId(),
-                                    identifyResult.getFaceId(), identifyResult.getScore(),
-                                    personTable.getName(), personTable.getCardNO(),
-                                    identifyResult.getBitmap(), type + "");
+                            .sendRecoResult(ApiService.recoCallBackUrl, params);
                 }
             }).subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -461,21 +475,27 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
                         @Override
                         public void accept(Disposable disposable) throws Exception {
                             showAlert("快马加鞭开箱子！", true);
+
                         }
                     })
                     .subscribeOn(AndroidSchedulers.mainThread()) // 指定线程之后，线程调用的是上游的回调在哪个线程中。
-                    .subscribe(new Consumer<ResponseEntity>() {
-                @Override
-                public void accept(ResponseEntity responseEntity) throws Exception {
-                    showAlert(responseEntity.getMessage(), true);
-                    countDownTimer.stopCount();
-                }
-            }, new Consumer<Throwable>() {
-                @Override
-                public void accept(Throwable throwable) throws Exception {
-                    showAlert("破网络失败了", true);
-                }
-            });
+                    .subscribe(new Consumer<ResponseEntity<String>>() {
+                        @Override
+                        public void accept(ResponseEntity<String> responseEntity) throws Exception {
+                            showAlert(responseEntity.getMessage(), true);
+                            countDownTimer.stopCount();
+                        }
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception {
+                            showAlert("破网络失败了", true);
+                        }
+                    }, new Action() {
+                        @Override
+                        public void run() throws Exception {
+                            toMainScreen();
+                        }
+                    });
 
             return;
         }
@@ -509,9 +529,6 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
 
     @Override
     public void onConnected() {
-//        if (serviceOptions.getRecoMode() == RecoMode.LOCALONLY && serviceOptions.getRecoPattern() == RecoPattern.VERIFY) {
-//            bitmapCompare();
-//        }
     }
 
     @Override
@@ -584,6 +601,23 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
             alertView.setVisibility(View.VISIBLE);
         else
             alertView.setVisibility(View.INVISIBLE);
+    }
+
+    /**
+     * 查询柜子
+      */
+    public void queryConbinet() {
+        RetrofitManager.getInstance()
+                .apiService
+                .queryCabinet(ApiService.queryCabinetUrl)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResponseEntity<List<CabinetBean>>>() {
+                    @Override
+                    public void accept(ResponseEntity<List<CabinetBean>> listResponseEntity) throws Exception {
+                        lockerAdapter.setList(listResponseEntity.getResult());
+                        lockerAdapter.notifyDataSetChanged();
+                    }
+                });
     }
 
 }

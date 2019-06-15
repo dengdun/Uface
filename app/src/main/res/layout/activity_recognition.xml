@@ -81,25 +81,6 @@
         tools:text="haode" />
 
     <android.support.v7.widget.CardView
-        android:id="@+id/operator_flow"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_goneMarginLeft="6dp"
-        app:layout_goneMarginRight="6dp"
-        app:layout_goneMarginTop="4dp"
-        app:layout_goneMarginBottom="4dp"
-        app:layout_constraintBottom_toBottomOf="@id/first_line_two"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@id/first_line_one">
-
-        <android.support.v7.widget.AppCompatTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/operator_flow" />
-    </android.support.v7.widget.CardView>
-
-    <android.support.v7.widget.CardView
         android:id="@+id/card_view"
         android:layout_width="0dp"
         android:layout_height="0dp"

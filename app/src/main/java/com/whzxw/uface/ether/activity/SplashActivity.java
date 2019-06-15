@@ -11,18 +11,15 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.whzxw.uface.ether.activity.core.CoreRecoActivity;
 import com.whzxw.uface.ether.http.ApiService;
 import com.whzxw.uface.ether.http.ResponseEntity;
 import com.whzxw.uface.ether.http.RetrofitManager;
 import com.whzxw.uface.ether.utils.XlogUitls;
 
-import java.io.IOException;
-import java.util.concurrent.TimeUnit;
-
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
@@ -58,7 +55,7 @@ public class SplashActivity extends AppCompatActivity {
         /**
          * 查询成功，前置机启动了。
          */
-        RetrofitManager.getInstance()
+        final Disposable disposable = RetrofitManager.getInstance()
                 .apiService
                 .queryMachineName(ApiService.queryDevNameUrl)
                 .retryWhen(new Function<Observable<Throwable>, ObservableSource<?>>() {
@@ -67,22 +64,25 @@ public class SplashActivity extends AppCompatActivity {
                         return throwableObservable.flatMap(new Function<Throwable, ObservableSource<?>>() {
                             @Override
                             public ObservableSource<?> apply(Throwable throwable) throws Exception {
-                                if (throwable instanceof IOException) {
-                                    return Observable.just(1).delay(2, TimeUnit.SECONDS);
-                                } else {
-                                    return Observable.error(new Throwable(""));
-                                }
+
+//                                if (throwable instanceof IOException) {
+//                                    return Observable.just(1).delay(2, TimeUnit.SECONDS);
+//                                } else {
+//                                    return Observable.error(new Throwable(""));
+//                                }
+
+                                return Observable.error(new Throwable(""));
                             }
                         });
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Consumer<ResponseEntity>() {
+                .subscribe(new Consumer<ResponseEntity<String>>() {
                     @Override
-                    public void accept(ResponseEntity responseEntity) throws Exception {
+                    public void accept(ResponseEntity<String> responseEntity) throws Exception {
                         Log.i("jin", "get result");
-                        Intent intent = new Intent(getApplicationContext(), CoreRecoActivity.class);
+                        Intent intent = new Intent(getApplicationContext(), CoreRecoTempActivity.class);
                         intent.putExtra(INTENT_DEVNAME, responseEntity.getResult());
                         startActivity(intent);
                         finish();
@@ -91,12 +91,18 @@ public class SplashActivity extends AppCompatActivity {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
+                        Intent intent = new Intent(getApplicationContext(), CoreRecoTempActivity.class);
+                        intent.putExtra(INTENT_DEVNAME, "什么机子");
+                        startActivity(intent);
+                        finish();
                         Log.i("jin", "throw erro");
+
                     }
                 }, new Action() {
                     @Override
                     public void run() throws Exception {
                         Log.i("jin", "run throw erro");
+
                     }
                 });
 

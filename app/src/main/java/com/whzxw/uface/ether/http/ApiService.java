@@ -1,19 +1,23 @@
 package com.whzxw.uface.ether.http;
 
-import android.graphics.Bitmap;
+import java.util.List;
+import java.util.Map;
 
 import io.reactivex.Observable;
+import retrofit2.http.FieldMap;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.POST;
-import retrofit2.http.Query;
 import retrofit2.http.Url;
 
 /**
  * 接口封装类
  */
 public interface ApiService {
+//    public String baseUrl = "http://192.168.10.150:8082";
+    public String baseUrl = "http://3drrbn.natappfree.cc";
     /**
      * 1. 查询设备名称接口
-     * 请求地址: http://192.168.10.150:8082/locker/selectDevName
+     * 请求地址: /locker/selectDevName
      * 请求参数: 无
      * 返回结果:
      * {
@@ -23,7 +27,7 @@ public interface ApiService {
      * }
      * 其它说明: 查询异常时success返回false
      */
-    public String queryDevNameUrl = "http://192.168.10.150:8082/locker/selectDevName";
+    public String queryDevNameUrl = baseUrl + "/locker/selectDevName";
 
     /**
      * 2. 识别回调接口
@@ -37,7 +41,40 @@ public interface ApiService {
      * face 		人脸识别快照
      * type		操作类型，0. 储物; 1. 临取; 2. 整取;
      */
-    public String recoCallBackUrl = "http://192.168.10.150:8082/locker/callback4App";
+    public String recoCallBackUrl = baseUrl + "/locker/callback4App";
+
+    /**
+     * 3. 查询箱位状态接口
+     * 请求地址: http://192.168.10.150:8082/locker/selectBoxStatus
+     * 请求参数: 无
+     * 返回结果:
+     * {
+     *     "success": true,
+     *     "message": "查询成功",
+     *     "result": [
+     *         {
+     *             "id": 1,
+     *             "sarkCode": "face-dev-02",
+     *             "no": 1,
+     *             "used": 1,
+     *             "usable": 0,
+     *             "sno": "0301",
+     *             "owner": null
+     *         },
+     *         {
+     *             "id": 2,
+     *             "sarkCode": "face-dev-02",
+     *             "no": 2,
+     *             "used": 1,
+     *             "usable": 0,
+     *             "sno": "0001",
+     *             "owner": null
+     *         }
+     *     ]
+     * }
+     * used为0表示未存放，1表示已存放；
+     */
+    public String queryCabinetUrl = baseUrl + "/locker/selectBoxStatus";
 
     /**
      * 通知树莓派开始工作了
@@ -45,7 +82,7 @@ public interface ApiService {
      * @return
      */
     @POST
-    Observable<ResponseEntity> startApp(@Url String url);
+    Observable<ResponseEntity<String>> startApp(@Url String url);
 
     /**
      * 识别成功之后，把数据给他们
@@ -53,17 +90,22 @@ public interface ApiService {
      * @return
      */
     @POST
-    Observable<ResponseEntity> sendRecoResult(@Url String url, @Query("personId")  String personId, @Query("faceId")  String faceId,
-                                      @Query("score")  Float score, @Query("name")  String name,
-                                      @Query("cardNo")  String cardNo, @Query("face")  Bitmap face,
-                                      @Query("type") String type);
-
+    @FormUrlEncoded
+    Observable<ResponseEntity<String>> sendRecoResult(@Url String url, @FieldMap Map<String, String> Msg);
     /**
      * 查詢设备名字
      * @param url
      * @return
      */
     @POST
-    Observable<ResponseEntity> queryMachineName(@Url String url);
+    Observable<ResponseEntity<String>> queryMachineName(@Url String url);
+
+    /**
+     * 查询柜子的状态
+     * @param u
+     * @return
+     */
+    @POST
+    Observable<ResponseEntity<List<CabinetBean>>> queryCabinet(@Url String u);
 
 }

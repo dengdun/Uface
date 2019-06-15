@@ -33,15 +33,15 @@
         </activity>
         <activity android:name="com.whzxw.uface.ether.activity.SplashActivity"
             android:screenOrientation="portrait">
-
-        </activity>
-        <activity android:name="com.whzxw.uface.ether.activity.CoreRecoTempActivity"
-            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity android:name="com.whzxw.uface.ether.activity.CoreRecoTempActivity"
+            android:screenOrientation="portrait">
+
         </activity>
         <activity android:name="com.whzxw.uface.ether.activity.outdevice.OutDeviceActivity"></activity>
         <activity android:name="com.whzxw.uface.ether.activity.outdevice.SerialPortActivity" />
