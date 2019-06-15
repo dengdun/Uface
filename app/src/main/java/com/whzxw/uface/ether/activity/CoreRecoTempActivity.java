@@ -128,6 +128,11 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
     @BindView(R.id.alert)
     AppCompatTextView alertView;
 
+    @BindView(R.id.camera_title)
+    AppCompatTextView title;
+
+
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -525,7 +530,6 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
         cameraIR.closeCamera();
     }
 
-
     /**
      * 跳转到主屏幕
      */
@@ -557,11 +561,14 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
         switch (view.getId()) {
             case R.id.open:
                 recoFromWhichButton = 0;
+                title.setText("存件");
                 break;
             case R.id.temp_open:
+                title.setText("中途取件");
                 recoFromWhichButton = 1;
                 break;
             case R.id.final_open:
+                title.setText("取件");
                 recoFromWhichButton = 2;
                 break;
         }

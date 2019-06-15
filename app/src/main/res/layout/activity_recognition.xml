@@ -166,7 +166,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="invisible"
-        app:constraint_referenced_ids="recycle_view,  btn_back, put, countdown_timer"/>
+        app:constraint_referenced_ids="recycle_view,  btn_back, camera_title, countdown_timer"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycle_view"
@@ -188,7 +188,7 @@
         app:layout_constraintLeft_toLeftOf="parent"/>
 
     <android.support.v7.widget.AppCompatTextView
-        android:id="@+id/put"
+        android:id="@+id/camera_title"
         android:text="@string/open"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
