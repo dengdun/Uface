@@ -1,6 +1,5 @@
 package com.whzxw.uface.ether.http;
 
-import java.util.List;
 import java.util.Map;
 
 import io.reactivex.Observable;
@@ -82,7 +81,7 @@ public interface ApiService {
      * @return
      */
     @POST
-    Observable<ResponseEntity<String>> startApp(@Url String url);
+    Observable<ResponseEntity> startApp(@Url String url);
 
     /**
      * 识别成功之后，把数据给他们
@@ -91,14 +90,14 @@ public interface ApiService {
      */
     @POST
     @FormUrlEncoded
-    Observable<ResponseEntity<String>> sendRecoResult(@Url String url, @FieldMap Map<String, String> Msg);
+    Observable<ResponseEntity> sendRecoResult(@Url String url, @FieldMap Map<String, String> Msg);
     /**
      * 查詢设备名字
      * @param url
      * @return
      */
     @POST
-    Observable<ResponseEntity<String>> queryMachineName(@Url String url);
+    Observable<ResponseEntity> queryMachineName(@Url String url);
 
     /**
      * 查询柜子的状态
@@ -106,6 +105,6 @@ public interface ApiService {
      * @return
      */
     @POST
-    Observable<ResponseEntity<List<CabinetBean>>> queryCabinet(@Url String u);
+    Observable<ResponseCabinetEntity> queryCabinet(@Url String u);
 
 }

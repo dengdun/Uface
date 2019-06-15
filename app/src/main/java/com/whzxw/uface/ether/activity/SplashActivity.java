@@ -78,9 +78,9 @@ public class SplashActivity extends AppCompatActivity {
                 })
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Consumer<ResponseEntity<String>>() {
+                .subscribe(new Consumer<ResponseEntity>() {
                     @Override
-                    public void accept(ResponseEntity<String> responseEntity) throws Exception {
+                    public void accept(ResponseEntity responseEntity) throws Exception {
                         Log.i("jin", "get result");
                         Intent intent = new Intent(getApplicationContext(), CoreRecoTempActivity.class);
                         intent.putExtra(INTENT_DEVNAME, responseEntity.getResult());

@@ -3,10 +3,10 @@ package com.whzxw.uface.ether.http;
 /**
  * 网络请求返回实体
  */
-public class ResponseEntity<T> {
+public class ResponseEntity {
     private String success;
     private String message;
-    private T result;
+    private String result;
 
     public String getSuccess() {
         return success;
@@ -24,11 +24,11 @@ public class ResponseEntity<T> {
         this.message = message;
     }
 
-    public T getResult() {
+    public String getResult() {
         return result;
     }
 
-    public void setResult(T result) {
+    public void setResult(String result) {
         this.result = result;
     }
 }

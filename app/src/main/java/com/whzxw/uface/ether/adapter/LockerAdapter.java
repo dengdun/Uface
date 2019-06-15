@@ -8,13 +8,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.whzxw.uface.ether.http.CabinetBean;
+import com.whzxw.uface.ether.http.ResponseCabinetEntity;
 
 import java.util.List;
 
 public class LockerAdapter extends RecyclerView.Adapter {
-    List<CabinetBean> list;
-    public LockerAdapter(List<CabinetBean> list) {
+    List<ResponseCabinetEntity.Cabinet> list;
+    public LockerAdapter(List<ResponseCabinetEntity.Cabinet> list) {
         this.list = list;
     }
 
@@ -59,7 +59,7 @@ public class LockerAdapter extends RecyclerView.Adapter {
         }
     }
 
-    public void setList(List<CabinetBean> list) {
+    public void setList(List<ResponseCabinetEntity.Cabinet> list) {
         this.list = list;
     }
 }

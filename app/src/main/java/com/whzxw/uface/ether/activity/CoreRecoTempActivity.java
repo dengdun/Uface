@@ -44,7 +44,7 @@ import com.whzxw.uface.ether.adapter.GridItemDecoration;
 import com.whzxw.uface.ether.adapter.LockerAdapter;
 import com.whzxw.uface.ether.database.PersonTable;
 import com.whzxw.uface.ether.http.ApiService;
-import com.whzxw.uface.ether.http.CabinetBean;
+import com.whzxw.uface.ether.http.ResponseCabinetEntity;
 import com.whzxw.uface.ether.http.ResponseEntity;
 import com.whzxw.uface.ether.http.RetrofitManager;
 import com.whzxw.uface.ether.utils.CameraUtils;
@@ -192,7 +192,7 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getApplicationContext(), 10);
         recyclerView.setLayoutManager(gridLayoutManager);
         recyclerView.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.HORIZONTAL));
-        lockerAdapter = new LockerAdapter(new ArrayList<CabinetBean>());
+        lockerAdapter = new LockerAdapter(new ArrayList<ResponseCabinetEntity.Cabinet>());
         recyclerView.setAdapter(lockerAdapter);
 
         GridItemDecoration gridItemDecoration = new GridItemDecoration();
@@ -291,6 +291,7 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
         Intent intent = getIntent();
         String schoolName = intent.getStringExtra(INTENT_DEVNAME);
         schoolNameView.setText(schoolName);
+
     }
 
     private void initCamera() {
@@ -449,9 +450,9 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
 
                     return new Object[]{objects[0], objects[1], personTable};
                 }
-            }).flatMap(new Function<Object[], Observable<ResponseEntity<String>>>() {
+            }).flatMap(new Function<Object[], Observable<ResponseEntity>>() {
                 @Override
-                public Observable<ResponseEntity<String>> apply(Object[] objects) throws Exception {
+                public Observable<ResponseEntity> apply(Object[] objects) throws Exception {
                     IdentifyResult identifyResult = (IdentifyResult) objects[0];
                     Integer type = (Integer) objects[1];
                     PersonTable personTable = (PersonTable) objects[2];
@@ -479,9 +480,9 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
                         }
                     })
                     .subscribeOn(AndroidSchedulers.mainThread()) // 指定线程之后，线程调用的是上游的回调在哪个线程中。
-                    .subscribe(new Consumer<ResponseEntity<String>>() {
+                    .subscribe(new Consumer<ResponseEntity>() {
                         @Override
-                        public void accept(ResponseEntity<String> responseEntity) throws Exception {
+                        public void accept(ResponseEntity responseEntity) throws Exception {
                             showAlert(responseEntity.getMessage(), true);
                             countDownTimer.stopCount();
                         }
@@ -589,6 +590,8 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
                 recoFromWhichButton = 2;
                 break;
         }
+
+        queryConbinet();
     }
 
     /**
@@ -611,11 +614,17 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
                 .apiService
                 .queryCabinet(ApiService.queryCabinetUrl)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<ResponseEntity<List<CabinetBean>>>() {
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Consumer<ResponseCabinetEntity>() {
                     @Override
-                    public void accept(ResponseEntity<List<CabinetBean>> listResponseEntity) throws Exception {
+                    public void accept(ResponseCabinetEntity listResponseEntity) throws Exception {
                         lockerAdapter.setList(listResponseEntity.getResult());
                         lockerAdapter.notifyDataSetChanged();
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        Log.i("error", "what error");
                     }
                 });
     }
