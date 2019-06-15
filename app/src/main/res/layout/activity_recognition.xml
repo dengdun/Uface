@@ -84,7 +84,10 @@
         android:id="@+id/operator_flow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="6dp"
+        app:layout_goneMarginLeft="6dp"
+        app:layout_goneMarginRight="6dp"
+        app:layout_goneMarginTop="4dp"
+        app:layout_goneMarginBottom="4dp"
         app:layout_constraintBottom_toBottomOf="@id/first_line_two"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -163,7 +166,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="invisible"
-        app:constraint_referenced_ids="recycle_view,  btn_back, put, countdowntimer"/>
+        app:constraint_referenced_ids="recycle_view,  btn_back, put, countdown_timer"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycle_view"
@@ -260,7 +263,8 @@
         android:text="@string/alert"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:visibility="gone"
+        android:visibility="invisible"
+        android:gravity="center"
         android:background="@color/cardview_light_background"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"

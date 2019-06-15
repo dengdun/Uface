@@ -53,7 +53,7 @@ public interface ApiService {
      * @return
      */
     @POST
-    Observable<Object> sendRecoResult(@Url String url, @Query("personId")  String personId, @Query("faceId")  String faceId,
+    Observable<ResponseEntity> sendRecoResult(@Url String url, @Query("personId")  String personId, @Query("faceId")  String faceId,
                                       @Query("score")  Float score, @Query("name")  String name,
                                       @Query("cardNo")  String cardNo, @Query("face")  Bitmap face,
                                       @Query("type") String type);

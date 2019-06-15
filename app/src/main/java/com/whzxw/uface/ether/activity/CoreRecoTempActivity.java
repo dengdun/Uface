@@ -44,6 +44,7 @@ import com.whzxw.uface.ether.adapter.GridItemDecoration;
 import com.whzxw.uface.ether.adapter.LockerAdapter;
 import com.whzxw.uface.ether.database.PersonTable;
 import com.whzxw.uface.ether.http.ApiService;
+import com.whzxw.uface.ether.http.ResponseEntity;
 import com.whzxw.uface.ether.http.RetrofitManager;
 import com.whzxw.uface.ether.utils.CameraUtils;
 import com.whzxw.uface.ether.utils.NetHttpUtil;
@@ -60,10 +61,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
+import io.reactivex.schedulers.Schedulers;
 
 import static com.whzxw.uface.ether.activity.SplashActivity.INTENT_DEVNAME;
 
@@ -120,6 +124,9 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
 
     @BindView(R.id.school_name)
     AppCompatTextView schoolNameView;
+
+    @BindView(R.id.alert)
+    AppCompatTextView alertView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -332,7 +339,6 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
                     etherFaceManager.pushRGBFrameData(data);
                 }
 
-
             }
         });
 
@@ -363,7 +369,6 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
                 } else {
                     faceView.setVisibility(View.VISIBLE);
                     faceView.setFaces(checkFaces);
-
                 }
             }
         });
@@ -426,25 +431,47 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
                     return personTables.get(0);
                 }
             });
-
-            Observable.zip(dataObservable, personTableObservable, new BiFunction<Object[], PersonTable, Observable<Object>>() {
+            Observable.zip(dataObservable, personTableObservable, new BiFunction<Object[], PersonTable, Object[]>() {
                 @Override
-                public Observable<Object> apply(Object[] i, PersonTable personTable) throws Exception {
-                    IdentifyResult identifyResult = (IdentifyResult) i[0];
-                    String type = (String) i[1];
+                public Object[] apply(Object[] objects, PersonTable personTable) throws Exception {
+
+                    return new Object[]{objects[0], objects[1], personTable};
+                }
+            }).flatMap(new Function<Object[], Observable<ResponseEntity>>() {
+                @Override
+                public Observable<ResponseEntity> apply(Object[] objects) throws Exception {
+                    IdentifyResult identifyResult = (IdentifyResult) objects[0];
+                    Integer type = (Integer) objects[1];
+                    PersonTable personTable = (PersonTable) objects[2];
                     return RetrofitManager.getInstance()
                             .apiService
                             .sendRecoResult(ApiService.recoCallBackUrl, identifyResult.getPersonId(),
                                     identifyResult.getFaceId(), identifyResult.getScore(),
                                     personTable.getName(), personTable.getCardNO(),
-                                    identifyResult.getBitmap(), type);
+                                    identifyResult.getBitmap(), type + "");
                 }
-            }).subscribe(new Consumer<Observable<Object>>() {
+            }).subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .doOnSubscribe(new Consumer<Disposable>() {
+                        @Override
+                        public void accept(Disposable disposable) throws Exception {
+                            showAlert("快马加鞭开箱子！", true);
+                        }
+                    })
+                    .subscribeOn(AndroidSchedulers.mainThread()) // 指定线程之后，线程调用的是上游的回调在哪个线程中。
+                    .subscribe(new Consumer<ResponseEntity>() {
                 @Override
-                public void accept(Observable<Object> objectObservable) throws Exception {
+                public void accept(ResponseEntity responseEntity) throws Exception {
+                    showAlert(responseEntity.getMessage(), true);
                     countDownTimer.stopCount();
                 }
+            }, new Consumer<Throwable>() {
+                @Override
+                public void accept(Throwable throwable) throws Exception {
+                    showAlert("破网络失败了", true);
+                }
             });
+
             return;
         }
         if (recognition.isAlivePass()&&!recognition.isVerifyPass()){
@@ -504,14 +531,25 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
      */
     @OnClick(R.id.btn_back)
     public void toMainScreen() {
+
         firstScreenGroup.setVisibility(View.VISIBLE);
         twoScreenGroup.setVisibility(View.INVISIBLE);
         countDownTimer.stopCount();
+        // 设置预览值
+        isPreViewCamera = true;
 
+        showAlert("", false);
     }
 
+    /**
+     * 跳转到识别屏幕 显示摄像头的那种
+     * @param view
+     */
     @OnClick({R.id.open, R.id.temp_open, R.id.final_open})
     public void toRecoScreen(View view) {
+        // 设置预览值
+        isPreViewCamera = false;
+
         countDownTimer.startCountDown(15);
         firstScreenGroup.setVisibility(View.INVISIBLE);
         twoScreenGroup.setVisibility(View.VISIBLE);
@@ -529,5 +567,16 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
         }
     }
 
+    /**
+     * 显示识别后文字
+     */
+    public void showAlert(String alert, boolean show) {
+        isPreViewCamera = true;
+        alertView.setText(alert);
+        if (show)
+            alertView.setVisibility(View.VISIBLE);
+        else
+            alertView.setVisibility(View.INVISIBLE);
+    }
 
 }
