@@ -8,7 +8,7 @@ import java.io.File;
  * 配置文件
  */
 public class Config {
-    public static final String BASE_DIR = new File(Environment.getExternalStorageState(), "/whzxw/").getPath();
+    public static final String BASE_DIR = new File(Environment.getExternalStorageDirectory(), "/whzxw/").getPath();
     /**
      *  初始化保存的文件地址
      */

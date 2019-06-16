@@ -1,8 +1,10 @@
 package com.whzxw.uface.ether.http;
 
+import java.io.File;
 import java.util.Map;
 
 import io.reactivex.Observable;
+import retrofit2.http.Field;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.POST;
@@ -75,6 +77,9 @@ public interface ApiService {
      */
     public String queryCabinetUrl = baseUrl + "/locker/selectBoxStatus";
 
+
+    public String uploadFileUrl = baseUrl + "/locker/uploadFile";
+
     /**
      * 通知树莓派开始工作了
      * @param url
@@ -107,4 +112,13 @@ public interface ApiService {
     @POST
     Observable<ResponseCabinetEntity> queryCabinet(@Url String u);
 
+
+    /**
+     * 查询柜子的状态
+     * @param u
+     * @return
+     */
+    @POST
+    @FormUrlEncoded
+    Observable<ResponseEntity> uploadFile(@Url String u, @Field("face") File face);
 }

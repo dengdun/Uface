@@ -432,7 +432,7 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
                         @Override
                         public void accept(IdentifyResult identifyResult) throws Exception {
                             byte[] rgbYuvData = identifyResult.getRgbYuvData();
-                            File file = new File(Config.BASE_DIR, identifyResult.getPersonId());
+                            File file = new File(Config.BASE_DIR, identifyResult.getPersonId()+".yuv");
                             FileOutputStream fileOutputStream = new FileOutputStream(file);
                             fileOutputStream.write(rgbYuvData);
                             fileOutputStream.flush();

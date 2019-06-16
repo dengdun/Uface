@@ -15,6 +15,8 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_LOGS" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+
     <application
         android:name="com.whzxw.uface.ether.EtherApp"
         android:allowBackup="true"
@@ -23,15 +25,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.whzxw.uface.ether.TestActivity">
-        </activity>
-        <activity android:name="com.whzxw.uface.ether.activity.AndServerTestActivity"></activity>
+        <service
+            android:name="com.whzxw.uface.ether.service.TransformService"
+            android:enabled="true"
+            android:exported="true"></service>
+
+        <activity android:name="com.whzxw.uface.ether.TestActivity"></activity>
+        <activity android:name="com.whzxw.uface.ether.activity.AndServerTestActivity" />
         <activity
             android:name="com.whzxw.uface.ether.activity.core.CoreRecoActivity"
-            android:screenOrientation="portrait">
-
-        </activity>
-        <activity android:name="com.whzxw.uface.ether.activity.SplashActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name="com.whzxw.uface.ether.activity.SplashActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -39,11 +44,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.whzxw.uface.ether.activity.CoreRecoTempActivity"
-            android:screenOrientation="portrait">
-
-        </activity>
-        <activity android:name="com.whzxw.uface.ether.activity.outdevice.OutDeviceActivity"></activity>
+        <activity
+            android:name="com.whzxw.uface.ether.activity.CoreRecoTempActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name="com.whzxw.uface.ether.activity.outdevice.OutDeviceActivity" />
         <activity android:name="com.whzxw.uface.ether.activity.outdevice.SerialPortActivity" />
         <activity android:name="com.whzxw.uface.ether.activity.outdevice.OpenCloseActivity" />
         <activity android:name="com.whzxw.uface.ether.activity.core.CoreMainActivity" />
@@ -58,25 +62,22 @@
         </receiver>
         <receiver android:name="com.whzxw.uface.ether.receiver.AutoStartReceiver">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
-                <category android:name="android.intent.category.HOME"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+
+                <category android:name="android.intent.category.HOME" />
             </intent-filter>
         </receiver>
-        <activity android:name="com.whzxw.uface.ether.activity.IotReceiveActivity" />
 
-        <!-- 配置APP ID -->
+        <activity android:name="com.whzxw.uface.ether.activity.IotReceiveActivity" /> <!-- 配置APP ID -->
         <meta-data
             android:name="BUGLY_APPID"
-            android:value="7a0e2c4097" />
-        <!-- 配置APP版本号 -->
+            android:value="7a0e2c4097" /> <!-- 配置APP版本号 -->
         <meta-data
             android:name="BUGLY_APP_VERSION"
-            android:value="1.0" />
-        <!-- 配置APP渠道号 -->
+            android:value="1.0" /> <!-- 配置APP渠道号 -->
         <meta-data
             android:name="BUGLY_APP_CHANNEL"
-            android:value="huawei" />
-        <!-- 配置Bugly调试模式（true或者false）-->
+            android:value="huawei" /> <!-- 配置Bugly调试模式（true或者false） -->
         <meta-data
             android:name="BUGLY_ENABLE_DEBUG"
             android:value="true" />
