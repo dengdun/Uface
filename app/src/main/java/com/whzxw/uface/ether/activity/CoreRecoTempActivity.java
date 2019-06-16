@@ -48,12 +48,15 @@ import com.whzxw.uface.ether.http.ResponseCabinetEntity;
 import com.whzxw.uface.ether.http.ResponseEntity;
 import com.whzxw.uface.ether.http.RetrofitManager;
 import com.whzxw.uface.ether.utils.CameraUtils;
+import com.whzxw.uface.ether.utils.Config;
 import com.whzxw.uface.ether.utils.NetHttpUtil;
 import com.whzxw.uface.ether.utils.ShareUtils;
 import com.whzxw.uface.ether.view.CountDownTimer;
 import com.whzxw.uface.ether.view.FaceView;
 
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -287,7 +290,6 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
         faceHandler = new FaceHandler();
         faceHandler.init();
 
-
         Intent intent = getIntent();
         String schoolName = intent.getStringExtra(INTENT_DEVNAME);
         schoolNameView.setText(schoolName);
@@ -422,11 +424,21 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
             Observable<Object[]> dataObservable = Observable.zip(identifyResultObservable, just, new BiFunction<IdentifyResult, Integer, Object[]>() {
                 @Override
                 public Object[] apply(IdentifyResult identifyResult, Integer integer) throws Exception {
-                    Bitmap bitmap = ImageUtils.rotateBitmap(ImageUtils.yuvImg2BitMap(recognition.getRgbYuvData(), 640, 480), 90);
-                    identifyResult.setBitmap(bitmap);
                     return new Object[]{identifyResult, integer};
                 }
             });
+            Observable.just(recognition).observeOn(Schedulers.io())
+                    .subscribe(new Consumer<IdentifyResult>() {
+                        @Override
+                        public void accept(IdentifyResult identifyResult) throws Exception {
+                            byte[] rgbYuvData = identifyResult.getRgbYuvData();
+                            File file = new File(Config.BASE_DIR, identifyResult.getPersonId());
+                            FileOutputStream fileOutputStream = new FileOutputStream(file);
+                            fileOutputStream.write(rgbYuvData);
+                            fileOutputStream.flush();
+                            fileOutputStream.close();
+                        }
+                    });
             // 创建查数据的观察事件
             Observable<PersonTable> personTableObservable = Observable.just(recognition).map(new Function<IdentifyResult, List<PersonTable>>() {
                 @Override
@@ -447,7 +459,6 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
             Observable.zip(dataObservable, personTableObservable, new BiFunction<Object[], PersonTable, Object[]>() {
                 @Override
                 public Object[] apply(Object[] objects, PersonTable personTable) throws Exception {
-
                     return new Object[]{objects[0], objects[1], personTable};
                 }
             }).flatMap(new Function<Object[], Observable<ResponseEntity>>() {

@@ -35,6 +35,7 @@ import com.whzxw.uface.ether.serverhandle.ScreenHandler;
 import com.whzxw.uface.ether.serverhandle.SettingHandler;
 import com.whzxw.uface.ether.serverhandle.StartRecoHandler;
 import com.whzxw.uface.ether.utils.AudioUtils;
+import com.whzxw.uface.ether.utils.Config;
 import com.whzxw.uface.ether.utils.SerialUtils;
 import com.whzxw.uface.ether.utils.ShareferenceManager;
 import com.whzxw.uface.ether.utils.XlogUitls;
@@ -146,6 +147,8 @@ public class EtherApp extends Application {
 
         // 初始化xlog
         XlogUitls.init(getApplicationContext());
+        // 初始化
+        Config.initBaseFilePath();
 
         // 程序崩溃时触发线程  以下用来捕获程序崩溃异常
         Thread.setDefaultUncaughtExceptionHandler(restartHandler);
