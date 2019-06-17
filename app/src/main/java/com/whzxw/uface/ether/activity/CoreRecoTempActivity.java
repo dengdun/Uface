@@ -199,11 +199,34 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getApplicationContext(), 10);
         recyclerView.setLayoutManager(gridLayoutManager);
         recyclerView.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.HORIZONTAL));
-        lockerAdapter = new LockerAdapter(new ArrayList<ResponseCabinetEntity.Cabinet>());
+
+        ArrayList<ResponseCabinetEntity.Cabinet> cabinets = new ArrayList<>();
+        cabinets.add(new ResponseCabinetEntity.Cabinet());
+        cabinets.add(new ResponseCabinetEntity.Cabinet());
+        cabinets.add(new ResponseCabinetEntity.Cabinet());
+        cabinets.add(new ResponseCabinetEntity.Cabinet());
+        cabinets.add(new ResponseCabinetEntity.Cabinet());
+        cabinets.add(new ResponseCabinetEntity.Cabinet());
+        cabinets.add(new ResponseCabinetEntity.Cabinet());
+        cabinets.add(new ResponseCabinetEntity.Cabinet());
+        cabinets.add(new ResponseCabinetEntity.Cabinet());
+        cabinets.add(new ResponseCabinetEntity.Cabinet());
+        cabinets.add(new ResponseCabinetEntity.Cabinet());
+        cabinets.add(new ResponseCabinetEntity.Cabinet());
+        cabinets.add(new ResponseCabinetEntity.Cabinet());
+        cabinets.add(new ResponseCabinetEntity.Cabinet());
+        cabinets.add(new ResponseCabinetEntity.Cabinet());
+        cabinets.add(new ResponseCabinetEntity.Cabinet());
+        cabinets.add(new ResponseCabinetEntity.Cabinet());
+        cabinets.add(new ResponseCabinetEntity.Cabinet());
+        cabinets.add(new ResponseCabinetEntity.Cabinet());
+        cabinets.add(new ResponseCabinetEntity.Cabinet());
+        cabinets.add(new ResponseCabinetEntity.Cabinet());
+        lockerAdapter = new LockerAdapter(cabinets);
         recyclerView.setAdapter(lockerAdapter);
 
         GridItemDecoration gridItemDecoration = new GridItemDecoration();
-        recyclerView.addItemDecoration(gridItemDecoration);
+//        recyclerView.addItemDecoration(gridItemDecoration);
     }
 
     @Override

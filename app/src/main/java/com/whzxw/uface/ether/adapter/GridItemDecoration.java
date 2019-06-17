@@ -1,10 +1,12 @@
 package com.whzxw.uface.ether.adapter;
 
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+
+import com.uniubi.uface.ether.R;
+import com.whzxw.uface.ether.EtherApp;
 
 /**
  * 表格增加表格线
@@ -14,7 +16,8 @@ public class GridItemDecoration extends RecyclerView.ItemDecoration {
     private final ColorDrawable mDriver;
 
     public GridItemDecoration() {
-        mDriver = new ColorDrawable(Color. BLACK);
+
+        mDriver = new ColorDrawable(EtherApp.context.getResources().getColor(R.color.lockerline));
     }
 
     @Override
@@ -29,10 +32,11 @@ public class GridItemDecoration extends RecyclerView.ItemDecoration {
             // 先计算列号
             int coloum = i+1 % 10;
             if ((coloum )%2 == 1) {
-                View childView = parent.getChildAt(i);
-                RecyclerView.LayoutParams layoutParams = (RecyclerView.LayoutParams) childView.getLayoutParams();
-
-                mDriver.setBounds(childView.getRight() , childView.getTop()- layoutParams.topMargin, childView.getRight()+  layoutParams.rightMargin, childView.getBottom() + layoutParams.bottomMargin);
+                View leftchildView = parent.getChildAt(i);
+                View rightchildView = parent.getChildAt(i);
+                RecyclerView.LayoutParams leftchildViewLayoutParams = (RecyclerView.LayoutParams) leftchildView.getLayoutParams();
+                int moveDisatance = 0;
+                mDriver.setBounds(leftchildView.getRight() + moveDisatance, leftchildView.getTop() - leftchildViewLayoutParams.topMargin , leftchildView.getRight() +  2*leftchildViewLayoutParams.rightMargin - moveDisatance, leftchildView.getBottom() + leftchildViewLayoutParams.bottomMargin);
 
                 mDriver.draw(c);
             }

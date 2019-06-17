@@ -10,11 +10,11 @@ public class ResponseCabinetEntity {
     private String message;
     private List<Cabinet> result;
 
-    public class Cabinet {
+    public static class Cabinet {
         private String id;
         private String sarkCode;
         private String no;
-        private Integer used;
+        private Integer used = 1;
         private String usable;
         private String sno;
         private String owner;
