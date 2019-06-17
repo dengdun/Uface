@@ -1,13 +1,16 @@
 package com.whzxw.uface.ether.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.constraint.Group;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
@@ -135,6 +138,10 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
 
     @BindView(R.id.camera_title)
     AppCompatTextView title;
+
+    @BindView(R.id.operator_flow)
+    AppCompatImageView operator_flow;
+
     private LockerAdapter lockerAdapter;
 
 
@@ -153,7 +160,7 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
         serviceOptions = UfaceEtherImpl.getServiceOptions();
         etherFaceManager = EtherFaceManager.getInstance();
 
-
+        operator_flow.bringToFront();
         init();
         initCamera();
         initWebView();
@@ -236,8 +243,10 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
         return super.dispatchKeyEvent(event);
     }
 
+    @SuppressLint("SetJavaScriptEnabled")
     private void initWebView() {
         final String cachePath = getApplicationContext().getDir("cache",Context.MODE_PRIVATE).getPath();
+        adWebView.bringToFront();
         // WebView加载web资源
         adWebView.loadUrl((String) ShareUtils.get(getApplicationContext(), "urlad2", "http://home.wuhan.gov.cn/"));
         // 使用硬件GPU加载
@@ -251,6 +260,11 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
         webSettings.setAppCachePath(cachePath);
         webSettings.setAppCacheMaxSize(5*1024*1024);
 
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            webSettings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+        }
+        webSettings.setDomStorageEnabled(true);
         webSettings.setMediaPlaybackRequiresUserGesture(false);
         // 设置与Js交互的权限
         webSettings.setJavaScriptEnabled(true);
