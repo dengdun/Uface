@@ -387,15 +387,6 @@ public class CoreRecoActivity extends AppCompatActivity implements IdentifyResul
         if (isScreenSaver) return;
         Log.i("coreCall", "分数=" + recognition.getScore());
 
-//        runOnUiThread(new Runnable() {
-//            @Override
-//            public void run() {
-//                Log.i("coreCall", "主线程运行。。。");
-//                Toast.makeText(getApplicationContext(), recognition.getScore() + "", Toast.LENGTH_LONG).show();
-//            }
-//        });
-
-
         // 屏保的时候不让提交数据
         if (recognition.isAlivePass()&&recognition.isVerifyPass()) {
             Log.i("coreCall", "通过正在启动柜门");

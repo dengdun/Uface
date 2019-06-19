@@ -12,7 +12,6 @@ import android.support.constraint.Group;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -196,9 +195,8 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
      */
     private void initRecycleView() {
 
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getApplicationContext(), 10);
+       GridLayoutManager gridLayoutManager = new GridLayoutManager(getApplicationContext(), 10);
         recyclerView.setLayoutManager(gridLayoutManager);
-        recyclerView.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.HORIZONTAL));
 
         ArrayList<ResponseCabinetEntity.Cabinet> cabinets = new ArrayList<>();
         cabinets.add(new ResponseCabinetEntity.Cabinet());
@@ -222,6 +220,21 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
         cabinets.add(new ResponseCabinetEntity.Cabinet());
         cabinets.add(new ResponseCabinetEntity.Cabinet());
         cabinets.add(new ResponseCabinetEntity.Cabinet());
+        cabinets.add(new ResponseCabinetEntity.Cabinet());
+        cabinets.add(new ResponseCabinetEntity.Cabinet());
+        cabinets.add(new ResponseCabinetEntity.Cabinet());
+        cabinets.add(new ResponseCabinetEntity.Cabinet());
+//        cabinets.add(new ResponseCabinetEntity.Cabinet());
+//        cabinets.add(new ResponseCabinetEntity.Cabinet());
+//        cabinets.add(new ResponseCabinetEntity.Cabinet());
+//        cabinets.add(new ResponseCabinetEntity.Cabinet());
+//        cabinets.add(new ResponseCabinetEntity.Cabinet());
+//        cabinets.add(new ResponseCabinetEntity.Cabinet());
+//        cabinets.add(new ResponseCabinetEntity.Cabinet());
+//        cabinets.add(new ResponseCabinetEntity.Cabinet());
+//        cabinets.add(new ResponseCabinetEntity.Cabinet());
+//        cabinets.add(new ResponseCabinetEntity.Cabinet());
+//        cabinets.add(new ResponseCabinetEntity.Cabinet());
         lockerAdapter = new LockerAdapter(cabinets);
         recyclerView.setAdapter(lockerAdapter);
 
