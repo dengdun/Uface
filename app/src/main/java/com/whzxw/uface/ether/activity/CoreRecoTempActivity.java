@@ -41,7 +41,6 @@ import com.uniubi.uface.ether.core.faceprocess.IdentifyResultCallBack;
 import com.uniubi.uface.ether.outdevice.utils.FileNodeOperator;
 import com.uniubi.uface.ether.utils.ImageUtils;
 import com.whzxw.uface.ether.EtherApp;
-import com.whzxw.uface.ether.adapter.GridItemDecoration;
 import com.whzxw.uface.ether.adapter.LockerAdapter;
 import com.whzxw.uface.ether.database.PersonTable;
 import com.whzxw.uface.ether.http.ApiService;
@@ -200,46 +199,11 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
         recyclerView.setLayoutManager(gridLayoutManager);
 
         ArrayList<ResponseCabinetEntity.Cabinet> cabinets = new ArrayList<>();
-        cabinets.add(new ResponseCabinetEntity.Cabinet());
-        cabinets.add(new ResponseCabinetEntity.Cabinet());
-        cabinets.add(new ResponseCabinetEntity.Cabinet());
-        cabinets.add(new ResponseCabinetEntity.Cabinet());
-        cabinets.add(new ResponseCabinetEntity.Cabinet());
-        cabinets.add(new ResponseCabinetEntity.Cabinet());
-        cabinets.add(new ResponseCabinetEntity.Cabinet());
-        cabinets.add(new ResponseCabinetEntity.Cabinet());
-        cabinets.add(new ResponseCabinetEntity.Cabinet());
-        cabinets.add(new ResponseCabinetEntity.Cabinet());
-        cabinets.add(new ResponseCabinetEntity.Cabinet());
-        cabinets.add(new ResponseCabinetEntity.Cabinet());
-        cabinets.add(new ResponseCabinetEntity.Cabinet());
-        cabinets.add(new ResponseCabinetEntity.Cabinet());
-        cabinets.add(new ResponseCabinetEntity.Cabinet());
-        cabinets.add(new ResponseCabinetEntity.Cabinet());
-        cabinets.add(new ResponseCabinetEntity.Cabinet());
-        cabinets.add(new ResponseCabinetEntity.Cabinet());
-        cabinets.add(new ResponseCabinetEntity.Cabinet());
-        cabinets.add(new ResponseCabinetEntity.Cabinet());
-        cabinets.add(new ResponseCabinetEntity.Cabinet());
-        cabinets.add(new ResponseCabinetEntity.Cabinet());
-        cabinets.add(new ResponseCabinetEntity.Cabinet());
-        cabinets.add(new ResponseCabinetEntity.Cabinet());
-        cabinets.add(new ResponseCabinetEntity.Cabinet());
-//        cabinets.add(new ResponseCabinetEntity.Cabinet());
-//        cabinets.add(new ResponseCabinetEntity.Cabinet());
-//        cabinets.add(new ResponseCabinetEntity.Cabinet());
-//        cabinets.add(new ResponseCabinetEntity.Cabinet());
-//        cabinets.add(new ResponseCabinetEntity.Cabinet());
-//        cabinets.add(new ResponseCabinetEntity.Cabinet());
-//        cabinets.add(new ResponseCabinetEntity.Cabinet());
-//        cabinets.add(new ResponseCabinetEntity.Cabinet());
-//        cabinets.add(new ResponseCabinetEntity.Cabinet());
-//        cabinets.add(new ResponseCabinetEntity.Cabinet());
 //        cabinets.add(new ResponseCabinetEntity.Cabinet());
         lockerAdapter = new LockerAdapter(cabinets);
         recyclerView.setAdapter(lockerAdapter);
-
-        GridItemDecoration gridItemDecoration = new GridItemDecoration();
+//
+//        GridItemDecoration gridItemDecoration = new GridItemDecoration();
 //        recyclerView.addItemDecoration(gridItemDecoration);
     }
 

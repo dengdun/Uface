@@ -43,14 +43,14 @@
         app:layout_constraintGuide_percent="0.99" />
 
     <android.support.constraint.Guideline
-        android:id="@+id/two_line_zero"
+        android:id="@+id/second_line_zero"
         android:layout_width="0dp"
         android:layout_height="1dp"
         android:orientation="horizontal"
         app:layout_constraintGuide_begin="73dp" />
 
     <android.support.constraint.Guideline
-        android:id="@+id/two_line_one"
+        android:id="@+id/second_line_one"
         android:layout_width="0dp"
         android:layout_height="1dp"
         android:orientation="horizontal"
@@ -58,12 +58,20 @@
         app:layout_constraintGuide_percent="0.34" />
 
     <android.support.constraint.Guideline
-        android:id="@+id/two_line_two"
+        android:id="@+id/second_line_two"
         android:layout_width="0dp"
         android:layout_height="1dp"
         android:orientation="horizontal"
         android:visibility="gone"
         app:layout_constraintGuide_percent="0.40" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/second_line_three"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        app:layout_constraintGuide_percent="0.46" />
 
     <!--首屏-->
     <de.hdodenhof.circleimageview.CircleImageView
@@ -174,7 +182,7 @@
         android:id="@+id/two_group"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="invisible"
+        android:visibility="visible"
         app:constraint_referenced_ids="  btn_back, camera_title, countdown_timer, banner"/>
 
     <android.support.v4.widget.NestedScrollView
@@ -183,8 +191,8 @@
 
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@id/two_line_zero"
-        app:layout_constraintBottom_toBottomOf="@id/two_line_one">
+        app:layout_constraintTop_toTopOf="@id/second_line_zero"
+        app:layout_constraintBottom_toBottomOf="@id/second_line_two">
         <com.whzxw.uface.ether.view.autofit.AutoFitRecyclerView
             android:id="@+id/recycle_view"
             android:layout_marginRight="10dp"
@@ -193,6 +201,57 @@
             android:layout_height="wrap_content"/>
     </android.support.v4.widget.NestedScrollView>
 
+    <View
+        android:id="@+id/using_box_image"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="20dp"
+        android:background="@color/hadLockerColor"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="@id/second_line_one"/>
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/using_box_text"
+        android:text="@string/using_box"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        app:layout_constraintTop_toTopOf="@id/second_line_one"
+        app:layout_constraintLeft_toRightOf="@id/using_box_image"/>
+
+    <View
+        android:id="@+id/not_use_box"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        app:layout_goneMarginLeft="80dp"
+        android:layout_marginStart="80dp"
+        android:background="@color/defaultLockerColor"
+        app:layout_constraintTop_toTopOf="@id/second_line_one"
+        app:layout_constraintLeft_toRightOf="@id/using_box_text"/>
+
+    <android.support.v7.widget.AppCompatTextView
+        android:text="@string/not_use_box"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        app:layout_constraintTop_toTopOf="@id/second_line_one"
+        app:layout_constraintLeft_toRightOf="@id/not_use_box"/>
+
+    <android.support.v7.widget.AppCompatTextView
+        android:text="@string/not_use_box_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        app:layout_constraintTop_toBottomOf="@id/using_box_image"
+        app:layout_constraintLeft_toLeftOf="parent"/>
+
+    <android.support.v7.widget.AppCompatTextView
+        android:text="@string/book_box_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        app:layout_constraintTop_toBottomOf="@id/using_box_image"
+        app:layout_constraintRight_toRightOf="parent"/>
 
     <View
         android:id="@+id/banner"
@@ -201,18 +260,18 @@
         android:background="@color/cardview_light_background"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@id/two_line_one"
-        app:layout_constraintBottom_toBottomOf="@id/two_line_two"/>
+        app:layout_constraintTop_toTopOf="@id/second_line_two"
+        app:layout_constraintBottom_toBottomOf="@id/second_line_three"/>
 
-    <android.support.v7.widget.AppCompatButton
+    <android.support.v7.widget.AppCompatTextView
         android:id="@+id/btn_back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/back"
         android:drawableLeft="@drawable/back"
         android:background="@color/cardview_light_background"
-        app:layout_constraintTop_toTopOf="@id/two_line_one"
-        app:layout_constraintBottom_toBottomOf="@id/two_line_two"
+        app:layout_constraintTop_toTopOf="@id/second_line_two"
+        app:layout_constraintBottom_toBottomOf="@id/second_line_three"
         app:layout_constraintLeft_toLeftOf="parent"/>
 
     <android.support.v7.widget.AppCompatTextView
@@ -220,8 +279,8 @@
         android:text="@string/open"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="@id/two_line_one"
-        app:layout_constraintBottom_toBottomOf="@id/two_line_two"
+        app:layout_constraintTop_toTopOf="@id/second_line_two"
+        app:layout_constraintBottom_toBottomOf="@id/second_line_three"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"/>
 
@@ -229,8 +288,8 @@
         android:id="@+id/countdown_timer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="@id/two_line_one"
-        app:layout_constraintBottom_toBottomOf="@id/two_line_two"
+        app:layout_constraintTop_toTopOf="@id/second_line_two"
+        app:layout_constraintBottom_toBottomOf="@id/second_line_three"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginEnd="12dp"/>
 
@@ -241,7 +300,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@id/two_line_two" />
+        app:layout_constraintTop_toTopOf="@id/second_line_three" />
 
     <TextureView
         android:id="@+id/ir_camera"
@@ -250,7 +309,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@id/two_line_two" />
+        app:layout_constraintTop_toTopOf="@id/second_line_three" />
 
     <com.whzxw.uface.ether.view.FaceView
         android:id="@+id/fvRGB"
@@ -259,7 +318,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@id/two_line_two" />
+        app:layout_constraintTop_toTopOf="@id/second_line_three" />
 
     <com.whzxw.uface.ether.view.FaceView
         android:id="@+id/fvIR"
@@ -268,7 +327,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@id/two_line_two" />
+        app:layout_constraintTop_toTopOf="@id/second_line_three" />
     <!--视频的遮羞布-->
     <View
         android:id="@+id/cameralid"
@@ -278,7 +337,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@id/two_line_two"/>
+        app:layout_constraintTop_toTopOf="@id/second_line_three"/>
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/alert"
@@ -291,6 +350,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@id/two_line_two"/>
+        app:layout_constraintTop_toTopOf="@id/second_line_three"/>
 
 </android.support.constraint.ConstraintLayout>

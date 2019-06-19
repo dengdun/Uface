@@ -90,7 +90,6 @@ public class GridItemDecoration extends RecyclerView.ItemDecoration {
                 outRect.top = spacing;
             }
             outRect.bottom = spacing; // item bottom
-
         }
     }
 }

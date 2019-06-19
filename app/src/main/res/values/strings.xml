@@ -82,4 +82,12 @@
     <string name="final_open">取件</string>
     <string name="back">返回</string>
     <string name="alert">提示信息</string>
+
+    <string name="using_box">在用箱位</string>
+    <string name="not_use_box">空闲箱位</string>
+    <string name="not_use_box_number">可用箱位: 0</string>
+    <string name="book_box_number">预留箱位: 0</string>
+
+
+
 </resources>
