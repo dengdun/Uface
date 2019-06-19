@@ -76,6 +76,7 @@ import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Schedulers;
 
+import static com.whzxw.uface.ether.activity.SplashActivity.INTENT_DEVCODE;
 import static com.whzxw.uface.ether.activity.SplashActivity.INTENT_DEVNAME;
 
 /**
@@ -158,7 +159,7 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
 
         serviceOptions = UfaceEtherImpl.getServiceOptions();
         etherFaceManager = EtherFaceManager.getInstance();
-
+        // 这个要提高堆叠的时候的登记，不然容易被后面的控件盖住。看不到。
         operator_flow.bringToFront();
         init();
         initCamera();
@@ -302,10 +303,10 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
         faceHandler = new FaceHandler();
         faceHandler.init();
 
-
         Intent intent = getIntent();
         String schoolName = intent.getStringExtra(INTENT_DEVNAME);
-        schoolNameView.setText(schoolName);
+        String deviceCode = intent.getStringExtra(INTENT_DEVCODE);
+        schoolNameView.setText(schoolName  + "\n" + deviceCode);
 
     }
 
@@ -533,7 +534,6 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
     public void onTrackStart() {
 
     }
-
 
     @Override
     protected void onDestroy() {

@@ -21,7 +21,7 @@ public class CountDownTimer extends AppCompatTextView {
     /**
      * 默认计时器的时间
      */
-    public final static int COUNTNUMBER = 15;
+    public final static int DEFAULTCOUNTNUMBER = 15;
     private Disposable disposable;
 
     public CountDownTimer(Context context) {
@@ -85,7 +85,9 @@ public class CountDownTimer extends AppCompatTextView {
         }
     }
 
-
+    /**
+     * 计时器时间到了，就回调。
+     */
     public interface DeadlineListener {
         public void deadline();
     }

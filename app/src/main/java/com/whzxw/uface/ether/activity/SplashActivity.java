@@ -11,10 +11,14 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.uniubi.uface.ether.BuildConfig;
 import com.whzxw.uface.ether.http.ApiService;
 import com.whzxw.uface.ether.http.ResponseEntity;
 import com.whzxw.uface.ether.http.RetrofitManager;
 import com.whzxw.uface.ether.utils.XlogUitls;
+
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
@@ -31,6 +35,9 @@ import io.reactivex.schedulers.Schedulers;
 public class SplashActivity extends AppCompatActivity {
 
     public static final String INTENT_DEVNAME = "devName";
+    public static final String INTENT_DEVCODE = "devCode";
+    private Disposable disposable;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,7 +62,7 @@ public class SplashActivity extends AppCompatActivity {
         /**
          * 查询成功，前置机启动了。
          */
-        final Disposable disposable = RetrofitManager.getInstance()
+        disposable = RetrofitManager.getInstance()
                 .apiService
                 .queryMachineName(ApiService.queryDevNameUrl)
                 .retryWhen(new Function<Observable<Throwable>, ObservableSource<?>>() {
@@ -64,14 +71,16 @@ public class SplashActivity extends AppCompatActivity {
                         return throwableObservable.flatMap(new Function<Throwable, ObservableSource<?>>() {
                             @Override
                             public ObservableSource<?> apply(Throwable throwable) throws Exception {
-
-//                                if (throwable instanceof IOException) {
-//                                    return Observable.just(1).delay(2, TimeUnit.SECONDS);
-//                                } else {
-//                                    return Observable.error(new Throwable(""));
-//                                }
-
-                                return Observable.error(new Throwable(""));
+                                if (BuildConfig.DEBUG)  {
+                                    return Observable.error(new Throwable(""));
+                                } else {
+                                    // 测试的时候注释上
+                                    if (throwable instanceof IOException) {
+                                        return Observable.just(1).delay(2, TimeUnit.SECONDS);
+                                    } else {
+                                        return Observable.error(new Throwable(""));
+                                    }
+                                }
                             }
                         });
                     }
@@ -84,6 +93,7 @@ public class SplashActivity extends AppCompatActivity {
                         Log.i("jin", "get result");
                         Intent intent = new Intent(getApplicationContext(), CoreRecoTempActivity.class);
                         intent.putExtra(INTENT_DEVNAME, responseEntity.getResult());
+                        intent.putExtra(INTENT_DEVCODE, responseEntity.getResult());
                         startActivity(intent);
                         finish();
                     }
@@ -105,11 +115,14 @@ public class SplashActivity extends AppCompatActivity {
 
                     }
                 });
-
-
         XlogUitls.init(getApplication());
 
     }
 
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (disposable != null && !disposable.isDisposed())
+            disposable.dispose();
+    }
 }

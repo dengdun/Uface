@@ -70,7 +70,6 @@
         android:layout_width="0dp"
         android:layout_height="1dp"
         android:orientation="horizontal"
-        android:visibility="gone"
         app:layout_constraintGuide_percent="0.46" />
 
     <!--首屏-->
@@ -171,7 +170,7 @@
         android:id="@+id/first_group"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="invisible"
+        android:visibility="visible"
         app:constraint_referenced_ids="operator_flow, open, temp_open, final_open, cameralid, adwebview"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -182,7 +181,7 @@
         android:id="@+id/two_group"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="visible"
+        android:visibility="invisible"
         app:constraint_referenced_ids="  btn_back, camera_title, countdown_timer, banner"/>
 
     <android.support.v4.widget.NestedScrollView
@@ -269,6 +268,9 @@
         android:layout_height="wrap_content"
         android:text="@string/back"
         android:drawableLeft="@drawable/back"
+        android:layout_marginStart="20dp"
+        android:textSize="20sp"
+        android:textColor="@color/colorBlack"
         android:background="@color/cardview_light_background"
         app:layout_constraintTop_toTopOf="@id/second_line_two"
         app:layout_constraintBottom_toBottomOf="@id/second_line_three"
@@ -277,6 +279,8 @@
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/camera_title"
         android:text="@string/open"
+        android:textSize="20sp"
+        android:textColor="@color/colorBlack"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="@id/second_line_two"
