@@ -13,7 +13,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.InputDevice;
 import android.view.KeyEvent;
@@ -54,6 +53,8 @@ import com.whzxw.uface.ether.utils.NetHttpUtil;
 import com.whzxw.uface.ether.utils.ShareUtils;
 import com.whzxw.uface.ether.view.CountDownTimer;
 import com.whzxw.uface.ether.view.FaceView;
+import com.whzxw.uface.ether.view.autofit.AutoFitLayoutManager;
+import com.whzxw.uface.ether.view.autofit.AutoFitRecyclerView;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -119,7 +120,7 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
     WebView adWebView;
 
     @BindView(R.id.recycle_view)
-    RecyclerView recyclerView;
+    AutoFitRecyclerView recyclerView;
 
     @BindView(R.id.first_group)
     Group firstScreenGroup;
@@ -195,7 +196,7 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
      */
     private void initRecycleView() {
 
-       GridLayoutManager gridLayoutManager = new GridLayoutManager(getApplicationContext(), 10);
+       GridLayoutManager gridLayoutManager = new AutoFitLayoutManager(getApplicationContext(), 10);
         recyclerView.setLayoutManager(gridLayoutManager);
 
         ArrayList<ResponseCabinetEntity.Cabinet> cabinets = new ArrayList<>();

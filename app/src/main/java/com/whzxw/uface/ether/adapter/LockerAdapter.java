@@ -25,72 +25,53 @@ public class LockerAdapter extends RecyclerView.Adapter {
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull final ViewGroup parent, final int viewType) {
-        View inflate = LayoutInflater.from(parent.getContext()).inflate(R.layout.locker_item, parent, false);
+        switch (viewType) {
+            case LINE:
+                View view1 = LayoutInflater.from(parent.getContext()).inflate(R.layout.locker_line_item, parent, false);
+                return  new LockerLineHolder(view1);
 
-//        final ImageView imageView = new ImageView(parent.getContext());
-//        ViewGroup.MarginLayoutParams marginLayoutParams = new ViewGroup.MarginLayoutParams(30, 30);
-//        marginLayoutParams.height = 30;
-//        marginLayoutParams.width = 30;
-//        imageView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-//            @Override
-//            public boolean onPreDraw() {
-//                final int type = viewType;
-//                final ViewGroup.LayoutParams lp = imageView.getLayoutParams();
-//                if (lp instanceof GridLayoutManager.LayoutParams) {
-//                    GridLayoutManager.LayoutParams sglp = (GridLayoutManager.LayoutParams) lp;
-//                    int viewLayoutPosition = sglp.getViewLayoutPosition();
-//
-//                    switch (type) {
-//                        case LINE:
-//                            sglp.width = 30;
-//                            sglp.height = 30;
-//                            break;
-//                        case NO_LINE:
-//                            sglp.width = 30;
-//                            sglp.height = 30;
-//                            break;
-//                    }
-//                    imageView.setLayoutParams(sglp);
-//                }
-//                final GridLayoutManager lm =
-//                        (GridLayoutManager) ((RecyclerView) parent).getLayoutManager();
-//
-//                imageView.getViewTreeObserver().removeOnPreDrawListener(this);
-//                return true;
-//            }
-//        });
-//        GridLayoutManager.LayoutParams sglp = (GridLayoutManager.LayoutParams) imageView.getLayoutParams();
-//        int viewLayoutPosition = sglp.getViewLayoutPosition();
-//        sglp.width = 30;
-//        sglp.height = 30;
-//        switch (viewType) {
-//            case LINE:
-//                sglp.width = 30;
-//                sglp.height = 30;
-//                break;
-//            case NO_LINE:
-//                sglp.width = 30;
-//                sglp.height = 30;
-//                break;
-//        }
-//        imageView.setLayoutParams(marginLayoutParams);
-        return new LockerHolder(inflate);
+            default:
+                View view2 = LayoutInflater.from(parent.getContext()).inflate(R.layout.locker_item, parent, false);
+                return  new LockerHolder(view2);
+        }
+
+
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+
         Context context = holder.itemView.getContext();
-        ImageView itemView = (ImageView) holder.itemView;
-        // used为0表示未存放，1表示已存放；
-        if (list.get(position).getUsed() == 0) {
-//            holder.itemView.setBackgroundColor(context.getResources().getColor(R.color.defaultLockerColor));
-        } else if (list.get(position).getUsed() == 1) {
-            holder.itemView.setBackgroundColor(context.getResources().getColor(R.color.hadLockerColor));
-            itemView.setImageResource(R.drawable.lease);
-            itemView.setPadding(10, 10, 10, 10);
-        } else {
-            holder.itemView.setBackgroundColor(context.getResources().getColor(R.color.LockerColor));
+        int itemViewType = holder.getItemViewType();
+        switch (itemViewType) {
+            case LINE:
+                LockerLineHolder lockerLineHolder = (LockerLineHolder) holder;
+                lockerLineHolder.linear.setBackgroundColor(context.getResources().getColor(R.color.lockerline));
+                if (list.get(position).getUsed() == 0) {
+                    holder.itemView.setBackgroundColor(context.getResources().getColor(R.color.defaultLockerColor));
+                } else if (list.get(position).getUsed() == 1) {
+                    lockerLineHolder.imageView.setBackgroundColor(context.getResources().getColor(R.color.hadLockerColor));
+                    lockerLineHolder.imageView.setImageResource(R.drawable.lease);
+                    lockerLineHolder.imageView.setPadding(10, 10, 10, 10);
+                } else {
+                    lockerLineHolder.imageView.setBackgroundColor(context.getResources().getColor(R.color.LockerColor));
+                }
+                break;
+            default:
+                LockerHolder lockerHolder = (LockerHolder) holder;
+                // used为0表示未存放，1表示已存放；
+                if (list.get(position).getUsed() == 0) {
+                    holder.itemView.setBackgroundColor(context.getResources().getColor(R.color.defaultLockerColor));
+                } else if (list.get(position).getUsed() == 1) {
+                    lockerHolder.imageView.setBackgroundColor(context.getResources().getColor(R.color.hadLockerColor));
+                    lockerHolder.imageView.setImageResource(R.drawable.lease);
+                    lockerHolder.imageView.setPadding(10, 10, 10, 10);
+                } else {
+                    lockerHolder.imageView.setBackgroundColor(context.getResources().getColor(R.color.LockerColor));
+                }
         }
+
+
 
     }
 
@@ -102,7 +83,7 @@ public class LockerAdapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemViewType(int position) {
-        if (position% 3 == 1)
+        if (position%2 == 0)
             return LINE;
         else
             return NO_LINE;
@@ -110,8 +91,17 @@ public class LockerAdapter extends RecyclerView.Adapter {
 
     class LockerHolder extends RecyclerView.ViewHolder {
         final ImageView imageView;
-        final ImageView linear;
         public LockerHolder(View itemView) {
+            super(itemView);
+            imageView = ((ImageView)  itemView.findViewById(R.id.box));
+        }
+
+    }
+
+    class LockerLineHolder extends RecyclerView.ViewHolder {
+        final ImageView imageView;
+        final ImageView linear;
+        public LockerLineHolder(View itemView) {
             super(itemView);
             imageView = ((ImageView)  itemView.findViewById(R.id.box));
             linear = ((ImageView)  itemView.findViewById(R.id.liner));
@@ -123,15 +113,5 @@ public class LockerAdapter extends RecyclerView.Adapter {
         this.list = list;
     }
 
-    class LockerLineHolder extends RecyclerView.ViewHolder {
-        final ImageView imageView;
-        public LockerLineHolder(View itemView) {
-            super(itemView);
-            imageView = ((ImageView)  itemView);
-        }
 
-        public ImageView getImageView() {
-            return imageView;
-        }
-    }
 }
