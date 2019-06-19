@@ -184,21 +184,45 @@
         android:visibility="invisible"
         app:constraint_referenced_ids="  btn_back, camera_title, countdown_timer, banner"/>
 
-    <android.support.v4.widget.NestedScrollView
+    <!--<android.support.v4.widget.NestedScrollView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+
+        <!--app:layout_constraintLeft_toLeftOf="parent"-->
+        <!--app:layout_constraintRight_toRightOf="parent"-->
+        <!--app:layout_constraintTop_toTopOf="@id/second_line_zero"-->
+        <!--app:layout_constraintBottom_toBottomOf="@id/second_line_two">-->
+        <!--<com.whzxw.uface.ether.view.autofit.AutoFitRecyclerView-->
+            <!--android:id="@+id/recycle_view"-->
+            <!--android:layout_marginRight="10dp"-->
+            <!--android:layout_marginLeft="10dp"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"/>-->
+    <!--</android.support.v4.widget.NestedScrollView>-->
+
+    <LinearLayout
+        android:id="@+id/layout"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
+        android:orientation="vertical"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@id/second_line_zero"
-        app:layout_constraintBottom_toBottomOf="@id/second_line_two">
-        <com.whzxw.uface.ether.view.autofit.AutoFitRecyclerView
-            android:id="@+id/recycle_view"
-            android:layout_marginRight="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-    </android.support.v4.widget.NestedScrollView>
+        app:layout_constraintBottom_toBottomOf="@id/second_line_two"/>
+
+    <!--<HorizontalScrollView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:background="@color/defaultLockerColor"-->
+        <!--app:layout_constraintLeft_toLeftOf="parent"-->
+        <!--app:layout_constraintRight_toRightOf="parent"-->
+        <!--app:layout_constraintTop_toTopOf="@id/second_line_zero"-->
+        <!--app:layout_constraintBottom_toBottomOf="@id/second_line_two">-->
+
+        <!---->
+    <!--</HorizontalScrollView>-->
 
     <View
         android:id="@+id/using_box_image"

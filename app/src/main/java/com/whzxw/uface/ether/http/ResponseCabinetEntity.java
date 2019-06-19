@@ -14,7 +14,7 @@ public class ResponseCabinetEntity {
         private String id;
         private String sarkCode;
         private String no;
-        private Integer used;
+        private Integer used = 1;
         private String usable;
         private String sno;
         private String owner;
