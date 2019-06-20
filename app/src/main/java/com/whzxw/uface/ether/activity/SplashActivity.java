@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.uniubi.uface.ether.BuildConfig;
 import com.whzxw.uface.ether.http.ApiService;
-import com.whzxw.uface.ether.http.ResponseEntity;
+import com.whzxw.uface.ether.http.ResponseDeviceEntity;
 import com.whzxw.uface.ether.http.RetrofitManager;
 import com.whzxw.uface.ether.utils.XlogUitls;
 
@@ -87,13 +87,14 @@ public class SplashActivity extends AppCompatActivity {
                 })
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Consumer<ResponseEntity>() {
+                .subscribe(new Consumer<ResponseDeviceEntity>() {
                     @Override
-                    public void accept(ResponseEntity responseEntity) throws Exception {
+                    public void accept(ResponseDeviceEntity responseEntity) throws Exception {
                         Log.i("jin", "get result");
                         Intent intent = new Intent(getApplicationContext(), CoreRecoTempActivity.class);
-                        intent.putExtra(INTENT_DEVNAME, responseEntity.getResult());
-                        intent.putExtra(INTENT_DEVCODE, responseEntity.getResult());
+                        ResponseDeviceEntity.Device result = responseEntity.getResult();
+                        intent.putExtra(INTENT_DEVNAME, result.getDeviceName());
+                        intent.putExtra(INTENT_DEVCODE, result.getDeviceNo());
                         startActivity(intent);
                         finish();
                     }

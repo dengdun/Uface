@@ -31,4 +31,6 @@ public class ResponseEntity {
     public void setResult(String result) {
         this.result = result;
     }
+
+
 }

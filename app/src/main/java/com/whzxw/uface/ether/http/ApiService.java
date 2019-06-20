@@ -97,7 +97,7 @@ public interface ApiService {
      * @return
      */
     @POST
-    Observable<ResponseEntity> queryMachineName(@Url String url);
+    Observable<ResponseDeviceEntity> queryMachineName(@Url String url);
 
     /**
      * 查询柜子的状态
