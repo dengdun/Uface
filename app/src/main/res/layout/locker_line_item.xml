@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <View
+        <ImageView
             android:id="@+id/item"
             android:layout_width="40dp"
             android:layout_height="40dp"
@@ -20,7 +20,8 @@
         <View
             android:layout_width="40dp"
             android:layout_height="1dp"
-            android:background="@android:color/white" />
+            android:background="@android:color/white"
+            />
 
     </LinearLayout>
 

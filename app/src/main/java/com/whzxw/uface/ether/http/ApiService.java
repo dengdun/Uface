@@ -13,7 +13,7 @@ import retrofit2.http.Url;
  */
 public interface ApiService {
 //    public String baseUrl = "http://192.168.10.150:8082";
-    public String baseUrl = "http://3drrbn.natappfree.cc";
+    public String baseUrl = "http://zw38zm.natappfree.cc";
     /**
      * 1. 查询设备名称接口
      * 请求地址: /locker/selectDevName
@@ -75,6 +75,8 @@ public interface ApiService {
      */
     public String queryCabinetUrl = baseUrl + "/locker/selectBoxStatus";
 
+    public String adUrl = baseUrl + "/locker/toAd4App";
+
     /**
      * 通知树莓派开始工作了
      * @param url
@@ -106,5 +108,7 @@ public interface ApiService {
      */
     @POST
     Observable<ResponseCabinetEntity> queryCabinet(@Url String u);
+
+
 
 }

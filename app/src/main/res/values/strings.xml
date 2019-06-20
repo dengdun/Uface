@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">EtherDemo</string>
+    <string name="app_name">人脸识别自助机柜</string>
     <string name="title_activity_settings">Settings</string>
 
     <!-- Strings related to Settings -->

@@ -26,6 +26,7 @@ import com.uniubi.uface.ether.utils.AppLog;
 import com.whzxw.uface.ether.activity.SplashActivity;
 import com.whzxw.uface.ether.database.DaoMaster;
 import com.whzxw.uface.ether.database.DaoSession;
+import com.whzxw.uface.ether.schedule.AlarmManagerUtils;
 import com.whzxw.uface.ether.serverhandle.ChangeRocModeHandler;
 import com.whzxw.uface.ether.serverhandle.FaceAllDeleteHandler;
 import com.whzxw.uface.ether.serverhandle.FaceCreateHandler;
@@ -146,7 +147,8 @@ public class EtherApp extends Application {
 
         // 初始化xlog
         XlogUitls.init(getApplicationContext());
-
+        // 开启定时刷新广告webview的广播
+        AlarmManagerUtils.start();
         // 程序崩溃时触发线程  以下用来捕获程序崩溃异常
         Thread.setDefaultUncaughtExceptionHandler(restartHandler);
     }
@@ -154,7 +156,7 @@ public class EtherApp extends Application {
     // 创建服务用于捕获崩溃异常
     private Thread.UncaughtExceptionHandler restartHandler = new Thread.UncaughtExceptionHandler() {
         public void uncaughtException(Thread thread, Throwable ex) {
-//            restartApp();// 发生崩溃异常时,重启应用
+            restartApp();// 发生崩溃异常时,重启应用
         }
     };
 
