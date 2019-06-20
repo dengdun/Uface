@@ -15,6 +15,7 @@ import com.uniubi.uface.ether.BuildConfig;
 import com.whzxw.uface.ether.http.ApiService;
 import com.whzxw.uface.ether.http.ResponseDeviceEntity;
 import com.whzxw.uface.ether.http.RetrofitManager;
+import com.whzxw.uface.ether.utils.Voiceutils;
 import com.whzxw.uface.ether.utils.XlogUitls;
 
 import java.io.IOException;
@@ -41,7 +42,7 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        Voiceutils.init();
         //无title
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         //全屏

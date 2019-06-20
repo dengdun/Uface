@@ -52,6 +52,7 @@ import com.whzxw.uface.ether.http.ResponseEntity;
 import com.whzxw.uface.ether.http.RetrofitManager;
 import com.whzxw.uface.ether.utils.CameraUtils;
 import com.whzxw.uface.ether.utils.NetHttpUtil;
+import com.whzxw.uface.ether.utils.Voiceutils;
 import com.whzxw.uface.ether.view.CountDownTimer;
 import com.whzxw.uface.ether.view.FaceView;
 
@@ -168,7 +169,7 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
         init();
         initCamera();
         initWebView();
-        initRecycleView();
+//        initRecycleView();
 
         initWhiteYuvImage();
         etherFaceManager.startService(this, this, this);
@@ -583,6 +584,7 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
                     .subscribe(new Consumer<ResponseEntity>() {
                         @Override
                         public void accept(ResponseEntity responseEntity) throws Exception {
+                            Voiceutils.playRecoOver();
                             showAlert(responseEntity.getMessage(), true);
                             countDownTimer.stopCount();
                         }
@@ -676,7 +678,7 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
         countDownTimer.startCountDown(15);
         firstScreenGroup.setVisibility(View.INVISIBLE);
         twoScreenGroup.setVisibility(View.VISIBLE);
-
+        Voiceutils.playPlayStartReco();
         switch (view.getId()) {
             case R.id.open:
                 recoFromWhichButton = 0;
