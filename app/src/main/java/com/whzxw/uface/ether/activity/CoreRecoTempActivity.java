@@ -263,7 +263,7 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
                 if (i < spanCount*j&&i>=spanCount*(j-1))
                     if (i % 2 == 0) {
                         View view = LayoutInflater.from(this).inflate(R.layout.locker_item, null);
-                        ResponseCabinetEntity.Cabinet cabinet = lockerList.get(j);
+                        ResponseCabinetEntity.Cabinet cabinet = lockerList.get(i);
                         if (cabinet.getUsed() == 1) {
                             ImageView v = ((ImageView) view.findViewById(R.id.item));
                             v.setImageResource(R.drawable.locker_used);
@@ -272,7 +272,7 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
                         layout.addView(view);
                     } else {
                         View view = LayoutInflater.from(this).inflate(R.layout.locker_line_item , null);
-                        ResponseCabinetEntity.Cabinet cabinet = lockerList.get(j);
+                        ResponseCabinetEntity.Cabinet cabinet = lockerList.get(i);
                         if (cabinet.getUsed() == 1) {
                             ImageView v = ((ImageView) view.findViewById(R.id.item));
                             v.setImageResource(R.drawable.locker_used);
