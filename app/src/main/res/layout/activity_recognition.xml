@@ -367,17 +367,19 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@id/second_line_three"/>
 
-    <android.support.v7.widget.AppCompatTextView
+    <pl.droidsonroids.gif.GifTextView
         android:id="@+id/alert"
         android:text="@string/alert"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:visibility="invisible"
         android:gravity="center"
-        android:background="@color/cardview_light_background"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@id/second_line_three"/>
+        app:layout_constraintTop_toTopOf="@id/second_line_three"
+        />
+
+
 
 </android.support.constraint.ConstraintLayout>

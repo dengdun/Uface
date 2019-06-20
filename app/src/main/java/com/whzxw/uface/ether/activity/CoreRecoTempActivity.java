@@ -75,6 +75,8 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Schedulers;
+import pl.droidsonroids.gif.GifDrawable;
+import pl.droidsonroids.gif.GifTextView;
 
 import static com.whzxw.uface.ether.activity.SplashActivity.INTENT_DEVCODE;
 import static com.whzxw.uface.ether.activity.SplashActivity.INTENT_DEVNAME;
@@ -136,7 +138,7 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
     AppCompatTextView schoolNameView;
 
     @BindView(R.id.alert)
-    AppCompatTextView alertView;
+    GifTextView alertView;
 
     @BindView(R.id.camera_title)
     AppCompatTextView title;
@@ -384,6 +386,12 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
         String deviceCode = intent.getStringExtra(INTENT_DEVCODE);
         schoolNameView.setText(schoolName  + "\n" + deviceCode);
 
+        try {
+            GifDrawable gifFromAssets = new GifDrawable( getAssets(), "loading.gif" );
+            alertView.setBackground(gifFromAssets);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void initCamera() {
@@ -692,7 +700,7 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
      */
     public void showAlert(String alert, boolean show) {
         isPreViewCamera = true;
-        alertView.setText(alert);
+//        alertView.setText(alert);
         if (show)
             alertView.setVisibility(View.VISIBLE);
         else
