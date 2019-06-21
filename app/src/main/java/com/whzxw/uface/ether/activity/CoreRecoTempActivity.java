@@ -368,36 +368,34 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
                                                         .sendRecoResult(ApiService.recoCallBackUrl, params);
                                             }
                                         })
-                                        .flatMap(new Function<ResponseEntity, ObservableSource<?>>() {
-                                            @Override
-                                            public ObservableSource<?> apply(ResponseEntity responseEntity) throws Exception {
-                                                Voiceutils.playRecoOver();
-                                                showAlert(responseEntity.getMessage(), true);
-
-                                                return Observable.just(1).delay(2, TimeUnit.SECONDS);
-                                            }
-                                        })
                                         .subscribeOn(Schedulers.io())
                                         .observeOn(AndroidSchedulers.mainThread())
                                         .doOnSubscribe(new Consumer<Disposable>() {
                                             @Override
                                             public void accept(Disposable disposable) throws Exception {
                                                 showAlert("快马加鞭开箱子！", true);
-
                                             }
                                         })
-                                        .subscribeOn(AndroidSchedulers.mainThread()) // 指定线程之后，线程调用的是上游的回调在哪个线程中。
-
-                                        .subscribe(new Consumer<Object>() {
+                                        .flatMap(new Function<ResponseEntity, ObservableSource<Long>>() {
                                             @Override
-                                            public void accept(Object responseEntity) throws Exception {
-                                                countDownTimer.stopCount();
+                                            public ObservableSource<Long> apply(ResponseEntity responseEntity) throws Exception {
+                                                showAlert(responseEntity.getMessage(), true);
+                                                // 显示信息之后延时3秒跳转
+                                                return Observable.just(1).timer(3, TimeUnit.SECONDS);
+                                            }
+                                        })
+                                        .subscribeOn(AndroidSchedulers.mainThread())
+                                        .observeOn(AndroidSchedulers.mainThread())
+                                        .subscribe(new Consumer<Long>() {
+                                            @Override
+                                            public void accept(Long o) throws Exception {
+                                                showAlert("重要提示", true);
                                                 toMainScreen();
                                             }
                                         }, new Consumer<Throwable>() {
                                             @Override
                                             public void accept(Throwable throwable) throws Exception {
-                                                showAlert("破网络失败了", true);
+                                                showAlert("网络似乎开小差了！", true);
                                                 toMainScreen();
                                             }
                                         });
@@ -668,25 +666,25 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
                     })
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-
                     .doOnSubscribe(new Consumer<Disposable>() {
                         @Override
                         public void accept(Disposable disposable) throws Exception {
                             showAlert("快马加鞭开箱子！", true);
                         }
                     })
-                    .flatMap(new Function<ResponseEntity, ObservableSource<?>>() {
+                    .flatMap(new Function<ResponseEntity, ObservableSource<Long>>() {
                         @Override
-                        public ObservableSource<?> apply(ResponseEntity responseEntity) throws Exception {
-                            showAlert(responseEntity.getResult(), true);
+                        public ObservableSource<Long> apply(ResponseEntity responseEntity) throws Exception {
+                            showAlert(responseEntity.getMessage(), true);
                             // 显示信息之后延时3秒跳转
                             return Observable.just(1).timer(3, TimeUnit.SECONDS);
                         }
                     })
                     .subscribeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Consumer<Object>() {
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Consumer<Long>() {
                         @Override
-                        public void accept(Object o) throws Exception {
+                        public void accept(Long o) throws Exception {
                             showAlert("重要提示", true);
                             toMainScreen();
                         }

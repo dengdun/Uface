@@ -7,7 +7,6 @@ import java.util.Map;
 import io.reactivex.Observable;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
-import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Url;
 
@@ -16,7 +15,7 @@ import retrofit2.http.Url;
  */
 public interface ApiService {
 
-    public String baseUrl = BuildConfig.DEBUG?"http://zw38zm.natappfree.cc":"http://192.168.10.150:8082";
+    public String baseUrl = BuildConfig.DEBUG?"http://gbr8tx.natappfree.cc":"http://192.168.10.150:8082";
 
     /**
      * 1. 查询设备名称接口
@@ -112,9 +111,6 @@ public interface ApiService {
      */
     @POST
     Observable<ResponseCabinetEntity> queryCabinet(@Url String u);
-
-    @GET
-    Observable<TestBean> queryTest(@Url String u);
 
 
 }
