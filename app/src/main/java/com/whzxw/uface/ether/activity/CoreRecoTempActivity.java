@@ -45,6 +45,7 @@ import com.uniubi.uface.ether.core.faceprocess.IdentifyResultCallBack;
 import com.uniubi.uface.ether.outdevice.utils.FileNodeOperator;
 import com.uniubi.uface.ether.utils.ImageUtils;
 import com.whzxw.uface.ether.EtherApp;
+import com.whzxw.uface.ether.bean.SettingMessageEvent;
 import com.whzxw.uface.ether.database.PersonTable;
 import com.whzxw.uface.ether.http.ApiService;
 import com.whzxw.uface.ether.http.ResponseCabinetEntity;
@@ -55,6 +56,9 @@ import com.whzxw.uface.ether.utils.NetHttpUtil;
 import com.whzxw.uface.ether.utils.Voiceutils;
 import com.whzxw.uface.ether.view.CountDownTimer;
 import com.whzxw.uface.ether.view.FaceView;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -394,6 +398,7 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
                                             @Override
                                             public void accept(Throwable throwable) throws Exception {
                                                 showAlert("破网络失败了", true);
+                                                toMainScreen();
                                             }
                                         });
 
@@ -474,7 +479,8 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
         schoolNameView.setText(schoolName + "\n" + deviceCode);
 
         try {
-            GifDrawable gifFromAssets = new GifDrawable(getAssets(), "loading.gif");
+
+            GifDrawable gifFromAssets = new GifDrawable(getAssets(), "white.png");
             alertView.setBackground(gifFromAssets);
         } catch (IOException e) {
             e.printStackTrace();
@@ -658,7 +664,6 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
                             return RetrofitManager.getInstance()
                                     .apiService
                                     .sendRecoResult(ApiService.recoCallBackUrl, params);
-
                         }
                     })
                     .subscribeOn(Schedulers.io())
@@ -689,6 +694,7 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
                         @Override
                         public void accept(Throwable throwable) throws Exception {
                             showAlert("网络似乎开小差了！", true);
+                            toMainScreen();
                         }
                     });
             return;
@@ -734,6 +740,12 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
     @Override
     protected void onStart() {
         super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Subscribe
+    public void setSchoolName(SettingMessageEvent messageEvent) {
+        schoolNameView.setText(messageEvent.schooleNameLine1);
     }
 
     @Override
@@ -741,6 +753,8 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
         super.onStop();
         cameraRGB.closeCamera();
         cameraIR.closeCamera();
+
+        EventBus.getDefault().unregister(this);
     }
 
     /**
@@ -837,6 +851,8 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
             }
         }
     }
+
+
 
 
 }
