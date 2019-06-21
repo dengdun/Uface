@@ -1,10 +1,13 @@
 package com.whzxw.uface.ether.http;
 
+import com.uniubi.uface.ether.BuildConfig;
+
 import java.util.Map;
 
 import io.reactivex.Observable;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Url;
 
@@ -12,8 +15,9 @@ import retrofit2.http.Url;
  * 接口封装类
  */
 public interface ApiService {
-//    public String baseUrl = "http://192.168.10.150:8082";
-    public String baseUrl = "http://zw38zm.natappfree.cc";
+
+    public String baseUrl = BuildConfig.DEBUG?"http://zw38zm.natappfree.cc":"http://192.168.10.150:8082";
+
     /**
      * 1. 查询设备名称接口
      * 请求地址: /locker/selectDevName
@@ -109,6 +113,8 @@ public interface ApiService {
     @POST
     Observable<ResponseCabinetEntity> queryCabinet(@Url String u);
 
+    @GET
+    Observable<TestBean> queryTest(@Url String u);
 
 
 }

@@ -50,6 +50,7 @@ import com.whzxw.uface.ether.http.ApiService;
 import com.whzxw.uface.ether.http.ResponseCabinetEntity;
 import com.whzxw.uface.ether.http.ResponseEntity;
 import com.whzxw.uface.ether.http.RetrofitManager;
+import com.whzxw.uface.ether.http.TestBean;
 import com.whzxw.uface.ether.utils.CameraUtils;
 import com.whzxw.uface.ether.utils.NetHttpUtil;
 import com.whzxw.uface.ether.utils.Voiceutils;
@@ -60,14 +61,17 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Action;
@@ -169,7 +173,6 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
         init();
         initCamera();
         initWebView();
-//        initRecycleView();
 
         initWhiteYuvImage();
         etherFaceManager.startService(this, this, this);
@@ -299,22 +302,108 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
                 } else if(event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
                     // 刷卡结束
                     Toast.makeText(CoreRecoTempActivity.this, resultCode, Toast.LENGTH_LONG).show();
-                    String cardNo = resultCode.toUpperCase();
-                    List<PersonTable> personTables = EtherApp.daoSession.queryRaw(PersonTable.class, "where CARD_NO = ? ", cardNo);
-                    if (personTables != null && personTables.size() > 0) {
-                        final PersonTable personTable = personTables.get(0);
-                        // 屏保的时候不传开锁指令。
-                        if (!isPreViewCamera){
-                            cameraRGB.setScreenshotListener(new CameraUtils.OnCameraDataEnableListener() {
-                                @Override
-                                public void onCameraDataCallback(byte[] data, int camId) {
-                                    Bitmap bitmap = ImageUtils.rotateBitmap(ImageUtils.yuvImg2BitMap(data,640, 480), 90);
-                                    NetHttpUtil.sendMessage(personTable.getPseronId(), personTable.getFaceId(), 100f, personTable.getName(), personTable.getCardNO(), bitmap);
+                    final String cardNo = resultCode.toUpperCase();
 
-                                }
-                            });
-                        }
+
+                    if (!isPreViewCamera){
+                        cameraRGB.setScreenshotListener(new CameraUtils.OnCameraDataEnableListener() {
+                            @Override
+                            public void onCameraDataCallback(final byte[] data, int camId) {
+//                                Bitmap bitmap = ImageUtils.rotateBitmap(ImageUtils.yuvImg2BitMap(data,640, 480), 90);
+//                                    NetHttpUtil.sendMessage(personTable.getPseronId(), personTable.getFaceId(), 100f, personTable.getName(), personTable.getCardNO(), bitmap);
+                                // 创建
+                                Observable<byte[]> identifyResultObservable = Observable.just(data);
+                                Observable<Integer> just = Observable.just(recoFromWhichButton);
+                                Observable<Object[]> dataObservable = Observable.zip(identifyResultObservable, just, new BiFunction<byte[], Integer, Object[]>() {
+                                    @Override
+                                    public Object[] apply(byte[] identifyResult, Integer integer) throws Exception {
+                                        Bitmap bitmap = ImageUtils.rotateBitmap(ImageUtils.yuvImg2BitMap(data, 640, 480), 90);
+                                        return new Object[]{bitmap, integer};
+                                    }
+                                });
+
+                                // 创建查数据的观察事件
+                                Observable<PersonTable> personTableObservable = Observable.just(cardNo).map(new Function<String, List<PersonTable>>() {
+                                    @Override
+                                    public List<PersonTable> apply(String cardno) throws Exception {
+                                        return EtherApp.daoSession.queryRaw(PersonTable.class, "where CARD_NO = ? ", cardno);
+                                    }
+                                }).filter(new Predicate<List<PersonTable>>() {
+                                    @Override
+                                    public boolean test(List<PersonTable> personTables) throws Exception {
+                                        return personTables != null && personTables.size() != 0;
+                                    }
+                                }).map(new Function<List<PersonTable>, PersonTable>() {
+                                    @Override
+                                    public PersonTable apply(List<PersonTable> personTables) throws Exception {
+                                        return personTables.get(0);
+                                    }
+                                });
+
+                                Observable.zip(dataObservable, personTableObservable, new BiFunction<Object[], PersonTable, Object[]>() {
+                                    @Override
+                                    public Object[] apply(Object[] objects, PersonTable personTable) throws Exception {
+
+                                        return new Object[]{objects[0], objects[1], personTable};
+                                    }
+                                }).flatMap(new Function<Object[], Observable<ResponseEntity>>() {
+                                    @Override
+                                    public Observable<ResponseEntity> apply(Object[] objects) throws Exception {
+                                        Bitmap identifyResult = (Bitmap) objects[0];
+                                        Integer type = (Integer) objects[1];
+                                        PersonTable personTable = (PersonTable) objects[2];
+
+                                        Map<String, String> params = new HashMap<>();
+                                        params.put("personId", personTable.getPseronId());
+                                        params.put("faceId", personTable.getFaceId());
+                                        params.put("score", "-1");
+                                        params.put("name", personTable.getName());
+                                        params.put("cardNo", personTable.getCardNO());
+                                        params.put("face", NetHttpUtil.bitmapToBase64(identifyResult));
+                                        params.put("type", type+"");
+
+                                        return RetrofitManager.getInstance()
+
+                                                .apiService
+                                                .sendRecoResult(ApiService.recoCallBackUrl, params);
+                                    }
+                                }).subscribeOn(Schedulers.io())
+                                        .observeOn(AndroidSchedulers.mainThread())
+                                        .doOnSubscribe(new Consumer<Disposable>() {
+                                            @Override
+                                            public void accept(Disposable disposable) throws Exception {
+                                                showAlert("快马加鞭开箱子！", true);
+
+                                            }
+                                        })
+                                        .subscribeOn(AndroidSchedulers.mainThread()) // 指定线程之后，线程调用的是上游的回调在哪个线程中。
+
+                                        .subscribe(new Consumer<ResponseEntity>() {
+                                            @Override
+                                            public void accept(ResponseEntity responseEntity) throws Exception {
+                                                Voiceutils.playRecoOver();
+                                                showAlert(responseEntity.getMessage(), true);
+                                                countDownTimer.stopCount();
+
+                                            }
+                                        }, new Consumer<Throwable>() {
+                                            @Override
+                                            public void accept(Throwable throwable) throws Exception {
+                                                showAlert("破网络失败了", true);
+                                            }
+                                        }, new Action() {
+                                            @Override
+                                            public void run() throws Exception {
+                                                TimeUnit.SECONDS.sleep(2);
+                                                toMainScreen();
+
+                                            }
+                                        });
+
+                            }
+                        });
                     }
+
                 } else {
                     resultCode += Character.toString((char)event.getUnicodeChar());
                 }
@@ -545,60 +634,174 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
                     return personTables.get(0);
                 }
             });
+
+
+
             Observable.zip(dataObservable, personTableObservable, new BiFunction<Object[], PersonTable, Object[]>() {
                 @Override
                 public Object[] apply(Object[] objects, PersonTable personTable) throws Exception {
-
                     return new Object[]{objects[0], objects[1], personTable};
                 }
-            }).flatMap(new Function<Object[], Observable<ResponseEntity>>() {
+            }).flatMap(new Function<Object[], Observable<TestBean>>() {
                 @Override
-                public Observable<ResponseEntity> apply(Object[] objects) throws Exception {
+                public Observable<TestBean> apply(Object[] objects) throws Exception {
                     IdentifyResult identifyResult = (IdentifyResult) objects[0];
                     Integer type = (Integer) objects[1];
                     PersonTable personTable = (PersonTable) objects[2];
 
-                    Map<String, String> params = new HashMap<>();
-                    params.put("personId", identifyResult.getPersonId());
-                    params.put("faceId", identifyResult.getFaceId());
-                    params.put("score", identifyResult.getScore()+"");
-                    params.put("name", personTable.getName());
-                    params.put("cardNo", personTable.getCardNO());
-                    params.put("face", NetHttpUtil.bitmapToBase64(identifyResult.getBitmap()));
-                    params.put("type", type+"");
 
                     return RetrofitManager.getInstance()
                             .apiService
-                            .sendRecoResult(ApiService.recoCallBackUrl, params);
+                            .queryTest("http://api.map.baidu.com/telematics/v3/weather?location=嘉兴&output=json&ak=5slgyqGDENN7Sy7pw29IUvrZ");
+
                 }
-            }).subscribeOn(Schedulers.io())
+            })      .retryWhen(new Function<Observable<Throwable>, ObservableSource<?>>() {
+                @Override
+                public ObservableSource<?> apply(Observable<Throwable> throwableObservable) throws Exception {
+                    return Observable.just(1).delay(2, TimeUnit.SECONDS);
+                }
+            })
+                    .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
+
                     .doOnSubscribe(new Consumer<Disposable>() {
                         @Override
                         public void accept(Disposable disposable) throws Exception {
                             showAlert("快马加鞭开箱子！", true);
-
+                            Log.i("hao", "hao1," + new Date().getTime()+"");
                         }
-                    })
-                    .subscribeOn(AndroidSchedulers.mainThread()) // 指定线程之后，线程调用的是上游的回调在哪个线程中。
-                    .subscribe(new Consumer<ResponseEntity>() {
+                    }).flatMap(new Function<TestBean, ObservableSource<?>>() {
+                @Override
+                public ObservableSource<?> apply(TestBean responseEntity) throws Exception {
+//                    showAlert(responseEntity.getResult(), true);
+                    Log.i("hao", "hao2," +new Date().getTime()+"");
+                    return Observable.just(1).timer(4, TimeUnit.SECONDS);
+                }
+            }).subscribeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Consumer<Object>() {
                         @Override
-                        public void accept(ResponseEntity responseEntity) throws Exception {
-                            Voiceutils.playRecoOver();
-                            showAlert(responseEntity.getMessage(), true);
-                            countDownTimer.stopCount();
+                        public void accept(Object o) throws Exception {
+                            Log.i("hao", "hao3," +new Date().getTime() + "");
+//                            showAlert("日哦", true);
                         }
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
-                            showAlert("破网络失败了", true);
-                        }
-                    }, new Action() {
-                        @Override
-                        public void run() throws Exception {
-                            toMainScreen();
+                            Log.i("hao", "hao4," +new Date().getTime() + "");
                         }
                     });
+
+
+
+//            Observable.zip(dataObservable, personTableObservable, new BiFunction<Object[], PersonTable, Object[]>() {
+//                @Override
+//                public Object[] apply(Object[] objects, PersonTable personTable) throws Exception {
+//                    return new Object[]{objects[0], objects[1], personTable};
+//                }
+//            }).flatMap(new Function<Object[], Observable<ResponseEntity>>() {
+//                @Override
+//                public Observable<ResponseEntity> apply(Object[] objects) throws Exception {
+//                    IdentifyResult identifyResult = (IdentifyResult) objects[0];
+//                    Integer type = (Integer) objects[1];
+//                    PersonTable personTable = (PersonTable) objects[2];
+//
+//                    Map<String, String> params = new HashMap<>();
+//                    params.put("personId", identifyResult.getPersonId());
+//                    params.put("faceId", identifyResult.getFaceId());
+//                    params.put("score", identifyResult.getScore()+"");
+//                    params.put("name", personTable.getName());
+//                    params.put("cardNo", personTable.getCardNO());
+//                    params.put("face", NetHttpUtil.bitmapToBase64(identifyResult.getBitmap()));
+//                    params.put("type", type+"");
+//
+//                    return RetrofitManager.getInstance()
+//                            .apiService
+//                            .sendRecoResult(ApiService.recoCallBackUrl, params);
+//
+//                         }
+//            })      .retryWhen(new Function<Observable<Throwable>, ObservableSource<?>>() {
+//                @Override
+//                public ObservableSource<?> apply(Observable<Throwable> throwableObservable) throws Exception {
+//                    return Observable.just(1).delay(2, TimeUnit.SECONDS);
+//                }
+//            })
+//                    .subscribeOn(Schedulers.io())
+//                    .observeOn(AndroidSchedulers.mainThread())
+//
+//                    .doOnSubscribe(new Consumer<Disposable>() {
+//                        @Override
+//                        public void accept(Disposable disposable) throws Exception {
+//                            showAlert("快马加鞭开箱子！", true);
+//                            Log.i("hao", "hao1," + new Date().getTime()+"");
+//                        }
+//                    }).flatMap(new Function<ResponseEntity, ObservableSource<?>>() {
+//                @Override
+//                public ObservableSource<?> apply(ResponseEntity responseEntity) throws Exception {
+////                    showAlert(responseEntity.getResult(), true);
+//                    Log.i("hao", "hao2," +new Date().getTime()+"");
+//                    return Observable.just(1).timer(4, TimeUnit.SECONDS);
+//                }
+//            }).subscribeOn(AndroidSchedulers.mainThread())
+//                    .subscribe(new Consumer<Object>() {
+//                        @Override
+//                        public void accept(Object o) throws Exception {
+//                            Log.i("hao", "hao3," +new Date().getTime() + "");
+////                            showAlert("日哦", true);
+//                        }
+//                    }, new Consumer<Throwable>() {
+//                        @Override
+//                        public void accept(Throwable throwable) throws Exception {
+//                            Log.i("hao", "hao4," +new Date().getTime() + "");
+//                        }
+//                    });
+
+
+
+
+//                    .subscribeOn(Schedulers.io())
+//                    .observeOn(AndroidSchedulers.mainThread())
+//                    .doOnSubscribe(new Consumer<Disposable>() {
+//                        @Override
+//                        public void accept(Disposable disposable) throws Exception {
+//                            showAlert("快马加鞭开箱子！", true);
+//
+//                        }
+//                    })
+//                    .map(new Function<ResponseEntity, Object>() {
+//                        @Override
+//                        public Object apply(ResponseEntity responseEntity) throws Exception {
+//                            return ;
+//                        }
+//                    })
+//                    .subscribeOn(AndroidSchedulers.mainThread()) // 指定线程之后，线程调用的是上游的回调在哪个线程中。
+//                    .doFinally(new Action() { // 不管成功失败，只要是发送了时间过来这里就结束执行
+//                        @Override
+//                        public void run() throws Exception {
+//
+//
+//                        }
+//                    })
+//                    .subscribe(new Consumer<ResponseEntity>() {
+//                        @Override
+//                        public void accept(ResponseEntity responseEntity) throws Exception {
+//                            Voiceutils.playRecoOver();
+//                            showAlert(responseEntity.getMessage(), true);
+//                            countDownTimer.stopCount();
+//
+//                        }
+//                    }, new Consumer<Throwable>() {
+//                        @Override
+//                        public void accept(Throwable throwable) throws Exception {
+//                            showAlert("破网络失败了", true);
+//
+//
+//                        }
+//                    }, new Action() {
+//                        @Override
+//                        public void run() throws Exception {
+//                            // 这个 方法只在正常收到消息的时候调用
+//                        }
+//                    });
 
             return;
         }
@@ -702,7 +905,7 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
      */
     public void showAlert(String alert, boolean show) {
         isPreViewCamera = true;
-//        alertView.setText(alert);
+        alertView.setText(alert);
         if (show)
             alertView.setVisibility(View.VISIBLE);
         else

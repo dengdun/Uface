@@ -3,6 +3,7 @@ package com.whzxw.uface.ether.utils;
 import android.media.AudioAttributes;
 import android.media.SoundPool;
 
+import com.uniubi.uface.ether.BuildConfig;
 import com.uniubi.uface.ether.R;
 import com.whzxw.uface.ether.EtherApp;
 
@@ -29,12 +30,18 @@ public class Voiceutils {
     }
 
     public static final void playRecoOver() {
-        if (mSoundPoll != null)
-            mSoundPoll.play(sound, 1,1,1,0,1);
+        if (!BuildConfig.DEBUG) {
+            if (mSoundPoll != null)
+                mSoundPoll.play(sound, 1,1,1,0,1);
+        }
+
     }
 
     public static final void playPlayStartReco() {
-        if (mSoundPoll != null)
-            mSoundPoll.play(soundReco, 1,1,1,0,1);
+        if (!BuildConfig.DEBUG) {
+            if (mSoundPoll != null)
+                mSoundPoll.play(soundReco, 1,1,1,0,1);
+        }
+
     }
 }

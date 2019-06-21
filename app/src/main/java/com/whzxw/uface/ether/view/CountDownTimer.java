@@ -80,6 +80,7 @@ public class CountDownTimer extends AppCompatTextView {
      * 强制停止计时器
      */
     public void stopCount() {
+
         if(disposable != null && !disposable.isDisposed()){
             disposable.dispose();
         }

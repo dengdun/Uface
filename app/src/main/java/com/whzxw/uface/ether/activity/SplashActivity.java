@@ -103,10 +103,12 @@ public class SplashActivity extends AppCompatActivity {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        Intent intent = new Intent(getApplicationContext(), CoreRecoTempActivity.class);
-                        intent.putExtra(INTENT_DEVNAME, "什么机子");
-                        startActivity(intent);
-                        finish();
+                        if (BuildConfig.DEBUG) {
+                            Intent intent = new Intent(getApplicationContext(), CoreRecoTempActivity.class);
+                            intent.putExtra(INTENT_DEVNAME, "什么机子");
+                            startActivity(intent);
+                            finish();
+                        }
                         Log.i("jin", "throw erro");
 
                     }
