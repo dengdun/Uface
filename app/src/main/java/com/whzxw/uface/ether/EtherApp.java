@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.tencent.bugly.crashreport.CrashReport;
+import com.tencent.mars.xlog.Log;
 import com.uniubi.andserver.EtherAndServerManager;
 import com.uniubi.ether.Ether;
 import com.uniubi.uface.ether.andserver.handler.AbstractEtherRequestHandler;
@@ -144,7 +145,7 @@ public class EtherApp extends Application {
         EtherAndServerManager.getInstance().startAndServer(this);
 
         AppLog.e("hwcode "+ FaceHandler.getHwCode());
-
+        Log.i("hwcode", FaceHandler.getHwCode());
         // 初始化xlog
         XlogUitls.init(getApplicationContext());
         // 开启定时刷新广告webview的广播

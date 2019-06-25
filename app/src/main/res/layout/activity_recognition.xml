@@ -14,19 +14,17 @@
 
     <View
         android:id="@+id/line"
-        android:layout_width="0dp"
-        android:layout_height="1dp"
-        app:layout_constraintTop_toTopOf="@id/first_line_one"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintGuide_begin="76dp"/>
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:background="@android:color/black"
+        app:layout_constraintTop_toTopOf="@id/first_line_one"/>
 
     <android.support.constraint.Guideline
         android:id="@+id/first_line_two"
         android:layout_width="0dp"
         android:layout_height="1dp"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.3" />
+        app:layout_constraintGuide_begin="219dp" />
 
     <android.support.constraint.Guideline
         android:id="@+id/first_line_three"
@@ -55,7 +53,7 @@
         android:layout_height="1dp"
         android:orientation="horizontal"
         android:visibility="gone"
-        app:layout_constraintGuide_percent="0.34" />
+        app:layout_constraintGuide_begin="249dp" />
 
     <android.support.constraint.Guideline
         android:id="@+id/second_line_two"
@@ -73,7 +71,6 @@
         app:layout_constraintGuide_percent="0.46" />
 
     <!--首屏-->
-
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/school_name"
         android:layout_width="wrap_content"
@@ -161,7 +158,7 @@
         android:id="@+id/first_group"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="visible"
+        android:visibility="invisible"
         app:constraint_referenced_ids="operator_flow, open, temp_open, final_open, cameralid, adwebview"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -172,7 +169,7 @@
         android:id="@+id/two_group"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="invisible"
+        android:visibility="visible"
         app:constraint_referenced_ids="  btn_back, camera_title, countdown_timer, banner" />
 
     <LinearLayout
@@ -185,7 +182,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@id/second_line_zero"
-        app:layout_constraintBottom_toBottomOf="@id/second_line_two"/>
+        app:layout_constraintBottom_toBottomOf="@id/first_line_two"/>
 
     <View
         android:id="@+id/using_box_image"
@@ -336,7 +333,9 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:visibility="invisible"
-        android:gravity="center"
+        android:gravity="top|center_horizontal"
+        android:textSize="30dp"
+        android:textColor="@android:color/black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"

@@ -30,6 +30,7 @@ android {
             outputFileName = "release_"+ buildTime()+".apk"
         }
     }
+
 }
 repositories {
     flatDir {
@@ -38,7 +39,7 @@ repositories {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support:appcompat-v7:27.1.1'
     implementation 'com.android.support:recyclerview-v7:27.1.1'
     implementation 'com.android.support.constraint:constraint-layout:1.1.2'
@@ -52,14 +53,18 @@ dependencies {
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
     implementation 'net.zetetic:android-database-sqlcipher:3.5.7@aar'
     implementation 'org.greenrobot:eventbus:3.1.1'
-    implementation 'com.uniubi.uface.ether:baselib:0.2.6-release'//基础库模块
-    implementation 'com.uniubi.uface.ether:core:0.2.6-release@aar'//人脸识别核心模块（可选）
-    implementation 'com.uniubi.uface.ether:outdevice:0.2.4-release@aar'//外设模块（可选）
-    implementation 'org.greenrobot:greendao:3.2.2' // add library
-    implementation 'com.tencent.bugly:crashreport:latest.release' //其中latest.release指代最新Bugly SDK版本号，也可以指定明确的版本号，例如2.1.9
-    implementation 'com.tencent.bugly:nativecrashreport:latest.release' //其中latest.release指代最新Bugly NDK版本号，也可以指定明确的版本号，例如3.0
-
-
+    implementation 'com.uniubi.uface.ether:baselib:0.2.6-release'
+    //基础库模块
+    implementation 'com.uniubi.uface.ether:core:0.2.6-release@aar'
+    //人脸识别核心模块（可选）
+    implementation 'com.uniubi.uface.ether:outdevice:0.2.4-release@aar'
+    //外设模块（可选）
+    implementation 'org.greenrobot:greendao:3.2.2'
+    // add library
+    implementation 'com.tencent.bugly:crashreport:latest.release'
+    //其中latest.release指代最新Bugly SDK版本号，也可以指定明确的版本号，例如2.1.9
+    implementation 'com.tencent.bugly:nativecrashreport:latest.release'
+    //其中latest.release指代最新Bugly NDK版本号，也可以指定明确的版本号，例如3.0
     // Okhttp库
     implementation 'com.squareup.okhttp3:okhttp:3.11.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.8.1'
@@ -68,12 +73,12 @@ dependencies {
     implementation 'com.squareup.retrofit2:adapter-rxjava2:2.2.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.0.0'
     implementation 'com.google.code.gson:gson:2.8.0'
-
     //RxJava
     implementation 'io.reactivex.rxjava2:rxjava:2.0.1'
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
     // android播放gif文件
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.17'
+    implementation files('src/main/libs/mars-xlog-1.0.7-sources.jar')
 
 }
 

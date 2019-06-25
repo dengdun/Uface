@@ -112,5 +112,4 @@ public interface ApiService {
     @POST
     Observable<ResponseCabinetEntity> queryCabinet(@Url String u);
 
-
 }

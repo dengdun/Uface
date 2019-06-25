@@ -173,7 +173,7 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
         init();
         initCamera();
         initWebView();
-
+        initRecycleView();
         initWhiteYuvImage();
         etherFaceManager.startService(this, this, this);
 
@@ -205,49 +205,49 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
      * 初始化显示的空白页
      */
     private void initRecycleView() {
-//        lockerList.add(new ResponseCabinetEntity.Cabinet());
-//        lockerList.add(new ResponseCabinetEntity.Cabinet());
-//        lockerList.add(new ResponseCabinetEntity.Cabinet());
-//        lockerList.add(new ResponseCabinetEntity.Cabinet());
-//        lockerList.add(new ResponseCabinetEntity.Cabinet());
-//        lockerList.add(new ResponseCabinetEntity.Cabinet());
-//        lockerList.add(new ResponseCabinetEntity.Cabinet());
-//        lockerList.add(new ResponseCabinetEntity.Cabinet());
-//        lockerList.add(new ResponseCabinetEntity.Cabinet());
-//        lockerList.add(new ResponseCabinetEntity.Cabinet());
-//
-//        lockerList.add(new ResponseCabinetEntity.Cabinet());
-//        lockerList.add(new ResponseCabinetEntity.Cabinet());
-//        lockerList.add(new ResponseCabinetEntity.Cabinet());
-//        lockerList.add(new ResponseCabinetEntity.Cabinet());
-//        lockerList.add(new ResponseCabinetEntity.Cabinet());
-//        lockerList.add(new ResponseCabinetEntity.Cabinet());
-//        lockerList.add(new ResponseCabinetEntity.Cabinet());
-//        lockerList.add(new ResponseCabinetEntity.Cabinet());
-//        lockerList.add(new ResponseCabinetEntity.Cabinet());
-//        lockerList.add(new ResponseCabinetEntity.Cabinet());
-//
-//        lockerList.add(new ResponseCabinetEntity.Cabinet());
-//        lockerList.add(new ResponseCabinetEntity.Cabinet());
-//        lockerList.add(new ResponseCabinetEntity.Cabinet());
-//        lockerList.add(new ResponseCabinetEntity.Cabinet());
-//        lockerList.add(new ResponseCabinetEntity.Cabinet());
-//        lockerList.add(new ResponseCabinetEntity.Cabinet());
-//        lockerList.add(new ResponseCabinetEntity.Cabinet());
-//        lockerList.add(new ResponseCabinetEntity.Cabinet());
-//        lockerList.add(new ResponseCabinetEntity.Cabinet());
-//        lockerList.add(new ResponseCabinetEntity.Cabinet());
-//
-//        lockerList.add(new ResponseCabinetEntity.Cabinet());
-//        lockerList.add(new ResponseCabinetEntity.Cabinet());
-//        lockerList.add(new ResponseCabinetEntity.Cabinet());
-//        lockerList.add(new ResponseCabinetEntity.Cabinet());
-//        lockerList.add(new ResponseCabinetEntity.Cabinet());
-//        lockerList.add(new ResponseCabinetEntity.Cabinet());
-//        lockerList.add(new ResponseCabinetEntity.Cabinet());
-//        lockerList.add(new ResponseCabinetEntity.Cabinet());
-//        lockerList.add(new ResponseCabinetEntity.Cabinet());
-//        lockerList.add(new ResponseCabinetEntity.Cabinet());
+        lockerList.add(new ResponseCabinetEntity.Cabinet());
+        lockerList.add(new ResponseCabinetEntity.Cabinet());
+        lockerList.add(new ResponseCabinetEntity.Cabinet());
+        lockerList.add(new ResponseCabinetEntity.Cabinet());
+        lockerList.add(new ResponseCabinetEntity.Cabinet());
+        lockerList.add(new ResponseCabinetEntity.Cabinet());
+        lockerList.add(new ResponseCabinetEntity.Cabinet());
+        lockerList.add(new ResponseCabinetEntity.Cabinet());
+        lockerList.add(new ResponseCabinetEntity.Cabinet());
+        lockerList.add(new ResponseCabinetEntity.Cabinet());
+
+        lockerList.add(new ResponseCabinetEntity.Cabinet());
+        lockerList.add(new ResponseCabinetEntity.Cabinet());
+        lockerList.add(new ResponseCabinetEntity.Cabinet());
+        lockerList.add(new ResponseCabinetEntity.Cabinet());
+        lockerList.add(new ResponseCabinetEntity.Cabinet());
+        lockerList.add(new ResponseCabinetEntity.Cabinet());
+        lockerList.add(new ResponseCabinetEntity.Cabinet());
+        lockerList.add(new ResponseCabinetEntity.Cabinet());
+        lockerList.add(new ResponseCabinetEntity.Cabinet());
+        lockerList.add(new ResponseCabinetEntity.Cabinet());
+
+        lockerList.add(new ResponseCabinetEntity.Cabinet());
+        lockerList.add(new ResponseCabinetEntity.Cabinet());
+        lockerList.add(new ResponseCabinetEntity.Cabinet());
+        lockerList.add(new ResponseCabinetEntity.Cabinet());
+        lockerList.add(new ResponseCabinetEntity.Cabinet());
+        lockerList.add(new ResponseCabinetEntity.Cabinet());
+        lockerList.add(new ResponseCabinetEntity.Cabinet());
+        lockerList.add(new ResponseCabinetEntity.Cabinet());
+        lockerList.add(new ResponseCabinetEntity.Cabinet());
+        lockerList.add(new ResponseCabinetEntity.Cabinet());
+
+        lockerList.add(new ResponseCabinetEntity.Cabinet());
+        lockerList.add(new ResponseCabinetEntity.Cabinet());
+        lockerList.add(new ResponseCabinetEntity.Cabinet());
+        lockerList.add(new ResponseCabinetEntity.Cabinet());
+        lockerList.add(new ResponseCabinetEntity.Cabinet());
+        lockerList.add(new ResponseCabinetEntity.Cabinet());
+        lockerList.add(new ResponseCabinetEntity.Cabinet());
+        lockerList.add(new ResponseCabinetEntity.Cabinet());
+        lockerList.add(new ResponseCabinetEntity.Cabinet());
+        lockerList.add(new ResponseCabinetEntity.Cabinet());
 
         // 列表的size 假设40个 每行显示10个
         int listSize = lockerList.size();
@@ -268,19 +268,23 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
                     if (i % 2 == 0) {
                         View view = LayoutInflater.from(this).inflate(R.layout.locker_item, null);
                         ResponseCabinetEntity.Cabinet cabinet = lockerList.get(i);
+                        ImageView v = ((ImageView) view.findViewById(R.id.item));
                         if (cabinet.getUsed() == 1) {
-                            ImageView v = ((ImageView) view.findViewById(R.id.item));
                             v.setImageResource(R.drawable.locker_used);
                             v.setBackgroundColor(getResources().getColor(R.color.hadLockerColor));
+                        } else {
+                            v.setBackgroundColor(getResources().getColor(R.color.defaultLockerColor));
                         }
                         layout.addView(view);
                     } else {
                         View view = LayoutInflater.from(this).inflate(R.layout.locker_line_item, null);
                         ResponseCabinetEntity.Cabinet cabinet = lockerList.get(i);
+                        ImageView v = ((ImageView) view.findViewById(R.id.item));
                         if (cabinet.getUsed() == 1) {
-                            ImageView v = ((ImageView) view.findViewById(R.id.item));
                             v.setImageResource(R.drawable.locker_used);
                             v.setBackgroundColor(getResources().getColor(R.color.hadLockerColor));
+                        }else {
+                            v.setBackgroundColor(getResources().getColor(R.color.defaultLockerColor));
                         }
                         layout.addView(view);
                     }
@@ -396,6 +400,7 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
                                             @Override
                                             public void accept(Throwable throwable) throws Exception {
                                                 showAlert("网络似乎开小差了！", true);
+                                                com.tencent.mars.xlog.Log.d("CoreRecoTempActivity400", throwable.getMessage());
                                                 toMainScreen();
                                             }
                                         });
@@ -415,6 +420,7 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
 
     @SuppressLint("SetJavaScriptEnabled")
     private void initWebView() {
+
         final String cachePath = getApplicationContext().getDir("cache", Context.MODE_PRIVATE).getPath();
         adWebView.bringToFront();
         // WebView加载web资源
@@ -477,8 +483,7 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
         schoolNameView.setText(schoolName + "\n" + deviceCode);
 
         try {
-
-            GifDrawable gifFromAssets = new GifDrawable(getAssets(), "white.png");
+            GifDrawable gifFromAssets = new GifDrawable(getAssets(), "loading.gif");
             alertView.setBackground(gifFromAssets);
         } catch (IOException e) {
             e.printStackTrace();
@@ -687,12 +692,14 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
                         public void accept(Long o) throws Exception {
                             showAlert("重要提示", true);
                             toMainScreen();
+                            com.tencent.mars.xlog.Log.d("CoreRecoTempActivity400", o.toString());
                         }
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
                             showAlert("网络似乎开小差了！", true);
                             toMainScreen();
+                            com.tencent.mars.xlog.Log.d("CoreRecoTempActivity400", throwable.getMessage());
                         }
                     });
             return;
