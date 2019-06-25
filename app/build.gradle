@@ -7,7 +7,7 @@ apply plugin: 'org.greenrobot.greendao' // apply plugin
 android {
     compileSdkVersion 27
     defaultConfig {
-        def code = new Date().format("yyMMddhhmm",TimeZone.getTimeZone("CMT+8")).toInteger();
+        def code = new Date().format("yyMMddHHmm",TimeZone.getTimeZone("CMT+8")).toInteger();
         applicationId "com.whzxw.uface.ether"
         minSdkVersion 22
         targetSdkVersion 22
@@ -93,7 +93,7 @@ greendao {
 
 
 def buildTime() {
-    def timeFormat = new SimpleDateFormat("yyyyMMddhhmm");
+    def timeFormat = new SimpleDateFormat("yyyyMMddHHmm");
     return timeFormat.format(new Date());
 }
 

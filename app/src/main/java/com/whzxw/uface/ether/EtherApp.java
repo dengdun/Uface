@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.DisplayMetrics;
 
 import com.tencent.bugly.crashreport.CrashReport;
 import com.tencent.mars.xlog.Log;
@@ -152,6 +153,10 @@ public class EtherApp extends Application {
         AlarmManagerUtils.start();
         // 程序崩溃时触发线程  以下用来捕获程序崩溃异常
         Thread.setDefaultUncaughtExceptionHandler(restartHandler);
+
+        // 通过WindowManager获取
+        DisplayMetrics dm2 = getResources().getDisplayMetrics();
+        Log.i("device", "width = " + dm2.widthPixels + ",height = " + dm2.heightPixels);
     }
 
     // 创建服务用于捕获崩溃异常
