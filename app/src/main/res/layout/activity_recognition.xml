@@ -16,7 +16,7 @@
         android:id="@+id/line"
         android:layout_width="match_parent"
         android:layout_height="3dp"
-        android:background="@android:color/black"
+        android:background="@color/line"
         app:layout_constraintTop_toTopOf="@id/first_line_one"/>
 
     <android.support.constraint.Guideline
@@ -158,7 +158,7 @@
         android:id="@+id/first_group"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="invisible"
+        android:visibility="visible"
         app:constraint_referenced_ids="operator_flow, open, temp_open, final_open, cameralid, adwebview"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -169,7 +169,7 @@
         android:id="@+id/two_group"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="visible"
+        android:visibility="invisible"
         app:constraint_referenced_ids="  btn_back, camera_title, countdown_timer, banner" />
 
     <LinearLayout

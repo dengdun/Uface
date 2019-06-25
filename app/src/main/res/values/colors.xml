@@ -8,5 +8,7 @@
     <color name="hadLockerColor">#FFD07F</color>
     <color name="LockerColor">#5BB5FF</color>
     <color name="lockerline">#20D2C3</color>
+    <color name="line">#EAEAEA</color>
+
 
 </resources>

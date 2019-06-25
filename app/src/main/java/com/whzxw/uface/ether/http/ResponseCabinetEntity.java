@@ -1,5 +1,7 @@
 package com.whzxw.uface.ether.http;
 
+import com.uniubi.uface.ether.BuildConfig;
+
 import java.util.List;
 
 /**
@@ -14,7 +16,7 @@ public class ResponseCabinetEntity {
         private String id;
         private String sarkCode;
         private String no;
-        private Integer used = 1;
+        private Integer used = BuildConfig.DEBUG?1:0;
         private String usable;
         private String sno;
         private String owner;

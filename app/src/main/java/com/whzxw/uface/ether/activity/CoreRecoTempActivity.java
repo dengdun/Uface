@@ -32,6 +32,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.uniubi.faceapi.CvFace;
+import com.uniubi.uface.ether.BuildConfig;
 import com.uniubi.uface.ether.R;
 import com.uniubi.uface.ether.base.UfaceEtherImpl;
 import com.uniubi.uface.ether.config.ServiceOptions;
@@ -173,7 +174,8 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
         init();
         initCamera();
         initWebView();
-        initRecycleView();
+        if (BuildConfig.DEBUG) initRecycleView();
+
         initWhiteYuvImage();
         etherFaceManager.startService(this, this, this);
 
@@ -205,49 +207,52 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
      * 初始化显示的空白页
      */
     private void initRecycleView() {
-        lockerList.add(new ResponseCabinetEntity.Cabinet());
-        lockerList.add(new ResponseCabinetEntity.Cabinet());
-        lockerList.add(new ResponseCabinetEntity.Cabinet());
-        lockerList.add(new ResponseCabinetEntity.Cabinet());
-        lockerList.add(new ResponseCabinetEntity.Cabinet());
-        lockerList.add(new ResponseCabinetEntity.Cabinet());
-        lockerList.add(new ResponseCabinetEntity.Cabinet());
-        lockerList.add(new ResponseCabinetEntity.Cabinet());
-        lockerList.add(new ResponseCabinetEntity.Cabinet());
-        lockerList.add(new ResponseCabinetEntity.Cabinet());
+        if (BuildConfig.DEBUG) {
+            lockerList.add(new ResponseCabinetEntity.Cabinet());
+            lockerList.add(new ResponseCabinetEntity.Cabinet());
+            lockerList.add(new ResponseCabinetEntity.Cabinet());
+            lockerList.add(new ResponseCabinetEntity.Cabinet());
+            lockerList.add(new ResponseCabinetEntity.Cabinet());
+            lockerList.add(new ResponseCabinetEntity.Cabinet());
+            lockerList.add(new ResponseCabinetEntity.Cabinet());
+            lockerList.add(new ResponseCabinetEntity.Cabinet());
+            lockerList.add(new ResponseCabinetEntity.Cabinet());
+            lockerList.add(new ResponseCabinetEntity.Cabinet());
 
-        lockerList.add(new ResponseCabinetEntity.Cabinet());
-        lockerList.add(new ResponseCabinetEntity.Cabinet());
-        lockerList.add(new ResponseCabinetEntity.Cabinet());
-        lockerList.add(new ResponseCabinetEntity.Cabinet());
-        lockerList.add(new ResponseCabinetEntity.Cabinet());
-        lockerList.add(new ResponseCabinetEntity.Cabinet());
-        lockerList.add(new ResponseCabinetEntity.Cabinet());
-        lockerList.add(new ResponseCabinetEntity.Cabinet());
-        lockerList.add(new ResponseCabinetEntity.Cabinet());
-        lockerList.add(new ResponseCabinetEntity.Cabinet());
+            lockerList.add(new ResponseCabinetEntity.Cabinet());
+            lockerList.add(new ResponseCabinetEntity.Cabinet());
+            lockerList.add(new ResponseCabinetEntity.Cabinet());
+            lockerList.add(new ResponseCabinetEntity.Cabinet());
+            lockerList.add(new ResponseCabinetEntity.Cabinet());
+            lockerList.add(new ResponseCabinetEntity.Cabinet());
+            lockerList.add(new ResponseCabinetEntity.Cabinet());
+            lockerList.add(new ResponseCabinetEntity.Cabinet());
+            lockerList.add(new ResponseCabinetEntity.Cabinet());
+            lockerList.add(new ResponseCabinetEntity.Cabinet());
 
-        lockerList.add(new ResponseCabinetEntity.Cabinet());
-        lockerList.add(new ResponseCabinetEntity.Cabinet());
-        lockerList.add(new ResponseCabinetEntity.Cabinet());
-        lockerList.add(new ResponseCabinetEntity.Cabinet());
-        lockerList.add(new ResponseCabinetEntity.Cabinet());
-        lockerList.add(new ResponseCabinetEntity.Cabinet());
-        lockerList.add(new ResponseCabinetEntity.Cabinet());
-        lockerList.add(new ResponseCabinetEntity.Cabinet());
-        lockerList.add(new ResponseCabinetEntity.Cabinet());
-        lockerList.add(new ResponseCabinetEntity.Cabinet());
+            lockerList.add(new ResponseCabinetEntity.Cabinet());
+            lockerList.add(new ResponseCabinetEntity.Cabinet());
+            lockerList.add(new ResponseCabinetEntity.Cabinet());
+            lockerList.add(new ResponseCabinetEntity.Cabinet());
+            lockerList.add(new ResponseCabinetEntity.Cabinet());
+            lockerList.add(new ResponseCabinetEntity.Cabinet());
+            lockerList.add(new ResponseCabinetEntity.Cabinet());
+            lockerList.add(new ResponseCabinetEntity.Cabinet());
+            lockerList.add(new ResponseCabinetEntity.Cabinet());
+            lockerList.add(new ResponseCabinetEntity.Cabinet());
 
-        lockerList.add(new ResponseCabinetEntity.Cabinet());
-        lockerList.add(new ResponseCabinetEntity.Cabinet());
-        lockerList.add(new ResponseCabinetEntity.Cabinet());
-        lockerList.add(new ResponseCabinetEntity.Cabinet());
-        lockerList.add(new ResponseCabinetEntity.Cabinet());
-        lockerList.add(new ResponseCabinetEntity.Cabinet());
-        lockerList.add(new ResponseCabinetEntity.Cabinet());
-        lockerList.add(new ResponseCabinetEntity.Cabinet());
-        lockerList.add(new ResponseCabinetEntity.Cabinet());
-        lockerList.add(new ResponseCabinetEntity.Cabinet());
+            lockerList.add(new ResponseCabinetEntity.Cabinet());
+            lockerList.add(new ResponseCabinetEntity.Cabinet());
+            lockerList.add(new ResponseCabinetEntity.Cabinet());
+            lockerList.add(new ResponseCabinetEntity.Cabinet());
+            lockerList.add(new ResponseCabinetEntity.Cabinet());
+            lockerList.add(new ResponseCabinetEntity.Cabinet());
+            lockerList.add(new ResponseCabinetEntity.Cabinet());
+            lockerList.add(new ResponseCabinetEntity.Cabinet());
+            lockerList.add(new ResponseCabinetEntity.Cabinet());
+            lockerList.add(new ResponseCabinetEntity.Cabinet());
+        }
+
 
         // 列表的size 假设40个 每行显示10个
         int listSize = lockerList.size();
