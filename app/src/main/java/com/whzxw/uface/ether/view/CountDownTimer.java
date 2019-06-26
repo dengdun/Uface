@@ -4,6 +4,8 @@ import android.content.Context;
 import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
 
+import com.tencent.mars.xlog.Log;
+
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
@@ -80,8 +82,9 @@ public class CountDownTimer extends AppCompatTextView {
      * 强制停止计时器
      */
     public void stopCount() {
-
+        Log.i("countDownTimer", "stopCount 1");
         if(disposable != null && !disposable.isDisposed()){
+            Log.i("countDownTimer", "stopCount 2");
             disposable.dispose();
         }
     }

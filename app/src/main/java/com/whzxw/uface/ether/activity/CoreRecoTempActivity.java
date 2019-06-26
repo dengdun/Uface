@@ -155,6 +155,7 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
     AlarmBroadcastReceive alarmBroadcastReceive = new AlarmBroadcastReceive();
 
     private List<ResponseCabinetEntity.Cabinet> lockerList = new ArrayList<ResponseCabinetEntity.Cabinet>();
+    private Disposable connectOpenLockerDisposable;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -353,7 +354,7 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
                                 }
                             });
                             com.tencent.mars.xlog.Log.i("刷卡", "开始网络请求");
-                            Observable.zip(dataObservable, personTableObservable, new BiFunction<Object[], PersonTable, Object[]>() {
+                            connectOpenLockerDisposable = Observable.zip(dataObservable, personTableObservable, new BiFunction<Object[], PersonTable, Object[]>() {
                                 @Override
                                 public Object[] apply(Object[] objects, PersonTable personTable) throws Exception {
                                     return new Object[]{objects[0], objects[1], personTable};
@@ -388,10 +389,15 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
                                             showAlert("快马加鞭开箱子！", true);
                                         }
                                     })
+                                    .onExceptionResumeNext(Observable.just(new ResponseEntity()))
                                     .flatMap(new Function<ResponseEntity, ObservableSource<Long>>() {
                                         @Override
                                         public ObservableSource<Long> apply(ResponseEntity responseEntity) throws Exception {
-                                            showAlert(responseEntity.getMessage(), true);
+                                            if (responseEntity.getMessage() == null) {
+                                                showAlert("网络似乎开小差了！", true);
+                                            } else {
+                                                showAlert(responseEntity.getMessage(), true);
+                                            }
                                             // 显示信息之后延时3秒跳转
                                             return Observable.just(1).timer(3, TimeUnit.SECONDS);
                                         }
@@ -649,8 +655,7 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
                 }
             });
 
-
-            Observable.zip(dataObservable, personTableObservable, new BiFunction<Object[], PersonTable, Object[]>() {
+            connectOpenLockerDisposable = Observable.zip(dataObservable, personTableObservable, new BiFunction<Object[], PersonTable, Object[]>() {
                 @Override
                 public Object[] apply(Object[] objects, PersonTable personTable) throws Exception {
                     return new Object[]{objects[0], objects[1], personTable};
@@ -685,10 +690,15 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
                             showAlert("快马加鞭开箱子！", true);
                         }
                     })
+                    .onExceptionResumeNext(Observable.just(new ResponseEntity()))
                     .flatMap(new Function<ResponseEntity, ObservableSource<Long>>() {
                         @Override
                         public ObservableSource<Long> apply(ResponseEntity responseEntity) throws Exception {
-                            showAlert(responseEntity.getMessage(), true);
+                            if (responseEntity.getMessage() == null) {
+                                showAlert("网络似乎开小差了！", true);
+                            } else {
+                                showAlert(responseEntity.getMessage(), true);
+                            }
                             // 显示信息之后延时3秒跳转
                             return Observable.just(1).timer(3, TimeUnit.SECONDS);
                         }
@@ -779,6 +789,8 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
         firstScreenGroup.setVisibility(View.VISIBLE);
         twoScreenGroup.setVisibility(View.INVISIBLE);
         countDownTimer.stopCount();
+        // 这里网络成功了。正在倒计时的时候，如果点击了返回，则跳转回主页，这里如果监听器没有取消。快速再点击到识别页，可能立马就跳转回来了。
+        if (connectOpenLockerDisposable != null && !connectOpenLockerDisposable.isDisposed()) connectOpenLockerDisposable.dispose();
         // 设置预览值
         isPreViewCamera = true;
 
