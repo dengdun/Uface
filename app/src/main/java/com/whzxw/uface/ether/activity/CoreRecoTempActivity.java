@@ -115,6 +115,7 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
      */
     int recoFromWhichButton = -1;
     // 是否正在显示屏保
+
     private static boolean isPreViewCamera = true;
     private byte[] yuvByteData;
     @BindView(R.id.rgb_camera)
@@ -288,7 +289,7 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
                         if (cabinet.getUsed() == 1) {
                             v.setImageResource(R.drawable.locker_used);
                             v.setBackgroundColor(getResources().getColor(R.color.hadLockerColor));
-                        }else {
+                        } else {
                             v.setBackgroundColor(getResources().getColor(R.color.defaultLockerColor));
                         }
                         layout.addView(view);
@@ -313,106 +314,108 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
                     Toast.makeText(CoreRecoTempActivity.this, resultCode, Toast.LENGTH_LONG).show();
                     final String cardNo = resultCode.toUpperCase();
 
+                    com.tencent.mars.xlog.Log.i("刷卡", "开始刷卡");
+                    com.tencent.mars.xlog.Log.i("刷卡", "预览");
+                    // 屏保的时候不读取
+                    if(isPreViewCamera) return true;
 
-                    if (!isPreViewCamera) {
-                        cameraRGB.setScreenshotListener(new CameraUtils.OnCameraDataEnableListener() {
-                            @Override
-                            public void onCameraDataCallback(final byte[] data, int camId) {
-//                                Bitmap bitmap = ImageUtils.rotateBitmap(ImageUtils.yuvImg2BitMap(data,640, 480), 90);
-//                                    NetHttpUtil.sendMessage(personTable.getPseronId(), personTable.getFaceId(), 100f, personTable.getName(), personTable.getCardNO(), bitmap);
-                                // 创建
-                                Observable<byte[]> identifyResultObservable = Observable.just(data);
-                                Observable<Integer> just = Observable.just(recoFromWhichButton);
-                                Observable<Object[]> dataObservable = Observable.zip(identifyResultObservable, just, new BiFunction<byte[], Integer, Object[]>() {
-                                    @Override
-                                    public Object[] apply(byte[] identifyResult, Integer integer) throws Exception {
-                                        Bitmap bitmap = ImageUtils.rotateBitmap(ImageUtils.yuvImg2BitMap(data, 640, 480), 90);
-                                        return new Object[]{bitmap, integer};
-                                    }
-                                });
+                    cameraRGB.setScreenshotListener(new CameraUtils.OnCameraDataEnableListener() {
 
-                                // 创建查数据的观察事件
-                                Observable<PersonTable> personTableObservable = Observable.just(cardNo).map(new Function<String, List<PersonTable>>() {
-                                    @Override
-                                    public List<PersonTable> apply(String cardno) throws Exception {
-                                        return EtherApp.daoSession.queryRaw(PersonTable.class, "where CARD_NO = ? ", cardno);
-                                    }
-                                }).filter(new Predicate<List<PersonTable>>() {
-                                    @Override
-                                    public boolean test(List<PersonTable> personTables) throws Exception {
-                                        return personTables != null && personTables.size() != 0;
-                                    }
-                                }).map(new Function<List<PersonTable>, PersonTable>() {
-                                    @Override
-                                    public PersonTable apply(List<PersonTable> personTables) throws Exception {
-                                        return personTables.get(0);
-                                    }
-                                });
+                        @Override
+                        public void onCameraDataCallback(final byte[] data, int camId) {
+                            com.tencent.mars.xlog.Log.i("刷卡", "进入到监听");
+                            // 创建
+                            Observable<byte[]> identifyResultObservable = Observable.just(data);
+                            Observable<Integer> just = Observable.just(recoFromWhichButton);
+                            Observable<Object[]> dataObservable = Observable.zip(identifyResultObservable, just, new BiFunction<byte[], Integer, Object[]>() {
+                                @Override
+                                public Object[] apply(byte[] identifyResult, Integer integer) throws Exception {
+                                    Bitmap bitmap = ImageUtils.rotateBitmap(ImageUtils.yuvImg2BitMap(data, 640, 480), 90);
+                                    return new Object[]{bitmap, integer};
+                                }
+                            });
+                            com.tencent.mars.xlog.Log.i("刷卡", "创建头像");
+                            // 创建查数据的观察事件
+                            Observable<PersonTable> personTableObservable = Observable.just(cardNo).map(new Function<String, List<PersonTable>>() {
+                                @Override
+                                public List<PersonTable> apply(String cardno) throws Exception {
+                                    return EtherApp.daoSession.queryRaw(PersonTable.class, "where CARD_NO = ? ", cardno);
+                                }
+                            }).filter(new Predicate<List<PersonTable>>() {
+                                @Override
+                                public boolean test(List<PersonTable> personTables) throws Exception {
+                                    return personTables != null && personTables.size() != 0;
+                                }
+                            }).map(new Function<List<PersonTable>, PersonTable>() {
+                                @Override
+                                public PersonTable apply(List<PersonTable> personTables) throws Exception {
+                                    return personTables.get(0);
+                                }
+                            });
+                            com.tencent.mars.xlog.Log.i("刷卡", "开始网络请求");
+                            Observable.zip(dataObservable, personTableObservable, new BiFunction<Object[], PersonTable, Object[]>() {
+                                @Override
+                                public Object[] apply(Object[] objects, PersonTable personTable) throws Exception {
+                                    return new Object[]{objects[0], objects[1], personTable};
+                                }
+                            })
+                                    .flatMap(new Function<Object[], Observable<ResponseEntity>>() {
+                                        @Override
+                                        public Observable<ResponseEntity> apply(Object[] objects) throws Exception {
+                                            Bitmap identifyResult = (Bitmap) objects[0];
+                                            Integer type = (Integer) objects[1];
+                                            PersonTable personTable = (PersonTable) objects[2];
 
-                                Observable.zip(dataObservable, personTableObservable, new BiFunction<Object[], PersonTable, Object[]>() {
-                                    @Override
-                                    public Object[] apply(Object[] objects, PersonTable personTable) throws Exception {
+                                            Map<String, String> params = new HashMap<>();
+                                            params.put("personId", personTable.getPseronId());
+                                            params.put("faceId", personTable.getFaceId());
+                                            params.put("score", "-1");
+                                            params.put("name", personTable.getName());
+                                            params.put("cardNo", personTable.getCardNO());
+                                            params.put("face", NetHttpUtil.bitmapToBase64(identifyResult));
+                                            params.put("type", type + "");
 
-                                        return new Object[]{objects[0], objects[1], personTable};
-                                    }
-                                })
-                                        .flatMap(new Function<Object[], Observable<ResponseEntity>>() {
-                                            @Override
-                                            public Observable<ResponseEntity> apply(Object[] objects) throws Exception {
-                                                Bitmap identifyResult = (Bitmap) objects[0];
-                                                Integer type = (Integer) objects[1];
-                                                PersonTable personTable = (PersonTable) objects[2];
+                                            return RetrofitManager.getInstance()
+                                                    .apiService
+                                                    .sendRecoResult(ApiService.recoCallBackUrl, params);
+                                        }
+                                    })
+                                    .subscribeOn(Schedulers.io())
+                                    .observeOn(AndroidSchedulers.mainThread())
+                                    .doOnSubscribe(new Consumer<Disposable>() {
+                                        @Override
+                                        public void accept(Disposable disposable) throws Exception {
+                                            showAlert("快马加鞭开箱子！", true);
+                                        }
+                                    })
+                                    .flatMap(new Function<ResponseEntity, ObservableSource<Long>>() {
+                                        @Override
+                                        public ObservableSource<Long> apply(ResponseEntity responseEntity) throws Exception {
+                                            showAlert(responseEntity.getMessage(), true);
+                                            // 显示信息之后延时3秒跳转
+                                            return Observable.just(1).timer(3, TimeUnit.SECONDS);
+                                        }
+                                    })
+                                    .subscribeOn(AndroidSchedulers.mainThread())
+                                    .observeOn(AndroidSchedulers.mainThread())
+                                    .subscribe(new Consumer<Long>() {
+                                        @Override
+                                        public void accept(Long o) throws Exception {
+                                            showAlert("重要提示", true);
+                                            toMainScreen();
+                                        }
+                                    }, new Consumer<Throwable>() {
+                                        @Override
+                                        public void accept(Throwable throwable) throws Exception {
+                                            showAlert("网络似乎开小差了！", true);
+                                            toMainScreen();
+                                        }
+                                    });
 
-                                                Map<String, String> params = new HashMap<>();
-                                                params.put("personId", personTable.getPseronId());
-                                                params.put("faceId", personTable.getFaceId());
-                                                params.put("score", "-1");
-                                                params.put("name", personTable.getName());
-                                                params.put("cardNo", personTable.getCardNO());
-                                                params.put("face", NetHttpUtil.bitmapToBase64(identifyResult));
-                                                params.put("type", type + "");
+                        }
+                    });
 
-                                                return RetrofitManager.getInstance()
-                                                        .apiService
-                                                        .sendRecoResult(ApiService.recoCallBackUrl, params);
-                                            }
-                                        })
-                                        .subscribeOn(Schedulers.io())
-                                        .observeOn(AndroidSchedulers.mainThread())
-                                        .doOnSubscribe(new Consumer<Disposable>() {
-                                            @Override
-                                            public void accept(Disposable disposable) throws Exception {
-                                                showAlert("快马加鞭开箱子！", true);
-                                            }
-                                        })
-                                        .flatMap(new Function<ResponseEntity, ObservableSource<Long>>() {
-                                            @Override
-                                            public ObservableSource<Long> apply(ResponseEntity responseEntity) throws Exception {
-                                                showAlert(responseEntity.getMessage(), true);
-                                                // 显示信息之后延时3秒跳转
-                                                return Observable.just(1).timer(3, TimeUnit.SECONDS);
-                                            }
-                                        })
-                                        .subscribeOn(AndroidSchedulers.mainThread())
-                                        .observeOn(AndroidSchedulers.mainThread())
-                                        .subscribe(new Consumer<Long>() {
-                                            @Override
-                                            public void accept(Long o) throws Exception {
-                                                showAlert("重要提示", true);
-                                                toMainScreen();
-                                            }
-                                        }, new Consumer<Throwable>() {
-                                            @Override
-                                            public void accept(Throwable throwable) throws Exception {
-                                                showAlert("网络似乎开小差了！", true);
-                                                com.tencent.mars.xlog.Log.d("CoreRecoTempActivity400", throwable.getMessage());
-                                                toMainScreen();
-                                            }
-                                        });
 
-                            }
-                        });
-                    }
 
                 } else {
                     resultCode += Character.toString((char) event.getUnicodeChar());
@@ -861,8 +864,6 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
             }
         }
     }
-
-
 
 
 }
