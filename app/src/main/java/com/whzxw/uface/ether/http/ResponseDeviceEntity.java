@@ -4,15 +4,15 @@ package com.whzxw.uface.ether.http;
  * 网络请求返回实体
  */
 public class ResponseDeviceEntity {
-    private String success;
+    private boolean success;
     private String message;
     private Device result;
 
-    public String getSuccess() {
+    public boolean isSuccess() {
         return success;
     }
 
-    public void setSuccess(String success) {
+    public void setSuccess(boolean success) {
         this.success = success;
     }
 

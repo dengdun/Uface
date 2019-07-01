@@ -1,12 +1,14 @@
 package com.whzxw.uface.ether.http;
 
 import com.uniubi.uface.ether.BuildConfig;
+import com.whzxw.uface.ether.activity.SplashActivity;
 
 import java.util.Map;
 
 import io.reactivex.Observable;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Url;
 
@@ -112,4 +114,11 @@ public interface ApiService {
     @POST
     Observable<ResponseCabinetEntity> queryCabinet(@Url String u);
 
+    /**
+     * 查询柜子的状态
+     * @param u
+     * @return
+     */
+    @GET
+    Observable<SplashActivity.Diooo> test(@Url String u);
 }

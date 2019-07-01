@@ -259,20 +259,17 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
         // 列表的size 假设40个 每行显示10个
         int listSize = lockerList.size();
         int spanCount = 10;
-        int rowSize = 0;
-        if (listSize % spanCount == 0) {
-            rowSize = listSize / spanCount;
-        } else {
-            rowSize = listSize / spanCount + 1;
-        }
+        // 更改排列方式竖排 4排 强制
+        int rowSize = 4;
+
         // 每次进来都清空子控件
         layoutContainer.removeAllViews();
-        for (int j = 1; j <= rowSize; j++) {
+        for (int j = 1; j <= spanCount; j++) {
             LinearLayout layout = new LinearLayout(this);
-            layout.setOrientation(LinearLayout.HORIZONTAL);
+            layout.setOrientation(LinearLayout.VERTICAL);
             for (int i = 0; i < listSize; i++) {
-                if (i < spanCount * j && i >= spanCount * (j - 1))
-                    if (i % 2 == 0) {
+                if (i < rowSize * j && i >= rowSize * (j - 1))
+                    if (j % 2 == 1) {
                         View view = LayoutInflater.from(this).inflate(R.layout.locker_item, null);
                         ResponseCabinetEntity.Cabinet cabinet = lockerList.get(i);
                         ImageView v = ((ImageView) view.findViewById(R.id.item));
@@ -781,7 +778,7 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
     }
 
     /**
-     * 跳转到主屏幕
+     * 跳转到主屏幕.
      */
     @OnClick(R.id.btn_back)
     public void toMainScreen() {

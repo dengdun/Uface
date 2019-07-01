@@ -18,16 +18,11 @@ import com.whzxw.uface.ether.http.RetrofitManager;
 import com.whzxw.uface.ether.utils.Voiceutils;
 import com.whzxw.uface.ether.utils.XlogUitls;
 
-import java.io.IOException;
-import java.util.concurrent.TimeUnit;
-
-import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
+import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -66,24 +61,11 @@ public class SplashActivity extends AppCompatActivity {
         disposable = RetrofitManager.getInstance()
                 .apiService
                 .queryMachineName(ApiService.queryDevNameUrl)
-                .retryWhen(new Function<Observable<Throwable>, ObservableSource<?>>() {
+                .repeat()
+                .filter(new Predicate<ResponseDeviceEntity>() {
                     @Override
-                    public ObservableSource<?> apply(final Observable<Throwable> throwableObservable) throws Exception {
-                        return throwableObservable.flatMap(new Function<Throwable, ObservableSource<?>>() {
-                            @Override
-                            public ObservableSource<?> apply(Throwable throwable) throws Exception {
-                                if (BuildConfig.DEBUG)  {
-                                    return Observable.error(new Throwable(""));
-                                } else {
-                                    // 测试的时候注释上
-                                    if (throwable instanceof IOException) {
-                                        return Observable.just(1).delay(2, TimeUnit.SECONDS);
-                                    } else {
-                                        return Observable.error(new Throwable(""));
-                                    }
-                                }
-                            }
-                        });
+                    public boolean test(ResponseDeviceEntity responseDeviceEntity) throws Exception {
+                        return responseDeviceEntity.isSuccess();
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread())
@@ -92,20 +74,26 @@ public class SplashActivity extends AppCompatActivity {
                     @Override
                     public void accept(ResponseDeviceEntity responseEntity) throws Exception {
                         Log.i("jin", "get result");
+                        com.tencent.mars.xlog.Log.i("jin", "运行失败");
+
+                        if (disposable != null && !disposable.isDisposed()) disposable.dispose();
                         Intent intent = new Intent(getApplicationContext(), CoreRecoTempActivity.class);
                         ResponseDeviceEntity.Device result = responseEntity.getResult();
                         intent.putExtra(INTENT_DEVNAME, result.getDeviceName());
                         intent.putExtra(INTENT_DEVCODE, result.getDeviceNo());
                         startActivity(intent);
                         finish();
+
                     }
 
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         if (BuildConfig.DEBUG) {
+                            if (disposable != null && !disposable.isDisposed()) disposable.dispose();
                             Intent intent = new Intent(getApplicationContext(), CoreRecoTempActivity.class);
                             intent.putExtra(INTENT_DEVNAME, "什么机子");
+                            intent.putExtra(INTENT_DEVCODE, "88888888888888888888888888888");
                             startActivity(intent);
                             finish();
                         }
@@ -119,10 +107,31 @@ public class SplashActivity extends AppCompatActivity {
 
                     }
                 });
+
         XlogUitls.init(getApplication());
 
     }
 
+    public class Diooo {
+        String status;
+        String message;
+
+        public String getStatus() {
+            return status;
+        }
+
+        public void setStatus(String status) {
+            this.status = status;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+
+        public void setMessage(String message) {
+            this.message = message;
+        }
+    }
     @Override
     protected void onDestroy() {
         super.onDestroy();
