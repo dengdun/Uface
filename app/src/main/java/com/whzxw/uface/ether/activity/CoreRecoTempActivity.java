@@ -268,10 +268,18 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
             LinearLayout layout = new LinearLayout(this);
             layout.setOrientation(LinearLayout.VERTICAL);
             for (int i = 0; i < listSize; i++) {
-                if (i < rowSize * j && i >= rowSize * (j - 1))
+                if (i < rowSize * j && i >= rowSize * (j - 1)) {
+                    ResponseCabinetEntity.Cabinet cabinet = lockerList.get(i);
+                    if ("@".equals(cabinet.getSno()) && cabinet.getUsed() == 1 && "1".equals(cabinet.getUsable())) {
+                        // 储物柜显示屏幕的柜子
+                        View view = LayoutInflater.from(this).inflate(R.layout.locker_item, null);
+
+                        ImageView v = ((ImageView) view.findViewById(R.id.item));
+                        v.setBackgroundColor(getResources().getColor(R.color.LockerColor));
+                    }
                     if (j % 2 == 1) {
                         View view = LayoutInflater.from(this).inflate(R.layout.locker_item, null);
-                        ResponseCabinetEntity.Cabinet cabinet = lockerList.get(i);
+
                         ImageView v = ((ImageView) view.findViewById(R.id.item));
                         if (cabinet.getUsed() == 1) {
                             v.setImageResource(R.drawable.locker_used);
@@ -282,7 +290,7 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
                         layout.addView(view);
                     } else {
                         View view = LayoutInflater.from(this).inflate(R.layout.locker_line_item, null);
-                        ResponseCabinetEntity.Cabinet cabinet = lockerList.get(i);
+
                         ImageView v = ((ImageView) view.findViewById(R.id.item));
                         if (cabinet.getUsed() == 1) {
                             v.setImageResource(R.drawable.locker_used);
@@ -292,6 +300,7 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
                         }
                         layout.addView(view);
                     }
+                }
             }
             layoutContainer.addView(layout);
         }
