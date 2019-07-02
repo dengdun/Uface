@@ -18,10 +18,16 @@ import com.whzxw.uface.ether.http.RetrofitManager;
 import com.whzxw.uface.ether.utils.Voiceutils;
 import com.whzxw.uface.ether.utils.XlogUitls;
 
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
+
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -60,7 +66,26 @@ public class SplashActivity extends AppCompatActivity {
         disposable = RetrofitManager.getInstance()
                 .apiService
                 .queryMachineName(ApiService.queryDevNameUrl)
-                .repeat()
+                .retryWhen(new Function<Observable<Throwable>, ObservableSource<?>>() {
+                    @Override
+                    public ObservableSource<?> apply(final Observable<Throwable> throwableObservable) throws Exception {
+                        return throwableObservable.flatMap(new Function<Throwable, ObservableSource<?>>() {
+                            @Override
+                            public ObservableSource<?> apply(Throwable throwable) throws Exception {
+                                if (BuildConfig.DEBUG)  {
+                                    return Observable.error(new Throwable(""));
+                                } else {
+                                    // 测试的时候注释上
+                                    if (throwable instanceof IOException) {
+                                        return Observable.just(1).delay(2, TimeUnit.SECONDS);
+                                    } else {
+                                        return Observable.error(new Throwable(""));
+                                    }
+                                }
+                            }
+                        });
+                    }
+                })
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Consumer<ResponseDeviceEntity>() {
@@ -69,16 +94,17 @@ public class SplashActivity extends AppCompatActivity {
                         Log.i("jin", "get result");
                         com.tencent.mars.xlog.Log.i("jin", "运行失败");
 
-                        if (disposable != null && !disposable.isDisposed()) disposable.dispose();
                         // 这里已经过滤了肯定是正常的才走到这一步
                         Intent intent = new Intent(getApplicationContext(), CoreRecoTempActivity.class);
                         ResponseDeviceEntity.Device result = responseEntity.getResult();
+
                         intent.putExtra(INTENT_DEVNAME, result.getDeviceName());
                         intent.putExtra(INTENT_DEVCODE, result.getDeviceNo());
                         startActivity(intent);
                         finish();
 
                     }
+
 
                 }, new Consumer<Throwable>() {
                     @Override

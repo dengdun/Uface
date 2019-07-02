@@ -270,34 +270,34 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
             for (int i = 0; i < listSize; i++) {
                 if (i < rowSize * j && i >= rowSize * (j - 1)) {
                     ResponseCabinetEntity.Cabinet cabinet = lockerList.get(i);
-                    if ("@".equals(cabinet.getSno()) && cabinet.getUsed() == 1 && "1".equals(cabinet.getUsable())) {
-                        // 储物柜显示屏幕的柜子
+
+                    if (j % 2 == 1 ) {
                         View view = LayoutInflater.from(this).inflate(R.layout.locker_item, null);
 
                         ImageView v = ((ImageView) view.findViewById(R.id.item));
-                        v.setBackgroundColor(getResources().getColor(R.color.LockerColor));
-                    }
-                    if (j % 2 == 1) {
-                        View view = LayoutInflater.from(this).inflate(R.layout.locker_item, null);
-
-                        ImageView v = ((ImageView) view.findViewById(R.id.item));
-                        if (cabinet.getUsed() == 1) {
+                        if ("@".equals(cabinet.getSno()) && cabinet.getUsed() == 1 && "1".equals(cabinet.getUsable())) {
+                            v.setBackgroundColor(getResources().getColor(R.color.LockerColor));
+                        } else if (cabinet.getUsed() == 1) {
                             v.setImageResource(R.drawable.locker_used);
                             v.setBackgroundColor(getResources().getColor(R.color.hadLockerColor));
                         } else {
                             v.setBackgroundColor(getResources().getColor(R.color.defaultLockerColor));
                         }
+
                         layout.addView(view);
                     } else {
                         View view = LayoutInflater.from(this).inflate(R.layout.locker_line_item, null);
 
                         ImageView v = ((ImageView) view.findViewById(R.id.item));
-                        if (cabinet.getUsed() == 1) {
+                        if ("@".equals(cabinet.getSno()) && cabinet.getUsed() == 1 && "1".equals(cabinet.getUsable())) {
+                            v.setBackgroundColor(getResources().getColor(R.color.LockerColor));
+                        } else if (cabinet.getUsed() == 1 ) {
                             v.setImageResource(R.drawable.locker_used);
                             v.setBackgroundColor(getResources().getColor(R.color.hadLockerColor));
                         } else {
                             v.setBackgroundColor(getResources().getColor(R.color.defaultLockerColor));
                         }
+
                         layout.addView(view);
                     }
                 }
