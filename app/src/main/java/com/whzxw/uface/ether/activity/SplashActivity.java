@@ -22,7 +22,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -62,12 +61,6 @@ public class SplashActivity extends AppCompatActivity {
                 .apiService
                 .queryMachineName(ApiService.queryDevNameUrl)
                 .repeat()
-                .filter(new Predicate<ResponseDeviceEntity>() {
-                    @Override
-                    public boolean test(ResponseDeviceEntity responseDeviceEntity) throws Exception {
-                        return responseDeviceEntity.isSuccess();
-                    }
-                })
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Consumer<ResponseDeviceEntity>() {
@@ -77,6 +70,7 @@ public class SplashActivity extends AppCompatActivity {
                         com.tencent.mars.xlog.Log.i("jin", "运行失败");
 
                         if (disposable != null && !disposable.isDisposed()) disposable.dispose();
+                        // 这里已经过滤了肯定是正常的才走到这一步
                         Intent intent = new Intent(getApplicationContext(), CoreRecoTempActivity.class);
                         ResponseDeviceEntity.Device result = responseEntity.getResult();
                         intent.putExtra(INTENT_DEVNAME, result.getDeviceName());

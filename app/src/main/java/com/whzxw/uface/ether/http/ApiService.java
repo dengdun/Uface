@@ -37,6 +37,7 @@ public interface ApiService {
      * 2. 识别回调接口
      * 请求地址: http://192.168.10.150:8082/locker/callback4App
      * 请求参数:
+     *
      * personId	人员唯一标识
      * faceId		人脸唯一标识
      * score		识别分数
