@@ -50,10 +50,12 @@ import com.whzxw.uface.ether.bean.SettingMessageEvent;
 import com.whzxw.uface.ether.database.PersonTable;
 import com.whzxw.uface.ether.http.ApiService;
 import com.whzxw.uface.ether.http.ResponseCabinetEntity;
+import com.whzxw.uface.ether.http.ResponseDeviceEntity;
 import com.whzxw.uface.ether.http.ResponseEntity;
 import com.whzxw.uface.ether.http.RetrofitManager;
 import com.whzxw.uface.ether.utils.CameraUtils;
 import com.whzxw.uface.ether.utils.NetHttpUtil;
+import com.whzxw.uface.ether.utils.PhotoUtils;
 import com.whzxw.uface.ether.utils.Voiceutils;
 import com.whzxw.uface.ether.view.CountDownTimer;
 import com.whzxw.uface.ether.view.FaceView;
@@ -61,9 +63,7 @@ import com.whzxw.uface.ether.view.FaceView;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -77,6 +77,7 @@ import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Action;
 import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
@@ -87,6 +88,7 @@ import pl.droidsonroids.gif.GifTextView;
 
 import static com.whzxw.uface.ether.activity.SplashActivity.INTENT_DEVCODE;
 import static com.whzxw.uface.ether.activity.SplashActivity.INTENT_DEVNAME;
+import static com.whzxw.uface.ether.activity.SplashActivity.INTENT_SUCCESS;
 import static com.whzxw.uface.ether.http.ApiService.adUrl;
 import static com.whzxw.uface.ether.schedule.AlarmManagerUtils.ACTION_ALRAM;
 
@@ -95,6 +97,7 @@ import static com.whzxw.uface.ether.schedule.AlarmManagerUtils.ACTION_ALRAM;
  * @date 2018/08/02
  * <p>
  * 这里是最新的界面的一些功能
+ * 根据找学网部分需求更改页面效果
  */
 public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyResultCallBack, EtherFaceManager.OnServerConnectListener {
 
@@ -117,7 +120,11 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
     // 是否正在显示屏保
 
     private static boolean isPreViewCamera = true;
-    private byte[] yuvByteData;
+    /**
+     * 空白的YUV420P照片
+     */
+    private byte[] yuvByteData = PhotoUtils.getWhiteYuvImage();
+    ;
     @BindView(R.id.rgb_camera)
     TextureView textureRGBView;
     @BindView(R.id.ir_camera)
@@ -171,14 +178,13 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
 
         serviceOptions = UfaceEtherImpl.getServiceOptions();
         etherFaceManager = EtherFaceManager.getInstance();
-        // 这个要提高堆叠的时候的登记，不然容易被后面的控件盖住。看不到。
+        // 这个要提高堆叠的时候的等级，不然会被后面的控件盖住。看不到。
         operator_flow.bringToFront();
         init();
         initCamera();
         initWebView();
         if (BuildConfig.DEBUG) initRecycleView();
 
-        initWhiteYuvImage();
         etherFaceManager.startService(this, this, this);
 
         countDownTimer.setDeadlineListener(new CountDownTimer.DeadlineListener() {
@@ -189,20 +195,9 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
         });
 
         registerReceiver(alarmBroadcastReceive, new IntentFilter(ACTION_ALRAM));
-    }
 
-    private void initWhiteYuvImage() {
-        // 这里是读取assert的保存的一张空白的yuv的图片，保存下来，位了在屏保的时候推送到底层的识别。
-        try {
-            InputStream inputStream = getApplication().getResources().getAssets().open("white.yuv");
-            yuvByteData = new byte[inputStream.available()];
-            inputStream.read(yuvByteData);
-            inputStream.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
+
     }
 
     /**
@@ -271,7 +266,7 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
                 if (i < rowSize * j && i >= rowSize * (j - 1)) {
                     ResponseCabinetEntity.Cabinet cabinet = lockerList.get(i);
 
-                    if (j % 2 == 1 ) {
+                    if (j % 2 == 1) {
                         View view = LayoutInflater.from(this).inflate(R.layout.locker_item, null);
 
                         ImageView v = ((ImageView) view.findViewById(R.id.item));
@@ -291,7 +286,7 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
                         ImageView v = ((ImageView) view.findViewById(R.id.item));
                         if ("@".equals(cabinet.getSno()) && cabinet.getUsed() == 1 && "1".equals(cabinet.getUsable())) {
                             v.setBackgroundColor(getResources().getColor(R.color.LockerColor));
-                        } else if (cabinet.getUsed() == 1 ) {
+                        } else if (cabinet.getUsed() == 1) {
                             v.setImageResource(R.drawable.locker_used);
                             v.setBackgroundColor(getResources().getColor(R.color.hadLockerColor));
                         } else {
@@ -324,7 +319,7 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
                     com.tencent.mars.xlog.Log.i("刷卡", "开始刷卡");
                     com.tencent.mars.xlog.Log.i("刷卡", "预览");
                     // 屏保的时候不读取
-                    if(isPreViewCamera) return true;
+                    if (isPreViewCamera) return true;
 
                     cameraRGB.setScreenshotListener(new CameraUtils.OnCameraDataEnableListener() {
 
@@ -426,9 +421,6 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
 
                         }
                     });
-
-
-
                 } else {
                     resultCode += Character.toString((char) event.getUnicodeChar());
                 }
@@ -489,8 +481,6 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
                 view.loadUrl(request.getUrl().toString());
             }
         });
-
-
     }
 
     private void init() {
@@ -501,6 +491,9 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
         String schoolName = intent.getStringExtra(INTENT_DEVNAME);
         String deviceCode = intent.getStringExtra(INTENT_DEVCODE);
         schoolNameView.setText(schoolName + "\n" + deviceCode);
+        boolean booleanExtra = intent.getBooleanExtra(INTENT_SUCCESS, false);
+
+        if (booleanExtra) intervalGetDeviceName();
 
         try {
             GifDrawable gifFromAssets = new GifDrawable(getAssets(), "loading.gif");
@@ -796,7 +789,8 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
         twoScreenGroup.setVisibility(View.INVISIBLE);
         countDownTimer.stopCount();
         // 这里网络成功了。正在倒计时的时候，如果点击了返回，则跳转回主页，这里如果监听器没有取消。快速再点击到识别页，可能立马就跳转回来了。
-        if (connectOpenLockerDisposable != null && !connectOpenLockerDisposable.isDisposed()) connectOpenLockerDisposable.dispose();
+        if (connectOpenLockerDisposable != null && !connectOpenLockerDisposable.isDisposed())
+            connectOpenLockerDisposable.dispose();
         // 设置预览值
         isPreViewCamera = true;
 
@@ -883,5 +877,50 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
         }
     }
 
+    Disposable disposable = null;
+
+    /**
+     * 获取名字
+     */
+    public void intervalGetDeviceName() {
+
+        disposable = Observable.interval(10, TimeUnit.SECONDS)
+                .flatMap(new Function<Long, ObservableSource<ResponseDeviceEntity>>() {
+                    @Override
+                    public ObservableSource<ResponseDeviceEntity> apply(Long aLong) throws Exception {
+                        return RetrofitManager.getInstance()
+                                .apiService
+                                .queryMachineName(ApiService.queryDevNameUrl);
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Consumer<ResponseDeviceEntity>() {
+                    @Override
+                    public void accept(ResponseDeviceEntity responseEntity) throws Exception {
+                        Log.i("jin", responseEntity.toString());
+                        if (responseEntity.isSuccess()) {
+                            ResponseDeviceEntity.Device result = responseEntity.getResult();
+                            schoolNameView.setText(result.getDeviceName() + "\n" + result.getDeviceNo());
+                            if (disposable != null && !disposable.isDisposed()) disposable.dispose();
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+
+                        Log.i("jin", "throw erro");
+
+                    }
+                }, new Action() {
+                    @Override
+                    public void run() throws Exception {
+                        Log.i("jin", "run throw erro");
+
+                    }
+                });
+
+
+    }
 
 }

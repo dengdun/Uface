@@ -3,6 +3,12 @@ package com.whzxw.uface.ether.utils;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
+import com.whzxw.uface.ether.EtherApp;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+
 /**
  * @author qiaopeng
  * @date 2018/8/17
@@ -79,6 +85,23 @@ public class PhotoUtils {
 
                 index ++;
             }
+        }
+    }
+
+    public static byte[] getWhiteYuvImage() {
+        byte[] yuvByteData = null;
+        // 这里是读取assert的保存的一张空白的yuv的图片，保存下来，位了在屏保的时候推送到底层的识别。
+        try {
+            InputStream inputStream = EtherApp.context.getResources().getAssets().open("white.yuv");
+            yuvByteData = new byte[inputStream.available()];
+            inputStream.read(yuvByteData);
+            inputStream.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            return yuvByteData;
         }
     }
 }

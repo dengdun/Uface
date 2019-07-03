@@ -37,6 +37,7 @@ public class SplashActivity extends AppCompatActivity {
 
     public static final String INTENT_DEVNAME = "devName";
     public static final String INTENT_DEVCODE = "devCode";
+    public static final String INTENT_SUCCESS = "isSuccess";
     private Disposable disposable;
 
     @Override
@@ -100,6 +101,7 @@ public class SplashActivity extends AppCompatActivity {
 
                         intent.putExtra(INTENT_DEVNAME, result.getDeviceName());
                         intent.putExtra(INTENT_DEVCODE, result.getDeviceNo());
+                        intent.putExtra(INTENT_SUCCESS, responseEntity.isSuccess());
                         startActivity(intent);
                         finish();
 
@@ -110,12 +112,14 @@ public class SplashActivity extends AppCompatActivity {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         if (BuildConfig.DEBUG) {
-                            if (disposable != null && !disposable.isDisposed()) disposable.dispose();
+
                             Intent intent = new Intent(getApplicationContext(), CoreRecoTempActivity.class);
                             intent.putExtra(INTENT_DEVNAME, "什么机子");
                             intent.putExtra(INTENT_DEVCODE, "88888888888888888888888888888");
                             startActivity(intent);
                             finish();
+
+                            if (disposable != null && !disposable.isDisposed()) disposable.dispose();
                         }
                         Log.i("jin", "throw erro");
 
