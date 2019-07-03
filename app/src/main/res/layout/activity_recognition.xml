@@ -164,7 +164,7 @@
         android:visibility="invisible"
         app:constraint_referenced_ids="  btn_back, camera_title, countdown_timer, banner" />
 
-    <LinearLayout
+    <com.whzxw.uface.ether.view.LockerView
         android:id="@+id/layout"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
