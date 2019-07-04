@@ -84,6 +84,7 @@ import pl.droidsonroids.gif.GifTextView;
 
 import static com.whzxw.uface.ether.activity.SplashActivity.INTENT_DEVCODE;
 import static com.whzxw.uface.ether.activity.SplashActivity.INTENT_DEVNAME;
+import static com.whzxw.uface.ether.activity.SplashActivity.INTENT_PHONE;
 import static com.whzxw.uface.ether.activity.SplashActivity.INTENT_SUCCESS;
 import static com.whzxw.uface.ether.http.ApiService.adUrl;
 import static com.whzxw.uface.ether.schedule.AlarmManagerUtils.ACTION_ALRAM;
@@ -382,7 +383,8 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
         Intent intent = getIntent();
         String schoolName = intent.getStringExtra(INTENT_DEVNAME);
         String deviceCode = intent.getStringExtra(INTENT_DEVCODE);
-        schoolNameView.setText(schoolName + "\n" + deviceCode);
+        String phone = intent.getStringExtra(INTENT_PHONE);
+        schoolNameView.setText(schoolName + "\n" + phone + "\n" + deviceCode);
         boolean booleanExtra = intent.getBooleanExtra(INTENT_SUCCESS, false);
 
         if (booleanExtra) intervalGetDeviceName();
@@ -772,7 +774,7 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
                         Log.i("jin", responseEntity.toString());
                         if (responseEntity.isSuccess()) {
                             ResponseDeviceEntity.Device result = responseEntity.getResult();
-                            schoolNameView.setText(result.getDeviceName() + "\n" + result.getDeviceNo());
+                            schoolNameView.setText(result.getDeviceName() +  "\n" + result.getPhone() + "\n" + result.getDeviceNo());
                             if (disposable != null && !disposable.isDisposed()) disposable.dispose();
                         }
                     }

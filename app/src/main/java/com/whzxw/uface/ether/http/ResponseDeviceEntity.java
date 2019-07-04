@@ -8,6 +8,7 @@ public class ResponseDeviceEntity {
     private String message;
     private Device result;
 
+
     public boolean isSuccess() {
         return success;
     }
@@ -36,6 +37,15 @@ public class ResponseDeviceEntity {
     public class Device {
         String deviceNo;
         String deviceName;
+        String phone;
+
+        public String getPhone() {
+            return phone;
+        }
+
+        public void setPhone(String phone) {
+            this.phone = phone;
+        }
 
         public String getDeviceNo() {
             return deviceNo;

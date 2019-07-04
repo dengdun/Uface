@@ -38,6 +38,7 @@ public class SplashActivity extends AppCompatActivity {
     public static final String INTENT_DEVNAME = "devName";
     public static final String INTENT_DEVCODE = "devCode";
     public static final String INTENT_SUCCESS = "isSuccess";
+    public static final String INTENT_PHONE = "phone";
     private Disposable disposable;
 
     @Override
@@ -102,6 +103,8 @@ public class SplashActivity extends AppCompatActivity {
                         intent.putExtra(INTENT_DEVNAME, result.getDeviceName());
                         intent.putExtra(INTENT_DEVCODE, result.getDeviceNo());
                         intent.putExtra(INTENT_SUCCESS, responseEntity.isSuccess());
+                        intent.putExtra(INTENT_PHONE, result.getPhone()== null?"":result.getPhone());
+
                         startActivity(intent);
                         finish();
 

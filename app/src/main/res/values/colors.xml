@@ -4,7 +4,7 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="colorBlack">#000000</color>
-    <color name="defaultLockerColor">#EAFBFF</color>
+    <color name="defaultLockerColor">#B2F2F8</color>
     <color name="hadLockerColor">#FFD07F</color>
     <color name="LockerColor">#5BB5FF</color>
     <color name="lockerline">#20D2C3</color>
