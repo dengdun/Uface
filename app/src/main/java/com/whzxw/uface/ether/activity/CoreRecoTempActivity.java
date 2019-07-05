@@ -383,7 +383,7 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
         Intent intent = getIntent();
         String schoolName = intent.getStringExtra(INTENT_DEVNAME);
         String deviceCode = intent.getStringExtra(INTENT_DEVCODE);
-        String phone = intent.getStringExtra(INTENT_PHONE);
+        String phone = intent.getStringExtra(INTENT_PHONE) == null?"0000-000000":intent.getStringExtra(INTENT_PHONE);
         schoolNameView.setText(schoolName + "\n" + phone + "\n" + deviceCode);
         boolean booleanExtra = intent.getBooleanExtra(INTENT_SUCCESS, false);
 
@@ -736,7 +736,6 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
     }
 
 
-
     /**
      * 一个小时刷新一次页面
      */
@@ -756,8 +755,8 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
      * 获取名字
      */
     public void intervalGetDeviceName() {
-
-        disposable = Observable.interval(10, TimeUnit.SECONDS)
+        int period = BuildConfig.DEBUG ? 10 : 60;
+        disposable = Observable.interval(period, TimeUnit.SECONDS)
                 .flatMap(new Function<Long, ObservableSource<ResponseDeviceEntity>>() {
                     @Override
                     public ObservableSource<ResponseDeviceEntity> apply(Long aLong) throws Exception {
@@ -774,7 +773,7 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
                         Log.i("jin", responseEntity.toString());
                         if (responseEntity.isSuccess()) {
                             ResponseDeviceEntity.Device result = responseEntity.getResult();
-                            schoolNameView.setText(result.getDeviceName() +  "\n" + result.getPhone() + "\n" + result.getDeviceNo());
+                            schoolNameView.setText(result.getDeviceName() +  "\n" + (result.getPhone() == null?"0000-000000":result.getPhone()) + "\n" + result.getDeviceNo());
                             if (disposable != null && !disposable.isDisposed()) disposable.dispose();
                         }
                     }

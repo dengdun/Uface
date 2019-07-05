@@ -15,7 +15,7 @@
     <View
         android:id="@+id/line"
         android:layout_width="match_parent"
-        android:layout_height="3dp"
+        android:layout_height="2dp"
         android:background="@color/line"
         app:layout_constraintTop_toTopOf="@id/first_line_one"/>
 
@@ -68,6 +68,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="schoolName"
+        android:textColor="@android:color/black"
         app:layout_constraintHorizontal_bias="0.04"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -182,7 +183,7 @@
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="12dp"
         android:background="@color/hadLockerColor"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="@id/second_line_one"/>
@@ -193,7 +194,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="12dp"
         app:layout_constraintTop_toTopOf="@id/second_line_one"
         app:layout_constraintLeft_toRightOf="@id/using_box_image"/>
 
@@ -203,7 +204,7 @@
         android:layout_height="20dp"
         app:layout_goneMarginLeft="80dp"
         android:layout_marginStart="80dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="12dp"
         android:background="@color/defaultLockerColor"
         app:layout_constraintTop_toTopOf="@id/second_line_one"
         app:layout_constraintLeft_toRightOf="@id/using_box_text"/>
@@ -213,7 +214,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="12dp"
         app:layout_constraintTop_toTopOf="@id/second_line_one"
         app:layout_constraintLeft_toRightOf="@id/not_use_box"/>
 
@@ -222,6 +223,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
+        android:layout_marginTop="8dp"
         app:layout_constraintTop_toBottomOf="@id/using_box_image"
         app:layout_constraintLeft_toLeftOf="parent"/>
 
@@ -229,6 +231,7 @@
         android:text="@string/book_box_number"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="20dp"
         app:layout_constraintTop_toBottomOf="@id/using_box_image"
         app:layout_constraintRight_toRightOf="parent"/>
@@ -245,8 +248,9 @@
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/btn_back"
-        android:layout_width="wrap_content"
+        android:layout_width="60dp"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:text="@string/back"
         android:drawableLeft="@drawable/back"
         android:layout_marginStart="20dp"

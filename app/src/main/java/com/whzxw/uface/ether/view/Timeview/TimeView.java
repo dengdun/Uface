@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.view.Gravity;
 
 
 import java.text.SimpleDateFormat;
@@ -22,7 +23,7 @@ import io.reactivex.schedulers.Schedulers;
  */
 public class TimeView extends android.support.v7.widget.AppCompatTextView {
 
-    private SimpleDateFormat simpleDateFormat;
+    private SimpleDateFormat simpleDateFormat, simpleTimeDateFormat;
     private Paint paint;
     private Disposable mDisposable;
 
@@ -44,11 +45,14 @@ public class TimeView extends android.support.v7.widget.AppCompatTextView {
 
     private void init() {
 
-        simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd  \nHH:mm:ss");
+        simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        simpleTimeDateFormat = new SimpleDateFormat("HH:mm:ss");
+
         paint = new Paint();
-        paint.setTextSize(50);
+        paint.setTextSize(60);
         paint.setColor(Color.BLACK);
-        super.setText(simpleDateFormat.format(new Date()));
+        super.setTextColor(Color.BLACK);
+        setGravity(Gravity.RIGHT);
         Observable.interval(1, TimeUnit.SECONDS)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -61,7 +65,9 @@ public class TimeView extends android.support.v7.widget.AppCompatTextView {
 
                     @Override
                     public void onNext(Long aLong) {
-                        setText(simpleDateFormat.format(new Date()));
+                        Date date = new Date();
+                        setText(simpleDateFormat.format(date) + "\n" + simpleTimeDateFormat.format(date));
+
                     }
 
                     @Override
