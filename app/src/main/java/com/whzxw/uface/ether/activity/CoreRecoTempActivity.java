@@ -9,6 +9,7 @@ import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.constraint.Group;
 import android.support.v7.app.AppCompatActivity;
@@ -158,6 +159,7 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
     AlarmBroadcastReceive alarmBroadcastReceive = new AlarmBroadcastReceive();
 
     private Disposable connectOpenLockerDisposable;
+    private long startMillisSecond;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -505,11 +507,17 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
 
     @Override
     public void onIrFaceIn(CvFace[] cvFaces) {
+        startMillisSecond = SystemClock.currentThreadTimeMillis();
 
     }
 
     @Override
     public void onWholeIdentifyResult(final IdentifyResult recognition) {
+        long currentThreadTimeMillis = SystemClock.currentThreadTimeMillis();
+        final long timeDifference = currentThreadTimeMillis - startMillisSecond;
+        Log.i("time", (currentThreadTimeMillis - startMillisSecond) + "");
+        com.tencent.mars.xlog.Log.i("time", (currentThreadTimeMillis - startMillisSecond) + "");
+
         // 人脸识别的回调
         Log.i("coreCall", "分数=" + recognition.getScore());
         if (isPreViewCamera) return;
@@ -580,7 +588,7 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
                     .doOnSubscribe(new Consumer<Disposable>() {
                         @Override
                         public void accept(Disposable disposable) throws Exception {
-                            showAlert("快马加鞭开箱子！", true);
+                            showAlert("快马加鞭开箱子！本次人脸检测耗时" + timeDifference + "毫秒", true);
                         }
                     })
                     .onExceptionResumeNext(Observable.just(new ResponseEntity()))
