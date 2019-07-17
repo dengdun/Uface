@@ -77,8 +77,8 @@ public class SplashActivity extends AppCompatActivity {
                                 if (BuildConfig.DEBUG)  {
                                     return Observable.error(new Throwable(""));
                                 } else {
-                                    // 测试的时候注释上
                                     if (throwable instanceof IOException) {
+                                        // 重试等待前置器启动
                                         return Observable.just(1).delay(2, TimeUnit.SECONDS);
                                     } else {
                                         return Observable.error(new Throwable(""));
@@ -159,6 +159,7 @@ public class SplashActivity extends AppCompatActivity {
             this.message = message;
         }
     }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();

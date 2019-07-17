@@ -190,7 +190,7 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
                 toMainScreen();
             }
         });
-
+        // 注册定时广播
         registerReceiver(alarmBroadcastReceive, new IntentFilter(ACTION_ALRAM));
 
     }
@@ -389,7 +389,7 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
         schoolNameView.setText(schoolName + "\n" + phone + "\n" + deviceCode);
         boolean booleanExtra = intent.getBooleanExtra(INTENT_SUCCESS, false);
 
-        if (booleanExtra) intervalGetDeviceName();
+        intervalGetDeviceName();
 
         try {
             GifDrawable gifFromAssets = new GifDrawable(getAssets(), "loading.gif");
@@ -597,9 +597,9 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
                         @Override
                         public ObservableSource<Long> apply(ResponseEntity responseEntity) throws Exception {
                             if (responseEntity.getMessage() == null) {
-                                showAlert("网络似乎开小差了！"+ "本次人脸检测耗时" + timeDifference + "毫秒", true);
+                                showAlert("网络似乎开小差了！"+ "本次人脸检测耗时" + timeDifference + "毫秒!", true);
                             } else {
-                                showAlert(responseEntity.getMessage() + "本次人脸检测耗时" + timeDifference + "毫秒", true);
+                                showAlert(responseEntity.getMessage() + "!本次人脸检测耗时" + timeDifference + "毫秒!", true);
                             }
                             // 显示信息之后延时3秒跳转
                             return Observable.just(1).timer(3, TimeUnit.SECONDS);
