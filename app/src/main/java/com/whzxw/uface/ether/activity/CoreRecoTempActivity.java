@@ -463,6 +463,7 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
 
     @Override
     public void onFaceIn(CvFace[] cvFaces) {
+        startMillisSecond = SystemClock.elapsedRealtime();
     }
 
     @Override
@@ -507,13 +508,13 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
 
     @Override
     public void onIrFaceIn(CvFace[] cvFaces) {
-        startMillisSecond = SystemClock.currentThreadTimeMillis();
+
 
     }
 
     @Override
     public void onWholeIdentifyResult(final IdentifyResult recognition) {
-        long currentThreadTimeMillis = SystemClock.currentThreadTimeMillis();
+        long currentThreadTimeMillis = SystemClock.elapsedRealtime();
         final long timeDifference = currentThreadTimeMillis - startMillisSecond;
         Log.i("time", (currentThreadTimeMillis - startMillisSecond) + "");
         com.tencent.mars.xlog.Log.i("time", (currentThreadTimeMillis - startMillisSecond) + "");
@@ -588,7 +589,7 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
                     .doOnSubscribe(new Consumer<Disposable>() {
                         @Override
                         public void accept(Disposable disposable) throws Exception {
-                            showAlert("快马加鞭开箱子！本次人脸检测耗时" + timeDifference + "毫秒", true);
+                            showAlert("快马加鞭开箱子！", true);
                         }
                     })
                     .onExceptionResumeNext(Observable.just(new ResponseEntity()))
@@ -596,9 +597,9 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
                         @Override
                         public ObservableSource<Long> apply(ResponseEntity responseEntity) throws Exception {
                             if (responseEntity.getMessage() == null) {
-                                showAlert("网络似乎开小差了！", true);
+                                showAlert("网络似乎开小差了！"+ "本次人脸检测耗时" + timeDifference + "毫秒", true);
                             } else {
-                                showAlert(responseEntity.getMessage(), true);
+                                showAlert(responseEntity.getMessage() + "本次人脸检测耗时" + timeDifference + "毫秒", true);
                             }
                             // 显示信息之后延时3秒跳转
                             return Observable.just(1).timer(3, TimeUnit.SECONDS);
