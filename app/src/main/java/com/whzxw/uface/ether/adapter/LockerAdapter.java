@@ -4,7 +4,7 @@ package com.whzxw.uface.ether.adapter;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
-
+//  测试为 没用。
 public class LockerAdapter extends RecyclerView.Adapter {
     @NonNull
     @Override

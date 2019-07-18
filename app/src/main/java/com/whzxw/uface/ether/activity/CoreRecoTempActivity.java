@@ -96,6 +96,10 @@ import static com.whzxw.uface.ether.schedule.AlarmManagerUtils.ACTION_ALRAM;
  * <p>
  * 这里是最新的界面的一些功能
  * 根据找学网部分需求更改页面效果
+ * 识别核心类，主要的逻辑代码都在这个类里面了。其它的类都是无关紧要
+ * 主成成两个部分内容。
+ * 1.人脸识别开柜子，主要是封装识别回调里面开始自己的逻辑 onWholeIdentifyResult 识别成功之后，回调onWholeIdentifyResult这个方法，在这个方法里面执行回调逻辑
+ * 2.刷卡开柜子主要是在dispatchKeyEvent 这个方法里面获取卡片的信息，然后通过调用后台接口开柜
  */
 public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyResultCallBack, EtherFaceManager.OnServerConnectListener {
 
@@ -172,18 +176,20 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
         setContentView(R.layout.activity_recognition);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         ButterKnife.bind(this);
-
+        // 人脸识别框架配置
         serviceOptions = UfaceEtherImpl.getServiceOptions();
         etherFaceManager = EtherFaceManager.getInstance();
         // 这个要提高堆叠的时候的等级，不然会被后面的控件盖住。看不到。
         operator_flow.bringToFront();
         init();
+        // 初始化人脸识别相机
         initCamera();
+        // 中间广告部分初始化
         initWebView();
         if (BuildConfig.DEBUG) layoutContainer.setData();
-
+        // 打开识别框架初始化。
         etherFaceManager.startService(this, this, this);
-
+        // 设置倒计时器结束的时候回调。
         countDownTimer.setDeadlineListener(new CountDownTimer.DeadlineListener() {
             @Override
             public void deadline() {
@@ -210,12 +216,12 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
                     // 刷卡结束
                     Toast.makeText(CoreRecoTempActivity.this, resultCode, Toast.LENGTH_LONG).show();
                     final String cardNo = resultCode.toUpperCase();
-
+                    // 写入本地log。
                     com.tencent.mars.xlog.Log.i("刷卡", "开始刷卡");
                     com.tencent.mars.xlog.Log.i("刷卡", "预览");
                     // 屏保的时候不读取
                     if (isPreViewCamera) return true;
-
+                    // 回幕幕截图接口，通过这个接口回调当前刷卡人员照片了。
                     cameraRGB.setScreenshotListener(new CameraUtils.OnCameraDataEnableListener() {
 
                         @Override
@@ -250,6 +256,7 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
                                 }
                             });
                             com.tencent.mars.xlog.Log.i("刷卡", "开始网络请求");
+                            // 初始化Rxjava网络请求。通过调用该接口打开机柜。
                             connectOpenLockerDisposable = Observable.zip(dataObservable, personTableObservable, new BiFunction<Object[], PersonTable, Object[]>() {
                                 @Override
                                 public Object[] apply(Object[] objects, PersonTable personTable) throws Exception {
@@ -325,6 +332,7 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
         return super.dispatchKeyEvent(event);
     }
 
+    //初始化网络。
     @SuppressLint("SetJavaScriptEnabled")
     private void initWebView() {
 
@@ -378,6 +386,7 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
         });
     }
 
+    // 初始化一些显示数据。
     private void init() {
         faceHandler = new FaceHandler();
         faceHandler.init();
@@ -463,6 +472,7 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
 
     @Override
     public void onFaceIn(CvFace[] cvFaces) {
+        // 算法检测到人进入摄像头区的掉。
         startMillisSecond = SystemClock.elapsedRealtime();
     }
 
@@ -514,6 +524,7 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
 
     @Override
     public void onWholeIdentifyResult(final IdentifyResult recognition) {
+        // 人脸识别成功之后回调。
         long currentThreadTimeMillis = SystemClock.elapsedRealtime();
         final long timeDifference = currentThreadTimeMillis - startMillisSecond;
         Log.i("time", (currentThreadTimeMillis - startMillisSecond) + "");
@@ -556,7 +567,7 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
                     return personTables.get(0);
                 }
             });
-
+            // 通过网络调用打开机柜接口。
             connectOpenLockerDisposable = Observable.zip(dataObservable, personTableObservable, new BiFunction<Object[], PersonTable, Object[]>() {
                 @Override
                 public Object[] apply(Object[] objects, PersonTable personTable) throws Exception {
@@ -646,6 +657,7 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        // 关闭人脸识别进程。
         etherFaceManager.stopService(this);
         // 关灯
         FileNodeOperator.close(FileNodeOperator.LED_PATH);
@@ -709,7 +721,7 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
     public void toRecoScreen(View view) {
         // 设置预览值
         isPreViewCamera = false;
-
+        // 初始化倒计时。
         countDownTimer.startCountDown(15);
         firstScreenGroup.setVisibility(View.INVISIBLE);
         twoScreenGroup.setVisibility(View.VISIBLE);
@@ -736,6 +748,7 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
      * 显示识别后文字
      */
     public void showAlert(String alert, boolean show) {
+        // 是否显示预览相机？
         isPreViewCamera = true;
         alertView.setText(alert);
         if (show)
@@ -746,7 +759,7 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
 
 
     /**
-     * 一个小时刷新一次页面
+     * 一个小时刷新一次页面广告页面可能更改。
      */
     public class AlarmBroadcastReceive extends BroadcastReceiver {
         @Override
@@ -761,7 +774,7 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
     Disposable disposable = null;
 
     /**
-     * 获取名字
+     * 获取名字  在网络不好情况下，循环调用接口获取设备的名字。
      */
     public void intervalGetDeviceName() {
         int period = BuildConfig.DEBUG ? 10 : 60;

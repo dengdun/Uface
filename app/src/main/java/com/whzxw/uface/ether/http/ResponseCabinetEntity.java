@@ -6,6 +6,7 @@ import java.util.List;
 
 /**
  * 柜子的细节
+ * 对机柜接接反返回数据的对对象进行封装。
  */
 public class ResponseCabinetEntity {
     private String success;

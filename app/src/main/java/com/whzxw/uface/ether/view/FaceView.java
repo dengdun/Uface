@@ -16,6 +16,7 @@ import java.util.List;
 
 /**
  * Created by uniubi on 2017/3/15.
+ * 人脸识别视频流预览封装。。
  */
 
 public class FaceView extends View {

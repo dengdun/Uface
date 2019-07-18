@@ -24,6 +24,7 @@ import io.reactivex.schedulers.Schedulers;
 
 /**
  * 显示柜子
+ * 封装显示机柜控间。
  */
 public class LockerView extends LinearLayout {
     /**
@@ -57,8 +58,9 @@ public class LockerView extends LinearLayout {
     }
 
 
-
+    // 初始化数据并初始化最开显显示的空间。
     private void init()  {
+        // 在调试情况下，在数组中添加调试数据，方便显示机柜。
         if (BuildConfig.DEBUG) {
             lockerList.add(new ResponseCabinetEntity.Cabinet());
             lockerList.add(new ResponseCabinetEntity.Cabinet());
@@ -158,6 +160,7 @@ public class LockerView extends LinearLayout {
         }
     }
 
+    // 当每次调用打开机柜之后，通过调用该方法更新机柜的显示。
     public void refreshLocker() {
         RetrofitManager.getInstance()
                 .apiService
