@@ -279,7 +279,8 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
                                             params.put("name", personTable.getName());
                                             params.put("cardNo", personTable.getCardNO());
                                             params.put("face", NetHttpUtil.bitmapToBase64(identifyResult));
-                                            params.put("type", type + "");
+                                            // 武汉站只有一个按钮，强制写成3 开柜
+                                            params.put("type", "3");
 
                                             return RetrofitManager.getInstance()
                                                     .apiService
@@ -580,6 +581,7 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
                         @Override
                         public Observable<ResponseEntity> apply(Object[] objects) throws Exception {
                             IdentifyResult identifyResult = (IdentifyResult) objects[0];
+
                             Integer type = (Integer) objects[1];
                             PersonTable personTable = (PersonTable) objects[2];
 
@@ -590,7 +592,8 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
                             params.put("name", personTable.getName());
                             params.put("cardNo", personTable.getCardNO());
                             params.put("face", NetHttpUtil.bitmapToBase64(identifyResult.getBitmap()));
-                            params.put("type", type + "");
+                            // 武汉站只有一个按钮，强制写成3 开柜
+                            params.put("type", "3");
 
                             return RetrofitManager.getInstance()
                                     .apiService
@@ -727,7 +730,7 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
      *
      * @param view
      */
-    @OnClick({R.id.open, R.id.temp_open, R.id.final_open})
+    @OnClick({R.id.open})
     public void toRecoScreen(View view) {
         // 设置预览值
         isPreViewCamera = false;
@@ -739,16 +742,16 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
         switch (view.getId()) {
             case R.id.open:
                 recoFromWhichButton = 0;
-                title.setText("存件");
+                title.setText("开柜");
                 break;
-            case R.id.temp_open:
-                title.setText("中途取件");
-                recoFromWhichButton = 1;
-                break;
-            case R.id.final_open:
-                title.setText("取件");
-                recoFromWhichButton = 2;
-                break;
+//            case R.id.temp_open:
+//                title.setText("中途取件");
+//                recoFromWhichButton = 1;
+//                break;
+//            case R.id.final_open:
+//                title.setText("取件");
+//                recoFromWhichButton = 2;
+//                break;
         }
 
         layoutContainer.refreshLocker();
