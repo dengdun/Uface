@@ -635,6 +635,7 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
                         @Override
                         public void accept(Long o) throws Exception {
                             showAlert("重要提示", true);
+                            // 成功之后 打开屏保，跳转主页，主页有关灯操作
                             toMainScreen();
                             com.tencent.mars.xlog.Log.d("CoreRecoTempActivity400", o.toString());
                         }
@@ -712,7 +713,8 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
      */
     @OnClick(R.id.btn_back)
     public void toMainScreen() {
-
+        // 关灯
+        FileNodeOperator.close(FileNodeOperator.LED_PATH);
         firstScreenGroup.setVisibility(View.VISIBLE);
         twoScreenGroup.setVisibility(View.INVISIBLE);
         countDownTimer.stopCount();
@@ -732,6 +734,8 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
      */
     @OnClick({R.id.open})
     public void toRecoScreen(View view) {
+        // 开灯
+        FileNodeOperator.open(FileNodeOperator.LED_PATH);
         // 设置预览值
         isPreViewCamera = false;
         // 初始化倒计时。
