@@ -132,7 +132,8 @@ public class EtherApp extends Application {
                 .withOfflineServerWebsitePath("").build();
 
 
-        CommonOptions commonOptions = new CommonOptions(SerialUtils.getDeviceSerial(), "06CA983C214E4FBF82E90A00B05A4822", "025cb4d148f5b71f14dfdcf0e68ae5a9");
+//        CommonOptions commonOptions = new CommonOptions(SerialUtils.getDeviceSerial(), "06CA983C214E4FBF82E90A00B05A4822", "025cb4d148f5b71f14dfdcf0e68ae5a9");
+        CommonOptions commonOptions = new CommonOptions(SerialUtils.getDeviceKey(), "06CA983C214E4FBF82E90A00B05A4822", "025cb4d148f5b71f14dfdcf0e68ae5a9");
 
         Ether ether = new Ether.Builder(commonOptions)
                 .withAlgorithmOptions(algorithmOptions)
