@@ -208,6 +208,8 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
         InputDevice inputDevice = InputDevice.getDevice(event.getDeviceId());
+        Log.i("coreCall", event.toString());
+        Log.i("coreCall", inputDevice.toString());
         if (inputDevice.getName().equals("EHUOYAN.COM RfidLoginer")) {
             // 刷卡器事件  全部事件拦截
             if (event.getAction() == KeyEvent.ACTION_UP) {

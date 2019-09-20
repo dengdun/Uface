@@ -1,7 +1,7 @@
 adb kill-service
 adb connect 192.168.1.155:5555
 adb shell am force-stop com.whzxw.uface.ether
-adb shell am start com.whzxw.uface.ether/com.uniubi.uface.etherdemo.activity.SplashActivity
+adb shell am start com.whzxw.uface.ether/com.whzxw.uface.ether.activity.SplashActivity
 
 
 @REM 产生10个[4,12]间的随机数
