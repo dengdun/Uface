@@ -283,6 +283,7 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
                                             params.put("face", NetHttpUtil.bitmapToBase64(identifyResult));
                                             // 武汉站只有一个按钮，强制写成3 开柜
                                             params.put("type", "3");
+                                            params.put("time", new Date().getTime()+"");
 
                                             return RetrofitManager.getInstance()
                                                     .apiService
@@ -596,7 +597,7 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
                             params.put("face", NetHttpUtil.bitmapToBase64(identifyResult.getBitmap()));
                             // 武汉站只有一个按钮，强制写成3 开柜
                             params.put("type", "3");
-
+                            params.put("time", new Date().getTime()+"");
                             return RetrofitManager.getInstance()
                                     .apiService
                                     .sendRecoResult(ApiService.recoCallBackUrl, params);
