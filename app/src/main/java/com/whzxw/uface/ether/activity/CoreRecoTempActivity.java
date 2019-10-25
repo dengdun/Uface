@@ -210,16 +210,19 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
         InputDevice inputDevice = InputDevice.getDevice(event.getDeviceId());
         Log.i("coreCall", event.toString());
         Log.i("coreCall", inputDevice.toString());
-        if (inputDevice.getName().equals("EHUOYAN.COM RfidLoginer")) {
+        if (inputDevice.getName().equals("EHUOYAN.COM RfidLoginer") || "HXGCoLtd".equals(inputDevice.getName())) {
             // 刷卡器事件  全部事件拦截
             if (event.getAction() == KeyEvent.ACTION_UP) {
                 if (event.getKeyCode() == KeyEvent.KEYCODE_SHIFT_LEFT) {
                     // 开始刷卡
-                    resultCode = "";
+//                    resultCode = "";
                 } else if (event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
                     // 刷卡结束
                     Toast.makeText(CoreRecoTempActivity.this, resultCode, Toast.LENGTH_LONG).show();
                     final String cardNo = resultCode.toUpperCase();
+                    // 清空刷卡数据
+                    // 开始刷卡
+                    resultCode = "";
                     // 写入本地log。
                     com.tencent.mars.xlog.Log.i("刷卡", "开始刷卡");
                     com.tencent.mars.xlog.Log.i("刷卡", "预览");
