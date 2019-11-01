@@ -9,6 +9,8 @@ import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.constraint.Group;
@@ -41,6 +43,7 @@ import com.uniubi.uface.ether.core.bean.CheckFace;
 import com.uniubi.uface.ether.core.bean.IdentifyResult;
 import com.uniubi.uface.ether.core.cvhandle.FaceHandler;
 import com.uniubi.uface.ether.core.faceprocess.IdentifyResultCallBack;
+import com.uniubi.uface.ether.outdevice.serialport.EtherSerialPortManager;
 import com.uniubi.uface.ether.outdevice.utils.FileNodeOperator;
 import com.uniubi.uface.ether.utils.ImageUtils;
 import com.whzxw.uface.ether.EtherApp;
@@ -67,6 +70,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
@@ -166,6 +171,7 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
 
     private Disposable connectOpenLockerDisposable;
     private long startMillisSecond;
+    private int fd;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -200,7 +206,166 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
         });
         // 注册定时广播
         registerReceiver(alarmBroadcastReceive, new IntentFilter(ACTION_ALRAM));
+        // 开启定时器
+        setTimer();
+    }
 
+    private void setTimer(){
+        fd = EtherSerialPortManager.getInstance().openSerialPort("/dev/ttyS0", 9600);
+        timer.schedule(task, 1000, 2000);       // timeTask
+    }
+    public static final int TIMER = 0x0009;
+    private Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what){
+                // 刷卡之后的请求网络
+                case TIMER:
+                    //在此执行定时操作
+                    final String cardNo = ((String) msg.obj).toUpperCase();
+                    Toast.makeText(CoreRecoTempActivity.this, cardNo, Toast.LENGTH_LONG).show();
+                    // 清空刷卡数据
+                    // 开始刷卡
+                    resultCode = "";
+                    // 写入本地log。
+                    com.tencent.mars.xlog.Log.i("刷卡", "开始刷卡");
+                    com.tencent.mars.xlog.Log.i("刷卡", "预览");
+                    // 屏保的时候不读取
+                    if (isPreViewCamera) return ;
+                    // 回幕幕截图接口，通过这个接口回调当前刷卡人员照片了。
+                    cameraRGB.setScreenshotListener(new CameraUtils.OnCameraDataEnableListener() {
+
+                        @Override
+                        public void onCameraDataCallback(final byte[] data, int camId) {
+                            com.tencent.mars.xlog.Log.i("刷卡", "进入到监听");
+                            // 创建
+                            Observable<byte[]> identifyResultObservable = Observable.just(data);
+                            Observable<Integer> just = Observable.just(recoFromWhichButton);
+                            Observable<Object[]> dataObservable = Observable.zip(identifyResultObservable, just, new BiFunction<byte[], Integer, Object[]>() {
+                                @Override
+                                public Object[] apply(byte[] identifyResult, Integer integer) throws Exception {
+                                    Bitmap bitmap = ImageUtils.rotateBitmap(ImageUtils.yuvImg2BitMap(data, 640, 480), 90);
+                                    return new Object[]{bitmap, integer};
+                                }
+                            });
+                            com.tencent.mars.xlog.Log.i("刷卡", "创建头像");
+                            // 创建查数据的观察事件
+                            Observable<PersonTable> personTableObservable = Observable.just(cardNo).map(new Function<String, List<PersonTable>>() {
+                                @Override
+                                public List<PersonTable> apply(String cardno) throws Exception {
+                                    return EtherApp.daoSession.queryRaw(PersonTable.class, "where CARD_NO = ? ", cardno);
+                                }
+                            }).filter(new Predicate<List<PersonTable>>() {
+                                @Override
+                                public boolean test(List<PersonTable> personTables) throws Exception {
+                                    return personTables != null && personTables.size() != 0;
+                                }
+                            }).map(new Function<List<PersonTable>, PersonTable>() {
+                                @Override
+                                public PersonTable apply(List<PersonTable> personTables) throws Exception {
+                                    return personTables.get(0);
+                                }
+                            });
+                            com.tencent.mars.xlog.Log.i("刷卡", "开始网络请求");
+                            // 初始化Rxjava网络请求。通过调用该接口打开机柜。
+                            connectOpenLockerDisposable = Observable.zip(dataObservable, personTableObservable, new BiFunction<Object[], PersonTable, Object[]>() {
+                                @Override
+                                public Object[] apply(Object[] objects, PersonTable personTable) throws Exception {
+                                    return new Object[]{objects[0], objects[1], personTable};
+                                }
+                            })
+                                    .flatMap(new Function<Object[], Observable<ResponseEntity>>() {
+                                        @Override
+                                        public Observable<ResponseEntity> apply(Object[] objects) throws Exception {
+                                            Bitmap identifyResult = (Bitmap) objects[0];
+                                            Integer type = (Integer) objects[1];
+                                            PersonTable personTable = (PersonTable) objects[2];
+
+                                            Map<String, String> params = new HashMap<>();
+                                            params.put("personId", personTable.getPseronId());
+                                            params.put("faceId", personTable.getFaceId());
+                                            params.put("score", "-1");
+                                            params.put("name", personTable.getName());
+                                            params.put("cardNo", personTable.getCardNO());
+                                            params.put("face", NetHttpUtil.bitmapToBase64(identifyResult));
+                                            // 武汉站只有一个按钮，强制写成3 开柜
+                                            params.put("type", "3");
+                                            params.put("time", new Date().getTime()+"");
+
+                                            return RetrofitManager.getInstance()
+                                                    .apiService
+                                                    .sendRecoResult(ApiService.recoCallBackUrl, params);
+                                        }
+                                    })
+                                    .subscribeOn(Schedulers.io())
+                                    .observeOn(AndroidSchedulers.mainThread())
+                                    .doOnSubscribe(new Consumer<Disposable>() {
+                                        @Override
+                                        public void accept(Disposable disposable) throws Exception {
+                                            showAlert("快马加鞭开箱子！", true);
+                                        }
+                                    })
+                                    .onExceptionResumeNext(Observable.just(new ResponseEntity()))
+                                    .flatMap(new Function<ResponseEntity, ObservableSource<Long>>() {
+                                        @Override
+                                        public ObservableSource<Long> apply(ResponseEntity responseEntity) throws Exception {
+                                            if (responseEntity.getMessage() == null) {
+                                                showAlert("网络似乎开小差了！", true);
+                                            } else {
+                                                showAlert(responseEntity.getMessage(), true);
+                                            }
+                                            // 显示信息之后延时3秒跳转
+                                            return Observable.just(1).timer(3, TimeUnit.SECONDS);
+                                        }
+                                    })
+                                    .subscribeOn(AndroidSchedulers.mainThread())
+                                    .observeOn(AndroidSchedulers.mainThread())
+                                    .subscribe(new Consumer<Long>() {
+                                        @Override
+                                        public void accept(Long o) throws Exception {
+                                            showAlert("重要提示", true);
+                                            toMainScreen();
+                                        }
+                                    }, new Consumer<Throwable>() {
+                                        @Override
+                                        public void accept(Throwable throwable) throws Exception {
+                                            showAlert("网络似乎开小差了！", true);
+                                            toMainScreen();
+                                        }
+                                    });
+
+                        }
+                    });
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
+
+    Timer timer = new Timer();
+
+    TimerTask task = new TimerTask() {
+        @Override
+        public void run() {
+            char[] chars=new char[8];
+            String s = EtherSerialPortManager.getInstance().readICardNum(fd, 2048, EtherSerialPortManager.GPIO_UFACE2);
+            if (s != null) {
+                Message message = new Message();
+                message.obj = s;
+                message.what = TIMER;
+                mHandler.sendMessage(message);
+            }
+
+        }
+    };
+
+    private void stopTimer(){
+        timer.cancel();
+        task.cancel();
+
+        EtherSerialPortManager.getInstance().closeSerialPort(fd);
     }
 
 
@@ -683,6 +848,8 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
         FileNodeOperator.close(FileNodeOperator.LED_PATH);
 
         unregisterReceiver(alarmBroadcastReceive);
+
+        stopTimer();
     }
 
     @Override

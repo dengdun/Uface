@@ -18,6 +18,9 @@ android {
             abiFilters "armeabi", "armeabi-v7a", "x86", "mips"
         }
     }
+    lintOptions {
+        abortOnError false
+    }
     buildTypes {
         release {
             minifyEnabled false
