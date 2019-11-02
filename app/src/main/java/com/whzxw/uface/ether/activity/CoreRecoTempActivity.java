@@ -278,11 +278,15 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
                                     .flatMap(new Function<Object[], Observable<ResponseEntity>>() {
                                         @Override
                                         public Observable<ResponseEntity> apply(Object[] objects) throws Exception {
+                                            com.tencent.mars.xlog.Log.i("刷卡", "获取网络请求数据1");
                                             Bitmap identifyResult = (Bitmap) objects[0];
                                             Integer type = (Integer) objects[1];
                                             PersonTable personTable = (PersonTable) objects[2];
-
                                             Map<String, String> params = new HashMap<>();
+                                            if (personTable == null) {
+                                                com.tencent.mars.xlog.Log.i("刷卡", "卡号查询信息失败！");
+                                            }
+
                                             params.put("personId", personTable.getPseronId());
                                             params.put("faceId", personTable.getFaceId());
                                             params.put("score", "-1");
@@ -292,7 +296,7 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
                                             // 武汉站只有一个按钮，强制写成3 开柜
                                             params.put("type", "3");
                                             params.put("time", new Date().getTime()+"");
-
+                                            com.tencent.mars.xlog.Log.i("刷卡", "获取网络请求数据2");
                                             return RetrofitManager.getInstance()
                                                     .apiService
                                                     .sendRecoResult(ApiService.recoCallBackUrl, params);
