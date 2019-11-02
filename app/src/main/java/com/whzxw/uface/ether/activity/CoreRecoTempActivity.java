@@ -215,16 +215,17 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
         timer.schedule(task, 1000, 2000);       // timeTask
     }
     public static final int TIMER = 0x0009;
+    public static final int TOAST = 0x0010;
     private Handler mHandler = new Handler(){
         @Override
-        public void handleMessage(Message msg) {
+        public void handleMessage(final Message msg) {
             super.handleMessage(msg);
             switch (msg.what){
                 // 刷卡之后的请求网络
                 case TIMER:
                     //在此执行定时操作
                     final String cardNo = ((String) msg.obj).toUpperCase();
-                    Toast.makeText(CoreRecoTempActivity.this, cardNo, Toast.LENGTH_LONG).show();
+//                    Toast.makeText(CoreRecoTempActivity.this, cardNo, Toast.LENGTH_LONG).show();
                     // 清空刷卡数据
                     // 开始刷卡
                     resultCode = "";
@@ -285,6 +286,16 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
                                             Map<String, String> params = new HashMap<>();
                                             if (personTable == null) {
                                                 com.tencent.mars.xlog.Log.i("刷卡", "卡号查询信息失败！");
+                                                Message message = new Message();
+                                                message.what = TOAST;
+                                                message.obj = "卡号查询数据失败，无法开柜！";
+
+                                                mHandler.sendMessage(message);
+                                            } else {
+                                                Message message = new Message();
+                                                message.what = TOAST;
+                                                message.obj = personTable.getCardNO() + ":" + personTable.getName();
+                                                mHandler.sendMessage(message);
                                             }
 
                                             params.put("personId", personTable.getPseronId());
@@ -341,6 +352,9 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
 
                         }
                     });
+                    break;
+                case TOAST:
+//                    Toast.makeText(CoreRecoTempActivity.this, (String)msg.obj, Toast.LENGTH_LONG).show();
                     break;
                 default:
                     break;

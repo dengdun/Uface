@@ -24,6 +24,6 @@ public class AlarmManagerUtils {
         intent.setAction(ACTION_ALRAM);
         PendingIntent pi = PendingIntent.getBroadcast(EtherApp.context, REQUEST_CODE_ALARM, intent, PendingIntent.FLAG_IMMUTABLE);
         // 一个小时一次的广播
-        systemService.setRepeating(AlarmManager.RTC_WAKEUP, Calendar.getInstance().getTimeInMillis(), 1000*60*60, pi);
+        systemService.setRepeating(AlarmManager.RTC_WAKEUP, Calendar.getInstance().getTimeInMillis(), 1000*60*1, pi);
     }
 }
