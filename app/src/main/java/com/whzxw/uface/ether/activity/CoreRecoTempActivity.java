@@ -112,8 +112,8 @@ import static com.whzxw.uface.ether.schedule.AlarmManagerUtils.ACTION_ALRAM;
  * 2.刷卡开柜子主要是在dispatchKeyEvent 这个方法里面获取卡片的信息，然后通过调用后台接口开柜
  */
 public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyResultCallBack, EtherFaceManager.OnServerConnectListener {
-    //首頁圖片刷新時間30分鐘
-    private final static long REFRESH_IMAGE_TIME_DELAY = 30 * 60 * 1000;
+    //首頁圖片刷新時間1分鐘
+    private final static long REFRESH_IMAGE_TIME_DELAY = 1 * 60 * 1000;
     private FaceHandler faceHandler;
 
     private CameraUtils cameraRGB;
@@ -216,6 +216,7 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
         // 开启定时器
         setTimer();
         onehourLoadImage();
+//        Toast.makeText(getApplicationContext(), "isDegub:" + BuildConfig.DEBUG, Toast.LENGTH_LONG).show();
     }
 
     private void setTimer(){
