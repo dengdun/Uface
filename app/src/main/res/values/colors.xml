@@ -8,6 +8,6 @@
     <color name="hadLockerColor">#FFD07F</color>
     <color name="LockerColor">#5BB5FF</color>
     <color name="lockerline">#20D2C3</color>
-    <color name="line">#9C9B9B</color>
+    <color name="line">#eaeaea</color>
 
 </resources>

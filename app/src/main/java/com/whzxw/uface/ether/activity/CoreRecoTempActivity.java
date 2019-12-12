@@ -158,8 +158,8 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
     @BindView(R.id.countdown_timer)
     CountDownTimer countDownTimer;
 
-    @BindView(R.id.school_name)
-    AppCompatTextView schoolNameView;
+//    @BindView(R.id.school_name)
+//    AppCompatTextView schoolNameView;
 
     @BindView(R.id.alert)
     GifTextView alertView;
@@ -595,7 +595,7 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
         String schoolName = intent.getStringExtra(INTENT_DEVNAME);
         String deviceCode = intent.getStringExtra(INTENT_DEVCODE);
         String phone = intent.getStringExtra(INTENT_PHONE) == null?"0000-000000":intent.getStringExtra(INTENT_PHONE);
-        schoolNameView.setText(schoolName + "\n" + phone + "\n" + deviceCode);
+//        schoolNameView.setText(schoolName + "\n" + phone + "\n" + deviceCode);
         boolean booleanExtra = intent.getBooleanExtra(INTENT_SUCCESS, false);
 
         intervalGetDeviceName();
@@ -895,7 +895,7 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
 
     @Subscribe
     public void setSchoolName(SettingMessageEvent messageEvent) {
-        schoolNameView.setText(messageEvent.schooleNameLine1);
+//        schoolNameView.setText(messageEvent.schooleNameLine1);
     }
 
     @Override
@@ -1011,7 +1011,7 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
                         Log.i("jin", responseEntity.toString());
                         if (responseEntity.isSuccess()) {
                             ResponseDeviceEntity.Device result = responseEntity.getResult();
-                            schoolNameView.setText(result.getDeviceName() +  "\n" + (result.getPhone() == null?"0000-000000":result.getPhone()) + "\n" + result.getDeviceNo());
+//                            schoolNameView.setText(result.getDeviceName() +  "\n" + (result.getPhone() == null?"0000-000000":result.getPhone()) + "\n" + result.getDeviceNo());
                             if (disposable != null && !disposable.isDisposed()) disposable.dispose();
                         }
                     }
