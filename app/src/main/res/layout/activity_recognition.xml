@@ -62,13 +62,13 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.46" />
 
-    <de.hdodenhof.circleimageview.CircleImageView
+    <ImageView
         android:id="@+id/school_icon"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="197dp"
+        android:layout_height="45dp"
         android:src="@drawable/logo"
-        app:civ_border_color="#ffffff"
-        app:civ_border_width="2dp"
+        android:scaleType="centerCrop"
+        android:layout_marginLeft="6dp"
         app:layout_constraintBottom_toBottomOf="@id/first_line_one"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -83,6 +83,7 @@
         app:layout_constraintHorizontal_bias="0.04"
         app:layout_constraintLeft_toRightOf="@id/school_icon"
         app:layout_constraintTop_toTopOf="parent"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@id/first_line_one"/>
 
     <com.whzxw.uface.ether.view.Timeview.TimeView
@@ -104,8 +105,9 @@
         android:layout_marginEnd="6dp"
         android:layout_marginTop="4dp"
         android:layout_marginBottom="2dp"
-        android:background="@drawable/operator_flow"
+        android:src="@drawable/operator_flow"
         app:layout_constrainedHeight="true"
+        android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="@id/first_line_two"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -150,14 +152,14 @@
         app:layout_constraintBottom_toBottomOf="@id/first_line_four"/>
 
     <!--<android.support.v7.widget.AppCompatButton-->
-        <!--android:id="@+id/temp_open"-->
-        <!--android:layout_width="0dp"-->
-        <!--android:layout_height="0dp"-->
-        <!--android:background="@drawable/flow_button"-->
-        <!--app:layout_constraintRight_toLeftOf="@id/final_open"-->
-        <!--app:layout_constraintLeft_toRightOf="@id/open"-->
-        <!--app:layout_constraintTop_toTopOf="@id/first_line_three"-->
-        <!--app:layout_constraintBottom_toBottomOf="@id/first_line_four"/>-->
+    <!--android:id="@+id/temp_open"-->
+    <!--android:layout_width="0dp"-->
+    <!--android:layout_height="0dp"-->
+    <!--android:background="@drawable/flow_button"-->
+    <!--app:layout_constraintRight_toLeftOf="@id/final_open"-->
+    <!--app:layout_constraintLeft_toRightOf="@id/open"-->
+    <!--app:layout_constraintTop_toTopOf="@id/first_line_three"-->
+    <!--app:layout_constraintBottom_toBottomOf="@id/first_line_four"/>-->
 
 
 
@@ -178,7 +180,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="invisible"
-        app:constraint_referenced_ids="  btn_back, camera_title, countdown_timer, banner" />
+        app:constraint_referenced_ids="  btn_back, camera_title, countdown_timer, banner"
+        tools:visibility="gone"/>
 
     <com.whzxw.uface.ether.view.LockerView
         android:id="@+id/layout"

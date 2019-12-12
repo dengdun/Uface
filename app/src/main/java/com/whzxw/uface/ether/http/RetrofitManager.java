@@ -3,9 +3,17 @@ package com.whzxw.uface.ether.http;
 import com.whzxw.uface.ether.utils.RegularUtils;
 import com.whzxw.uface.ether.utils.ShareferenceManager;
 
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
+import io.reactivex.Single;
+import io.reactivex.SingleEmitter;
+import io.reactivex.SingleOnSubscribe;
+import okhttp3.Call;
+import okhttp3.Callback;
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
@@ -81,4 +89,23 @@ public class RetrofitManager {
         return mOkHttpClient;
     }
 
+    public Single<Response> get(final String url) {
+        return Single.create(new SingleOnSubscribe<Response>() {
+            @Override
+            public void subscribe(final SingleEmitter<Response> emitter) throws Exception {
+                Request request = new Request.Builder().url(url).build();
+                mOkHttpClient.newCall(request).enqueue(new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        emitter.onError(e);
+                    }
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        emitter.onSuccess(response);
+                    }
+                });
+            }
+        });
+    }
 }

@@ -29,6 +29,7 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.uniubi.faceapi.CvFace;
@@ -47,12 +48,14 @@ import com.uniubi.uface.ether.outdevice.serialport.EtherSerialPortManager;
 import com.uniubi.uface.ether.outdevice.utils.FileNodeOperator;
 import com.uniubi.uface.ether.utils.ImageUtils;
 import com.whzxw.uface.ether.EtherApp;
+import com.whzxw.uface.ether.activity.control.CoreRecoTempUtils;
 import com.whzxw.uface.ether.bean.SettingMessageEvent;
 import com.whzxw.uface.ether.database.PersonTable;
 import com.whzxw.uface.ether.http.ApiService;
 import com.whzxw.uface.ether.http.ResponseDeviceEntity;
 import com.whzxw.uface.ether.http.ResponseEntity;
 import com.whzxw.uface.ether.http.RetrofitManager;
+import com.whzxw.uface.ether.http.UriProvider;
 import com.whzxw.uface.ether.utils.CameraUtils;
 import com.whzxw.uface.ether.utils.NetHttpUtil;
 import com.whzxw.uface.ether.utils.PhotoUtils;
@@ -167,6 +170,9 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
     @BindView(R.id.operator_flow)
     AppCompatImageView operator_flow;
 
+    @BindView(R.id.school_icon)
+    ImageView schoolIcon;
+
     AlarmBroadcastReceive alarmBroadcastReceive = new AlarmBroadcastReceive();
 
     private Disposable connectOpenLockerDisposable;
@@ -208,6 +214,8 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
         registerReceiver(alarmBroadcastReceive, new IntentFilter(ACTION_ALRAM));
         // 开启定时器
         setTimer();
+        CoreRecoTempUtils.loadImage(operator_flow, UriProvider.HOME_ADVERTISE);
+        CoreRecoTempUtils.loadImage(schoolIcon, UriProvider.HOME_TOP_LEFT_LOGO);
     }
 
     private void setTimer(){

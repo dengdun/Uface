@@ -97,7 +97,7 @@ public class SplashActivity extends AppCompatActivity {
                         com.tencent.mars.xlog.Log.i("jin", "运行失败");
 
                         // 这里已经过滤了肯定是正常的才走到这一步
-                        Intent intent = new Intent(getApplicationContext(), CoreRecoTempActivity.class);
+                        Intent intent = new Intent(SplashActivity.this, CoreRecoTempActivity.class);
                         ResponseDeviceEntity.Device result = responseEntity.getResult();
 
                         intent.putExtra(INTENT_DEVNAME, result.getDeviceName());
