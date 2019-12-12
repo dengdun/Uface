@@ -158,7 +158,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="invisible"
-        app:constraint_referenced_ids="  layout, btn_back, camera_title, countdown_timer, banner"
         app:constraint_referenced_ids="  layout, btn_back, camera_title, countdown_timer, banner" />
 
     <com.whzxw.uface.ether.view.LockerView
