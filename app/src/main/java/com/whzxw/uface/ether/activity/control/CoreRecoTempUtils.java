@@ -23,6 +23,7 @@ public class CoreRecoTempUtils {
 
     @SuppressLint("CheckResult")
     public static void loadImage(final ImageView imageView, String url) {
+        Log.i(TAG, "loadImage url:" + url);
         RetrofitManager.getInstance().get(url)
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io())

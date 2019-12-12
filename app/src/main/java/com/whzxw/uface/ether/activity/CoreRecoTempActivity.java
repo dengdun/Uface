@@ -112,7 +112,8 @@ import static com.whzxw.uface.ether.schedule.AlarmManagerUtils.ACTION_ALRAM;
  * 2.刷卡开柜子主要是在dispatchKeyEvent 这个方法里面获取卡片的信息，然后通过调用后台接口开柜
  */
 public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyResultCallBack, EtherFaceManager.OnServerConnectListener {
-
+    //首頁圖片刷新時間30分鐘
+    private final static long REFRESH_IMAGE_TIME_DELAY = 30 * 60 * 1000;
     private FaceHandler faceHandler;
 
     private CameraUtils cameraRGB;
@@ -178,7 +179,7 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
     private Disposable connectOpenLockerDisposable;
     private long startMillisSecond;
     private int fd;
-
+    private Handler mRefreshImageHandler;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -214,8 +215,7 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
         registerReceiver(alarmBroadcastReceive, new IntentFilter(ACTION_ALRAM));
         // 开启定时器
         setTimer();
-        CoreRecoTempUtils.loadImage(operator_flow, UriProvider.HOME_ADVERTISE);
-        CoreRecoTempUtils.loadImage(schoolIcon, UriProvider.HOME_TOP_LEFT_LOGO);
+        onehourLoadImage();
     }
 
     private void setTimer(){
@@ -876,6 +876,11 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
         unregisterReceiver(alarmBroadcastReceive);
 
         stopTimer();
+
+        if (mRefreshImageHandler != null) {
+            mRefreshImageHandler.removeCallbacks(null);
+            mRefreshImageHandler = null;
+        }
     }
 
     @Override
@@ -1031,4 +1036,19 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
                 });
     }
 
+    private void onehourLoadImage() {
+        CoreRecoTempUtils.loadImage(operator_flow, UriProvider.HOME_ADVERTISE);
+        CoreRecoTempUtils.loadImage(schoolIcon, UriProvider.HOME_TOP_LEFT_LOGO);
+        if (mRefreshImageHandler == null) {
+            mRefreshImageHandler = new Handler();
+        }
+        mRefreshImageHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                CoreRecoTempUtils.loadImage(operator_flow, UriProvider.HOME_ADVERTISE);
+                CoreRecoTempUtils.loadImage(schoolIcon, UriProvider.HOME_TOP_LEFT_LOGO);
+                mRefreshImageHandler.postDelayed(this, REFRESH_IMAGE_TIME_DELAY);
+            }
+        }, REFRESH_IMAGE_TIME_DELAY);
+    }
 }
