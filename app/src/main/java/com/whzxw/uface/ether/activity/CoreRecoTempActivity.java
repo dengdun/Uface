@@ -17,7 +17,6 @@ import android.support.constraint.Group;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
-import android.util.Log;
 import android.view.InputDevice;
 import android.view.KeyEvent;
 import android.view.TextureView;
@@ -32,6 +31,7 @@ import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.tencent.mars.xlog.Log;
 import com.uniubi.faceapi.CvFace;
 import com.uniubi.uface.ether.BuildConfig;
 import com.uniubi.uface.ether.R;
@@ -673,12 +673,14 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
 
     @Override
     public void onFaceIn(CvFace[] cvFaces) {
+        Log.i("coreCall", "onFaceIn");
         // 算法检测到人进入摄像头区的掉。
         startMillisSecond = SystemClock.elapsedRealtime();
     }
 
     @Override
     public void onFaceNull() {
+        Log.i("coreCall", "onFaceNull:");
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -689,6 +691,7 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
 
     @Override
     public void onTrackCallBack(final List<CheckFace> checkFaces) {
+        Log.i("coreCall", "onTrackCallBack:" + checkFaces);
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -704,22 +707,22 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
 
     @Override
     public void onIdentifySuccess(final IdentifyResult result) {
-
+        Log.i("coreCall", "onIdentifySuccess:" + result);
     }
 
     @Override
     public void onIdentifyFailed(final IdentifyResult result) {
-
+        Log.i("coreCall", "onIdentifyFailed:" + result);
     }
 
     @Override
     public void onAliveCallBack(final AliveResult result) {
-
+        Log.i("coreCall", "AliveResult:" + result);
     }
 
     @Override
     public void onIrFaceIn(CvFace[] cvFaces) {
-
+        Log.i("coreCall", "onIrFaceIn");
 
     }
 
@@ -835,14 +838,15 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
                             showAlert("重要提示", true);
                             // 成功之后 打开屏保，跳转主页，主页有关灯操作
                             toMainScreen();
-                            com.tencent.mars.xlog.Log.d("CoreRecoTempActivity400", o.toString());
+                            com.tencent.mars.xlog.Log.i("CoreRecoTempActivity400", o.toString());
                         }
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
                             showAlert("网络似乎开小差了！", true);
                             toMainScreen();
-                            com.tencent.mars.xlog.Log.d("CoreRecoTempActivity400", throwable.getMessage());
+                            com.tencent.mars.xlog.Log.i("CoreRecoTempActivity400",
+                                    throwable.getMessage());
                         }
                     });
             return;

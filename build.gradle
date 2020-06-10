@@ -20,7 +20,7 @@ allprojects {
     repositories {
         google()
         mavenCentral()
-        jcenter{url "http://jcenter.bintray.com"}
+        jcenter()
         maven {
             url "http://maven.aliyun.com/nexus/content/repositories/releases/"
         }
