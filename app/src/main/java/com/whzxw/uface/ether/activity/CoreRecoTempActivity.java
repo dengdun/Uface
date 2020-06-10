@@ -691,7 +691,7 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
 
     @Override
     public void onTrackCallBack(final List<CheckFace> checkFaces) {
-        Log.i("coreCall", "onTrackCallBack:" + checkFaces);
+        // Log.i("coreCall", "onTrackCallBack:" + checkFaces);
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -740,7 +740,7 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
         Log.i("coreCall", "分数=" + recognition.getScore());
 
         // 屏保的时候不让提交数据
-        if (recognition.isAlivePass() && recognition.isVerifyPass()) {
+        if (recognition.isVerifyPass()) {
             Log.i("coreCall", "通过正在启动柜门");
 
             // 创建
@@ -850,19 +850,21 @@ public class CoreRecoTempActivity extends AppCompatActivity implements IdentifyR
                         }
                     });
             return;
+        } else {
+            Log.i("coreCall", "识别没通过");
         }
-        if (recognition.isAlivePass() && !recognition.isVerifyPass()) {
-            Log.i("coreCall", "活体检测通过， 识别没通过");
-            return;
-        }
-        if (!recognition.isAlivePass() && recognition.isVerifyPass()) {
-            Log.i("coreCall", "活体检测没通过， 识别通过");
-            return;
-        }
-        if (!recognition.isAlivePass() && !recognition.isVerifyPass()) {
-            Log.i("coreCall", "活体检测没通过， 识别没通过");
-            return;
-        }
+        // if (recognition.isAlivePass() && !recognition.isVerifyPass()) {
+        //     Log.i("coreCall", "活体检测通过， 识别没通过");
+        //     return;
+        // }
+        // if (!recognition.isAlivePass() && recognition.isVerifyPass()) {
+        //     Log.i("coreCall", "活体检测没通过， 识别通过");
+        //     return;
+        // }
+        // if (!recognition.isAlivePass() && !recognition.isVerifyPass()) {
+        //     Log.i("coreCall", "活体检测没通过， 识别没通过");
+        //     return;
+        // }
     }
 
     @Override
